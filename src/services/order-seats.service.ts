@@ -16,7 +16,7 @@ export class OrderSeatsService {
     @InjectRepository(OrderList)
     private orderListRepository: Repository<OrderList>
   ) {}
-
+  //공연 정보 상세 출력
   async getAContent(contentId: number) {
     const content = await this.contentRepository.findOne({
       where: {
@@ -25,21 +25,30 @@ export class OrderSeatsService {
       },
     });
 
-    return content;
-  }
+    const timeSale = await this.getCurrentTimeSale(contentId);
+    if (timeSale.length === 0) {
+      return content;
+    }
 
-  async checkTimeSale(contentId: number) {
+    return { content, timeSale };
+  }
+  //타임세일 정보 출력 (타 메소드에 포함시켜 사용)
+  async getCurrentTimeSale(contentId: number) {
     let today: Date = new Date();
     let timeNow: string = this.dateToStringForQuery(today);
 
     let query =
-      `select * from timeSale ts
+      `select contentId, performInfo, rate, ` +
+      `start` +
+      `, ` +
+      `end` +
+      ` from timeSale ts
     left join contents c on c.id = ts.contentId
     where ts.` +
       `end` +
       ` > "${timeNow}" and ts.contentId = ${contentId}`;
 
-    const content = await this.timeSaleRepository.query(query);
+    const timeSale = await this.timeSaleRepository.query(query);
 
     // console.log(today + '//' + timeNow);
 
@@ -57,9 +66,17 @@ export class OrderSeatsService {
 
     // console.log(this.dateToStringForQuery(today));
 
-    return content;
+    return timeSale;
   }
 
+  async takeSeats(
+    userId: number,
+    contentId: number,
+    performInfo: number,
+    seats: Array<string>
+  ) {}
+
+  //Date 객체를 mySQL의 datetime 타입 양식에 맞게 문자열로 변환
   dateToStringForQuery(date: Date): string {
     const year = date.getFullYear();
     const month = date.getMonth() + 1;

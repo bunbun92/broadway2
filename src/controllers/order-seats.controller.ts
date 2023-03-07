@@ -11,10 +11,10 @@ export class OrderSeatsController {
 
     return content;
   }
-
+  //현재 미사용 URI
   @Get('/:contentId/timeSale')
-  async checkTimeSale(@Param('contentId') contentId: number) {
-    const content = await this.orderSeatsService.checkTimeSale(contentId);
+  async getCurrentTimeSale(@Param('contentId') contentId: number) {
+    const content = await this.orderSeatsService.getCurrentTimeSale(contentId);
 
     return content;
   }
