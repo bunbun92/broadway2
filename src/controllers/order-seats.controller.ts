@@ -1,4 +1,5 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { CreateOrderSeatsDto } from 'src/dto/create-order-seats.dto';
 import { OrderSeatsService } from '../services/order-seats.service';
 
 @Controller('order-seats')
@@ -11,11 +12,43 @@ export class OrderSeatsController {
 
     return content;
   }
-  //현재 미사용 URI
-  @Get('/:contentId/timeSale')
-  async getCurrentTimeSale(@Param('contentId') contentId: number) {
-    const content = await this.orderSeatsService.getCurrentTimeSale(contentId);
 
-    return content;
+  @Get('/:contentId&:performInfo/seats')
+  async getAllSeatsOfAContent(
+    @Param('contentId') contentId: number,
+    @Param('performInfo') performInfo: number
+  ) {
+    const seats = await this.orderSeatsService.getAllSeatsOfAContent(
+      contentId,
+      performInfo
+    );
+
+    return seats;
   }
+
+  @Post('/:contentId&:performInfo/seatsRTWP')
+  async seatsReservationTemporarilyWhilePay(
+    @Param('contentId') contentId: number,
+    @Param('performInfo') performInfo: number,
+    @Body() data: CreateOrderSeatsDto
+  ) {
+    const userId = 1;
+    const msg =
+      await this.orderSeatsService.seatsReservationTemporarilyWhilePay(
+        userId,
+        contentId,
+        performInfo,
+        data.seats
+      );
+
+    return msg;
+  }
+
+  //현재 미사용 URI
+  // @Get('/:contentId/timeSale')
+  // async getCurrentTimeSale(@Param('contentId') contentId: number) {
+  //   const content = await this.orderSeatsService.getCurrentTimeSale(contentId);
+
+  //   return content;
+  // }
 }
