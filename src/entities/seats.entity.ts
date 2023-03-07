@@ -26,6 +26,9 @@ export class Seat {
   @Column('int')
   price: number;
 
+  @Column('tinyint')
+  orderStatus: number;
+
   @CreateDateColumn()
   createdAt: Date;
 
