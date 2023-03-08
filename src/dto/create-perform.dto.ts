@@ -2,23 +2,15 @@ import { IsNumber, IsString } from 'class-validator';
 
 export class CreatePerformDto {
   @IsNumber()
-  readonly stdate: number;
+  readonly performRound: number;
 
+  @IsString()
+  readonly performDate: string;
+
+  @IsString()
+  readonly performTime: string;
+
+  // jwt 사용시 userId 삭제
   @IsNumber()
-  readonly eddate: number;
-
-  @IsString()
-  readonly title: string;
-
-  @IsString()
-  readonly theater: string;
-
-  @IsString()
-  readonly theaterCode: string;
-
-  @IsString()
-  readonly genreCode: string;
-
-  @IsNumber()
-  readonly status: number;
+  readonly userId: number;
 }
