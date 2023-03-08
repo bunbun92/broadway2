@@ -17,6 +17,7 @@ import { JwtConfigService } from '../config/jwt.config.service';
 import { AuthMiddleware } from '../auth/auth.middleware';
 import { KopisApiModule } from '../kopis-api/kopis-api.module';
 import { PerformModule } from './perform.module';
+import { ReviewModule } from './review.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { PerformModule } from './perform.module';
     PerformModule,
     OrderSeatsModule,
     KopisApiModule,
+    ReviewModule,
   ],
   controllers: [AppController],
   providers: [AppService, AuthMiddleware],
