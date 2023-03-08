@@ -14,12 +14,12 @@ export class KopisApiService {
   //     return await {"id": 1};
   // }
 
-  async kopisCreate(data): Promise<KopisApi | string> {
-    console.log(data);
-    return 'success';
+  async kopisCreate(kopisApiResult): Promise<KopisApi | string> {
+    console.log(kopisApiResult);
+    //return 'success';
     // return await this.kopisApiRepository.save({
-    //   mt20id: data [ ]
-    //   prfnm: data
+    //   mt20id:
+    //   prfnm:
     //   prfpdfrom:
     //   prfpdto:
     //   fcltynm:
@@ -29,6 +29,7 @@ export class KopisApiService {
     //   openrun:
 
     // });
+    return await this.kopisApiRepository.save(kopisApiResult);
   }
 }
 
