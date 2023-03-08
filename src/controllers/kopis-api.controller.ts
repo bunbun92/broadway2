@@ -1,5 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
-import { KopisApiService } from './kopis-api.service';
+import { KopisApiService } from '../services/kopis-api.service';
 import axios from 'axios';
 import * as request from 'request';
 import { parseString } from 'xml2js';
@@ -47,15 +47,15 @@ export class KopisApiController {
             console.log(resultApi);
 
             kopisApiResult.push({
-              mt20id: resultApi.mt20id[0],
-              prfnm: resultApi.prfnm[0],
-              prfpdfrom: resultApi.prfpdfrom[0],
-              prfpdto: resultApi.prfpdto[0],
-              fcltynm: resultApi.fcltynm[0],
+              performId: resultApi.mt20id[0],
+              performName: resultApi.prfnm[0],
+              startDate: resultApi.prfpdfrom[0],
+              endDate: resultApi.prfpdto[0],
+              theater: resultApi.fcltynm[0],
               poster: resultApi.poster[0],
               genrenm: resultApi.genrenm[0],
-              prfstate: resultApi.prfstate[0],
-              openrun: resultApi.openrun[0],
+              performStatus: resultApi.prfstate[0],
+              // openrun: resultApi.openrun[0],
             });
           }
           console.log('haha');
