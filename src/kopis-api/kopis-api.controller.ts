@@ -1,8 +1,8 @@
 import { Controller, Get } from '@nestjs/common';
 import { KopisApiService } from './kopis-api.service';
 import axios from 'axios';
-import convert from 'xml-js';
-//import {KopisApi} from '../entities/kopisApi.entity'
+import * as request from 'request';
+import { parseString } from 'xml2js';
 
 @Controller('kopis-api')
 export class KopisApiController {
@@ -20,14 +20,13 @@ export class KopisApiController {
     //   return await this.kopisApiService.kopisCreate();
     // })
 
-    const request = require('request');
-    let parseString = require('xml2js').parseString;
-
+    // const request = require("request");
+    // axios async/awiat로 변경 하시면 좋음
     request(
-      'https://www.kopis.or.kr/openApi/restful/pblprfr?service=8ac72359a2b74f5f883f610f5d8df103&stdate=20230308&eddate=20231231&cpage=1&rows=10',
-      function (error, response, body) {
-        parseString(body, function (err, result) {
-          let parseData = result;
+      'https://www.kopis.or.kr/openApi/restful/pblprfr?service=8ac72359a2b74f5f883f610f5d8df103&stdate=20230308&eddate=20231231&cpage=1&rows=1000',
+      (error, response, body) => {
+        parseString(body, async (err, result) => {
+          const parseData = result;
           console.log('apseer');
           console.log(parseData.dbs.db[0]);
           console.log(parseData.dbs.db[1]);
@@ -56,28 +55,13 @@ export class KopisApiController {
           }
           console.log('haha');
           console.log(kopisApiResult);
-          return this.kopisApiService.kopisCreate(kopisApiResult);
+          return await this.kopisApiService.kopisCreate(kopisApiResult);
         });
       }
     );
-    // const ois: OrderItem[] = [];
-    // for (const req of reqs) {
-    //   const oi = new OrderItem();
-    //   ois.push(oi);
-    // }
-    // await oiRepo.insert(ois);
-
-    // const apiUrl =
-    //   'https://www.kopis.or.kr/openApi/restful/pblprfr?service=8ac72359a2b74f5f883f610f5d8df103&stdate=20230308&eddate=20231231&cpage=1&rows=1000';
-
-    // const result = await axios.get(encodeURI(apiUrl));
-    // console.log(result);
-    // const response = convert.xml2json(result.data, {
-    //   compact: true,
-    //   spaces: 4,
-    // });
-    // console.log(response);
-    // const { data } = response;
-    // console.log(data);
   }
 }
+
+// 1. 데이터 베이스에서 mtid20 최대값을 찾는다
+// 2. api 요청후 mtid20의 최소 값이 > 데이터 베이스에서 mtid20 최대갑
+//                    [13  12 11] 10 9    > 10
