@@ -31,7 +31,7 @@ export class KopisApi {
   poster: string; //포스트이미지경로
 
   @Column('varchar', { length: 30 })
-  genrenm: string; //공연장르
+  genreName: string; //공연장르
 
   @Column('varchar', { length: 30 })
   performStatus: string; //공연상태
