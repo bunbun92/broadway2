@@ -3,9 +3,11 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Content } from './content.entity';
 
 @Entity({ schema: 'broadway', name: 'kopisApi' })
 export class KopisApi {
@@ -47,4 +49,7 @@ export class KopisApi {
 
   @DeleteDateColumn()
   deletedAt: Date | null;
+
+  @OneToMany(type => Content, contents => contents.kopisApi)
+  contents: Content;
 }
