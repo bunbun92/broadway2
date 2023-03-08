@@ -12,7 +12,7 @@ export class KopisApi {
   @PrimaryGeneratedColumn({ type: 'int', name: 'id' })
   id: number;
 
-  @Column('varchar', { length: 30 })
+  @Column('varchar', { length: 30, unique: true })
   mt20id: string; //공연 ID
 
   @Column('varchar', { length: 50 })

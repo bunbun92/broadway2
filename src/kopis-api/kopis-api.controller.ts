@@ -27,11 +27,16 @@ export class KopisApiController {
       (error, response, body) => {
         parseString(body, async (err, result) => {
           const parseData = result;
-          console.log('apseer');
-          console.log(parseData.dbs.db[0]);
-          console.log(parseData.dbs.db[1]);
-          console.log(parseData.dbs.db[2]);
-          console.log(parseData.dbs.db.length);
+          // console.log('apseer');
+          // console.log(parseData.dbs.db[0]);
+          // console.log(parseData.dbs.db[1]);
+          // console.log(parseData.dbs.db[10]);
+          // console.log(parseData.dbs.db.length);
+
+          // for / map 구현
+          // 1.DB : 1~10 존재 = [A]
+          // 2. 1 ~20  새로 받음  = [B]
+          // 3. for / map   A B 비교 해서 A 에 포함된것만 빼고 update insert
 
           const kopisApiResult = [];
 
@@ -43,7 +48,7 @@ export class KopisApiController {
 
             kopisApiResult.push({
               mt20id: resultApi.mt20id[0],
-              prfnm: resultApi.mt20id[0],
+              prfnm: resultApi.prfnm[0],
               prfpdfrom: resultApi.prfpdfrom[0],
               prfpdto: resultApi.prfpdto[0],
               fcltynm: resultApi.fcltynm[0],
