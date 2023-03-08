@@ -15,7 +15,7 @@ import { UserModule } from './user.module';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtConfigService } from '../config/jwt.config.service';
 import { AuthMiddleware } from '../auth/auth.middleware';
-import { KopisApiModule } from '../kopis-api/kopis-api.module';
+import { KopisApiModule } from './kopis-api.module';
 import { PerformModule } from './perform.module';
 import { ReviewModule } from './review.module';
 
