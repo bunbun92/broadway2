@@ -14,9 +14,6 @@ export class OrderList {
   @Column('int')
   userId: number;
 
-  @Column('float')
-  timeSaleRate: number;
-
   @Column('int')
   contentId: number;
 
@@ -25,6 +22,18 @@ export class OrderList {
 
   @Column('tinyint')
   orderStatus: number;
+
+  @Column('varchar', { length: 10 })
+  seat: string;
+
+  @Column('float')
+  timeSaleRate: number | null;
+
+  @Column('int')
+  priceBeforeDiscount: number | null;
+
+  @Column('int')
+  pricePaid: number | null;
 
   @CreateDateColumn()
   createdAt: Date;
