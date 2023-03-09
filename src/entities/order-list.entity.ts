@@ -26,7 +26,7 @@ export class OrderList {
   @Column('varchar', { length: 10 })
   seat: string;
 
-  @Column('float')
+  @Column('float', { default: 0 })
   timeSaleRate: number | null;
 
   @Column('int')
