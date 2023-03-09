@@ -7,6 +7,7 @@ import { OrderList } from 'src/entities/order-list.entity';
 import { Seat } from 'src/entities/seats.entity';
 import { TimeSale } from 'src/entities/time-sale.entity';
 import { KopisApi } from 'src/entities/kopisApi.entity';
+import { Review } from 'src/entities/review.entity';
 
 @Injectable()
 export class TypeOrmConfigService implements TypeOrmOptionsFactory {
@@ -20,7 +21,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
       username: this.configService.get<string>('DATABASE_USERNAME'),
       password: this.configService.get<string>('DATABASE_PASSWORD'),
       database: this.configService.get<string>('DATABASE_NAME'),
-      entities: [Content, User, Seat, OrderList, TimeSale, KopisApi],
+      entities: [Content, User, Seat, OrderList, TimeSale, KopisApi, Review],
       synchronize: false,
     };
   }
