@@ -9,6 +9,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Content } from './content.entity';
+import { TimeSale } from './time-sale.entity';
 
 @Entity({ schema: 'broadway', name: 'users' })
 export class User {
@@ -42,4 +43,7 @@ export class User {
 
   @OneToMany(type => Content, contents => contents.users)
   contents: Content;
+
+  @OneToMany(type => TimeSale, timeSale => timeSale.users)
+  timeSale: TimeSale;
 }
