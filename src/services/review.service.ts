@@ -32,4 +32,21 @@ export class ReviewService {
       review,
     });
   }
+
+  async updateReview(
+    id: number,
+    contentId: number,
+    userId: number,
+    rating: number,
+    review: string
+  ) {
+    await this.reviewRepository.update(
+      { id },
+      { contentId, userId, rating, review }
+    );
+  }
+
+  deleteReview(id: number) {
+    this.reviewRepository.softDelete(id);
+  }
 }
