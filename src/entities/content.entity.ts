@@ -3,35 +3,33 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { KopisApi } from './kopisApi.entity';
+import { User } from './user.entity';
 
 @Entity({ schema: 'broadway', name: 'contents' })
 export class Content {
   @PrimaryGeneratedColumn({ type: 'int', name: 'id' })
   id: number;
 
-  @Column('int')
-  stdate: number;
+  @Column('varchar', { length: 30 })
+  performId: string;
 
   @Column('int')
-  eddate: number;
+  performRound: number;
 
-  @Column('varchar', { length: 50 })
-  title: string;
+  @Column('varchar', { length: 30 })
+  performDate: string;
 
-  @Column('varchar', { length: 50 })
-  theater: string;
-
-  @Column('varchar', { length: 50 })
-  theaterCode: string;
-
-  @Column('varchar', { length: 50 })
-  genreCode: string;
+  @Column('varchar', { length: 30 })
+  performTime: string;
 
   @Column('int')
-  status: number;
+  userId: number;
 
   @CreateDateColumn()
   createdAt: Date;
@@ -41,4 +39,16 @@ export class Content {
 
   @DeleteDateColumn()
   deletedAt: Date | null;
+
+  @ManyToOne(type => KopisApi, kopisApi => kopisApi.contents, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'performId', referencedColumnName: 'performId' })
+  kopisApi: KopisApi;
+
+  @ManyToOne(type => User, users => users.contents, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'userId' })
+  users: User;
 }

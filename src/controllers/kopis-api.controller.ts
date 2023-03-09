@@ -53,7 +53,7 @@ export class KopisApiController {
               endDate: resultApi.prfpdto[0],
               theater: resultApi.fcltynm[0],
               poster: resultApi.poster[0],
-              genrenm: resultApi.genrenm[0],
+              genreName: resultApi.genrenm[0],
               performStatus: resultApi.prfstate[0],
               // openrun: resultApi.openrun[0],
             });
