@@ -15,13 +15,31 @@ import { UpdateReviewDto } from '../dto/update-review.dto';
 export class ReviewController {
   constructor(private readonly reviewService: ReviewService) {}
 
-  @Get('/:contentId')
-  async getReviewSpec(@Param('contentId') contentId: number) {
-    const review = await this.reviewService.getReviewSpec(contentId);
+  // 전체 리뷰목록 조회
+  @Get('/')
+  async getAllReviews() {
+    const review = await this.reviewService.getAllReviews();
 
     return review;
   }
 
+  // 특정 공연 리뷰목록 조회
+  @Get('/:contentId/reviews')
+  async getReviewsByContentId(@Param('contentId') contentId: number) {
+    const review = await this.reviewService.getReviewsByContentId(contentId);
+
+    return review;
+  }
+
+  // 리뷰 상세내용 조희
+  @Get('/:id')
+  async getReviewSpec(@Param('id') reviewId: number) {
+    const review = await this.reviewService.getReviewSpec(reviewId);
+
+    return review;
+  }
+
+  // 리뷰 작성
   @Post('/')
   createReview(@Body() data: CreateReviewDto) {
     return this.reviewService.createReview(
@@ -32,10 +50,11 @@ export class ReviewController {
     );
   }
 
-  @Put('/:reviewId')
-  updateReview(@Param('id') id: number, @Body() data: UpdateReviewDto) {
+  // 리뷰 수정
+  @Put('/:id')
+  updateReview(@Param('id') reviewId: number, @Body() data: UpdateReviewDto) {
     return this.reviewService.updateReview(
-      id,
+      reviewId,
       data.contentId,
       data.userId,
       data.rating,
@@ -43,8 +62,9 @@ export class ReviewController {
     );
   }
 
-  @Delete('/:reviewId')
-  deletePerform(@Param('id') id: number) {
-    return this.reviewService.deleteReview(id);
+  // 리뷰 삭제
+  @Delete('/:id')
+  deleteReview(@Param('id') reviewId: number) {
+    return this.reviewService.deleteReview(reviewId);
   }
 }
