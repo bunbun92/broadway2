@@ -12,57 +12,58 @@ export class PerformService {
   async getPerforms() {
     return await this.performRepository.find({
       where: { deletedAt: null },
+      relations: ['kopisApi', 'users'],
     });
   }
 
-  async getMyPerforms(thtrId: string) {
+  async getMyPerforms(userId: number) {
     return await this.performRepository.find({
-      where: { theaterCode: thtrId, deletedAt: null },
+      where: { userId, deletedAt: null },
+      relations: ['kopisApi', 'users'],
     });
   }
 
   createPerform(
-    stdate: number,
-    eddate: number,
-    title: string,
-    theater: string,
-    theaterCode: string,
-    genreCode: string,
-    status: number
+    performId: string,
+    performRound: number,
+    performDate: string,
+    performTime: string,
+    userId: number
   ) {
     this.performRepository.insert({
-      stdate,
-      eddate,
-      title,
-      theater,
-      theaterCode,
-      genreCode,
-      status,
+      performId,
+      performRound,
+      performDate,
+      performTime,
+      userId,
     });
   }
 
-  updatePerform(
+  async updatePerform(
     id: number,
-    stdate: number,
-    eddate: number,
-    title: string,
-    theater: string,
-    theaterCode: string,
-    genreCode: string,
-    status: number
+    performRound: number,
+    performDate: string,
+    performTime: string,
+    userId: number // userId webtoken 으로 수정 필요
   ) {
+    const currentContent = await this.performRepository.findOne({
+      where: { id, deletedAt: null },
+      select: ['performId'],
+    });
+
+    const performId = currentContent.performId;
+    //console.log(performId);
     this.performRepository.update(id, {
-      stdate,
-      eddate,
-      title,
-      theater,
-      theaterCode,
-      genreCode,
-      status,
+      performId,
+      performRound,
+      performDate,
+      performTime,
+      userId,
     });
   }
 
-  deletePerform(id: number) {
+  // delete user authorization 추가 필요
+  deletePerform(id: string) {
     this.performRepository.softDelete(id);
   }
 }

@@ -4,9 +4,11 @@ import {
   DeleteDateColumn,
   Entity,
   Index,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Content } from './content.entity';
 
 @Entity({ schema: 'broadway', name: 'users' })
 export class User {
@@ -37,4 +39,7 @@ export class User {
 
   @DeleteDateColumn()
   deletedAt: Date | null;
+
+  @OneToMany(type => Content, contents => contents.users)
+  contents: Content;
 }

@@ -20,43 +20,42 @@ export class PerformController {
     return await this.performService.getPerforms();
   }
 
-  @Get('/performance/:thtrId')
-  async getMyPerforms(@Param('thtrId') thtrId: string) {
-    return await this.performService.getMyPerforms(thtrId);
+  @Get('/performance/:userId')
+  async getMyPerforms(@Param('userId') userId: number) {
+    return await this.performService.getMyPerforms(userId);
   }
 
-  @Post('/performance')
-  createPerform(@Body() data: CreatePerformDto) {
+  @Post('/performance/:performId')
+  createPerform(
+    @Param('performId') performId: string,
+    @Body() data: CreatePerformDto
+  ) {
     return this.performService.createPerform(
-      data.stdate,
-      data.eddate,
-      data.title,
-      data.theater,
-      data.theaterCode,
-      data.genreCode,
-      data.status
+      performId,
+      data.performRound,
+      data.performDate,
+      data.performTime,
+      data.userId // userId webtoken 으로 수정 필요
     );
   }
 
-  @Put('/performance/:prfmId')
+  @Put('/performance/:contentId/:userId') // userId webtoken 으로 수정 필요
   updatePerform(
-    @Param('prfmId') prfmId: number,
+    @Param('contentId') contentId: number,
+    @Param('userId') userId: number,
     @Body() data: UpdatePerformDto
   ) {
     return this.performService.updatePerform(
-      prfmId,
-      data.stdate,
-      data.eddate,
-      data.title,
-      data.theater,
-      data.theaterCode,
-      data.genreCode,
-      data.status
+      contentId,
+      data.performRound,
+      data.performDate,
+      data.performTime,
+      userId
     );
   }
 
-  @Delete('/performance/:prfmId')
-  deletePerform(@Param('prfmId') prfmId: number) {
-    return this.performService.deletePerform(prfmId);
+  @Delete('/performance/:contentId') // user authorization 추가 필요
+  deletePerform(@Param('contentId') contentId: string) {
+    return this.performService.deletePerform(contentId);
   }
 }
