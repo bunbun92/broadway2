@@ -16,7 +16,7 @@ export class Content {
   @PrimaryGeneratedColumn({ type: 'int', name: 'id' })
   id: number;
 
-  @Column('varchar', { length: 30 })
+  @Column()
   performId: string;
 
   @Column('int')
