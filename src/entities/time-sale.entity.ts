@@ -13,8 +13,8 @@ export class TimeSale {
   @PrimaryGeneratedColumn({ type: 'int', name: 'id' })
   id: number;
 
-  @Column('varchar', { length: 30 })
-  performId: string;
+  @Column('int')
+  contentId: number;
 
   @Column('datetime')
   start: string;
@@ -32,6 +32,6 @@ export class TimeSale {
   deletedAt: Date | null;
 
   @ManyToOne(() => Content)
-  @JoinColumn({ name: 'performId' })
+  @JoinColumn({ name: 'contentId' })
   content: Content;
 }
