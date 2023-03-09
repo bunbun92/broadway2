@@ -18,6 +18,7 @@ import { AuthMiddleware } from '../auth/auth.middleware';
 import { KopisApiModule } from './kopis-api.module';
 import { PerformModule } from './perform.module';
 import { ReviewModule } from './review.module';
+import { TimeSaleModule } from './time-sale.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { ReviewModule } from './review.module';
     PerformModule,
     OrderSeatsModule,
     KopisApiModule,
+    TimeSaleModule,
     ReviewModule,
   ],
   controllers: [AppController],
