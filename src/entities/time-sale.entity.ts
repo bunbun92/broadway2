@@ -4,9 +4,11 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Content } from './content.entity';
+import { User } from './user.entity';
 
 @Entity({ schema: 'board', name: 'timeSale' })
 export class TimeSale {
@@ -17,21 +19,25 @@ export class TimeSale {
   contentId: number;
 
   @Column('datetime')
-  start: string;
+  startTime: string;
 
   @Column('datetime')
-  end: string;
+  endTime: string;
 
   @Column('float')
   rate: number;
 
   @Column('int')
-  performInfo: number;
+  userId: number;
 
   @DeleteDateColumn()
   deletedAt: Date | null;
 
-  @ManyToOne(() => Content)
+  @ManyToOne(type => User, users => users.timeSale)
+  @JoinColumn({ name: 'userId' })
+  users: User;
+
+  @OneToOne(type => Content, contents => contents.timeSale)
   @JoinColumn({ name: 'contentId' })
-  content: Content;
+  contents: Content;
 }

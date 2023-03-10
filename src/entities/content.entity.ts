@@ -5,10 +5,13 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { KopisApi } from './kopisApi.entity';
+import { TimeSale } from './time-sale.entity';
 import { User } from './user.entity';
 
 @Entity({ schema: 'broadway', name: 'contents' })
@@ -51,4 +54,7 @@ export class Content {
   })
   @JoinColumn({ name: 'userId' })
   users: User;
+
+  @OneToOne(type => TimeSale, timeSale => timeSale.contents)
+  timeSale: TimeSale;
 }
