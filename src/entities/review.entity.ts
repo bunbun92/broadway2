@@ -3,9 +3,12 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Comment } from './comment.entity';
+import { Like } from './like.entity';
 
 @Entity({ schema: 'broadway', name: 'reviews' })
 export class Review {
@@ -23,6 +26,12 @@ export class Review {
 
   @Column('varchar', { length: 1000 })
   review: string;
+
+  @OneToMany(() => Comment, comment => comment.review)
+  comments: Comment[];
+
+  @OneToMany(() => Like, like => like.review)
+  likes: Like[];
 
   @CreateDateColumn()
   createdAt: Date;
