@@ -8,7 +8,9 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Comment } from './comment.entity';
 import { Content } from './content.entity';
+import { Like } from './like.entity';
 import { TimeSale } from './time-sale.entity';
 
 @Entity({ schema: 'broadway', name: 'users' })
@@ -46,4 +48,10 @@ export class User {
 
   @OneToMany(type => TimeSale, timeSale => timeSale.users)
   timeSale: TimeSale;
+
+  @OneToMany(() => Comment, comment => comment.user)
+  comments: Comment[];
+
+  @OneToMany(() => Like, like => like.user)
+  likes: Like[];
 }

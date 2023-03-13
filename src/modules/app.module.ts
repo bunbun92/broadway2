@@ -19,6 +19,7 @@ import { KopisApiModule } from './kopis-api.module';
 import { PerformModule } from './perform.module';
 import { ReviewModule } from './review.module';
 import { TimeSaleModule } from './time-sale.module';
+import { CommentModule } from './comment.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { TimeSaleModule } from './time-sale.module';
     KopisApiModule,
     TimeSaleModule,
     ReviewModule,
+    CommentModule,
   ],
   controllers: [AppController],
   providers: [AppService, AuthMiddleware],
