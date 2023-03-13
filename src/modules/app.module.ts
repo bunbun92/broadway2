@@ -19,6 +19,7 @@ import { KopisApiModule } from './kopis-api.module';
 import { PerformModule } from './perform.module';
 import { ReviewModule } from './review.module';
 import { TimeSaleModule } from './time-sale.module';
+import { ScheduleModule } from '@nestjs/schedule';
 import { CommentModule } from './comment.module';
 
 @Module({
@@ -36,6 +37,7 @@ import { CommentModule } from './comment.module';
       useClass: JwtConfigService,
       inject: [ConfigService],
     }),
+    ScheduleModule.forRoot(),
     ContentModule,
     UserModule,
     PerformModule,

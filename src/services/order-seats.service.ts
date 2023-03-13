@@ -4,7 +4,7 @@ import { Content } from 'src/entities/content.entity';
 import { OrderList } from 'src/entities/order-list.entity';
 import { Seat } from 'src/entities/seats.entity';
 import { TimeSale } from 'src/entities/time-sale.entity';
-import { In, Repository } from 'typeorm';
+import { In, Not, Repository } from 'typeorm';
 
 @Injectable()
 export class OrderSeatsService {
@@ -17,16 +17,16 @@ export class OrderSeatsService {
     private orderListRepository: Repository<OrderList>
   ) {}
   //공연 정보 상세 출력
-  async getAContent(contentId: number) {
-    const content = await this.contentRepository.findOne({
+  async getAContentByPerformId(performId: string) {
+    const content = await this.contentRepository.find({
       where: {
         deletedAt: null,
-        id: contentId,
+        performId,
       },
     });
 
     //타임세일이 진행중일 때만 값이 반환됨 (length > 0)
-    const timeSale = await this.getCurrentTimeSale(contentId);
+    const timeSale = await this.getCurrentAllTimeSaleByPerformId(performId);
     if (timeSale.length === 0) {
       return content;
     }
@@ -34,12 +34,11 @@ export class OrderSeatsService {
     return { content, timeSale };
   }
 
-  //공연의 모든 좌석들의 정보 출력
-  async getAllSeatsOfAContent(contentId: number, performInfo: number) {
+  //공연의 특정회차 모든 좌석들의 정보 출력
+  async getAllSeatsOfAContent(contentId: number) {
     const seats = await this.seatRepository.find({
       where: {
         contentId,
-        performInfo,
         deletedAt: null,
       },
     });
@@ -51,25 +50,22 @@ export class OrderSeatsService {
   async seatsReservationTemporarilyWhilePay(
     userId: number,
     contentId: number,
-    performInfo: number,
     seats: Array<string>
   ) {
     let tempString = '';
     let falseCount = 0;
 
-    const timeSale = await this.getCurrentTimeSaleForARound(
-      contentId,
-      performInfo
-    );
+    // const timeSale = await this.getCurrentTimeSaleByPerformIdAndPerformRound(
+    //   contentId,
+    //   performInfo
+    // );
 
-    const timeSaleRate = timeSale[0]['rate'];
+    // const timeSaleRate = timeSale[0]['rate'];
 
     for (let i = 0; i < seats.length; i++) {
-      let statusCheck = await this.checkASeatOrderStatus(
-        contentId,
-        performInfo,
-        seats[i]
-      );
+      let statusCheck = await this.checkASeatOrderStatus(contentId, seats[i], [
+        0,
+      ]);
 
       if (statusCheck === false) {
         falseCount++;
@@ -79,22 +75,21 @@ export class OrderSeatsService {
 
     if (falseCount > 0) {
       return { msg: '이미 선택된 좌석입니다: ' + tempString };
-    } else {
-      for (let i = 0; i < seats.length; i++) {
-        await this.seatRepository.increment(
-          { contentId, performInfo, seat: seats[i] },
-          'orderStatus',
-          1
-        );
-      }
     }
 
+    // for (let i = 0; i < seats.length; i++) {}
+
     for (let i = 0; i < seats.length; i++) {
+      await this.seatRepository.update(
+        // { contentId, seat: seats[i], deletedAt: null },
+        // deletedAt: null 을 하면 안되는 이유가멀까
+        { contentId, seat: seats[i] },
+        { orderStatus: 1 }
+      );
+
       await this.orderListRepository.insert({
         userId,
-        timeSaleRate,
         contentId,
-        performInfo,
         orderStatus: 1,
         seat: seats[i],
       });
@@ -105,37 +100,30 @@ export class OrderSeatsService {
 
   //선택(임시확보, 선점)한 좌석 정보 표시
   //현재 가격관련된 정보 DB구조 안나와서 완성되면 추가완성 필요
-  async getReservedSeats(
-    userId: number,
-    contentId: number,
-    performInfo: number
-  ) {
+  async getReservedSeats(userId: number, contentId: number) {
     const seats = this.orderListRepository.find({
       where: {
         userId,
         contentId,
-        performInfo,
         orderStatus: In([1, 2]),
+        deletedAt: null,
       },
     });
 
     //타임세일이 진행중일 때만 값이 반환됨 (length > 0)
-    const timeSale = await this.getCurrentTimeSaleForARound(
-      contentId,
-      performInfo
-    );
+    const timeSale = await this.getCurrentTimeSaleByContentId(contentId);
     if (timeSale.length > 0) {
       return (await seats).map(seat => {
         return {
-          id: seat.id,
+          orderListid: seat.id,
           userId: seat.userId,
           contentId: seat.contentId,
-          performInfo: seat.performInfo,
           seat: seat.seat,
           orderStatus: seat.orderStatus,
-          timeSaleRate: seat.timeSaleRate,
+          timeSaleRate: timeSale[0]['rate'],
           priceAfterDiscount:
-            seat.priceBeforeDiscount * (1 - timeSale[0]['rate']),
+            // seat.priceBeforeDiscount * (1 - timeSale[0]['rate']),
+            1000 * (1 - timeSale[0]['rate']), //가격 구조 완성되면 제대로 설정해야함
         };
       });
     }
@@ -148,100 +136,288 @@ export class OrderSeatsService {
   async payReservedSeats(
     userId: number,
     contentId: number,
-    performInfo: number,
     seats: Array<string>
   ) {
-    let price: number = 1; // 결제관련 DB 구현 후 이부분 수정 필요
-    const timeSale = await this.getCurrentTimeSaleForARound(
-      contentId,
-      performInfo
-    );
+    let price: number = 1000; // 결제관련 DB 구현 후 이부분 수정 필요
+    const timeSale = await this.getCurrentTimeSaleByContentId(contentId);
+
     if (timeSale.length > 0) {
       price *= 1 - timeSale[0]['rate'];
     }
 
+    //현재 확보된 DB내의 좌석정보와 req.body에서 받은 좌석정보가 완벽하게 일치하는지 한번 더 검증
     const seatsOrderStatusCheck = this.getReservedSeatsInfoSpecific(
       userId,
       contentId,
-      performInfo,
-      seats
+      seats,
+      [1, 2]
     );
 
     if ((await seatsOrderStatusCheck).length < seats.length) {
       return { msg: '잘못된 접근입니다. 좌석 확보 정보 만료' };
     }
 
+    //아래 orderListRepository와 seatRepository join해서 한번에 바꾸는 방법 고려
     await this.orderListRepository.update(
       {
         userId,
         contentId,
-        performInfo,
+        deletedAt: null,
         orderStatus: In([1, 2]),
         seat: In(seats),
       },
       { orderStatus: 3, pricePaid: price }
     );
 
+    await this.seatRepository.update(
+      {
+        contentId,
+        deletedAt: null,
+        orderStatus: In([1, 2]),
+        seat: In(seats),
+      },
+      {
+        orderStatus: 3,
+      }
+    );
+
     return { msg: '구매 성공' };
   }
 
-  //예매 정보 수정 (좌석 변경)
+  //미결제 상태의 좌석 변경
+  //contents 테이블 확정되면 공연 시작시간과 연관지어서 변경 못하게 하는 기능 추가 필요
   async editReservedSeats(
     userId: number,
     contentId: number,
-    performInfo: number,
     seatsBefore: Array<string>,
     seatsAfter: Array<string>
   ) {
-    const seatsOrderStatusCheck = this.getReservedSeatsInfoSpecific(
+    //DB내의 좌석 정보와 req.body로 받은 좌석정보가 일치하는지 검증
+    const seats = await this.getReservedSeatsInfoSpecific(
       userId,
       contentId,
-      performInfo,
-      seatsBefore
+      seatsBefore,
+      [1, 2]
     );
 
-    if ((await seatsOrderStatusCheck).length < seatsBefore.length) {
+    if (seats.length < seatsBefore.length) {
       return { msg: '잘못된 접근입니다. 좌석 확보 정보 만료' };
     }
 
-    //좌석의 갯수가 달라질 때 예외 처리
-    const editLength: number = seatsAfter.length - seatsBefore.length;
-    if (editLength > 0) {
-      // this.seatsReservationTemporarilyWhilePay()
-    } else if (editLength === 0) {
-    } else {
+    //기존의 타임스탬프가 훼손되지 않도록 보존 후 입력할것임
+    const originalCreatedAt: Date = seats[0].createdAt;
+
+    //orderListId를 반환된 seats에서 추출
+    let orderListIds: Array<number> = new Array(seats.length);
+    for (let i = 0; i < seats.length; i++) {
+      orderListIds[i] = seats[i].id;
     }
 
-    // for(let i= 0; i < seatsAfter.length)
+    //좌석 전부 해제했을 때
+    if (seatsAfter.length === 0) {
+      await this.deleteSeatsByIds(userId, orderListIds, [1, 2]);
+      return { msg: '좌석 선택 해제 완료' };
+    }
+
+    //새로 바꿀 좌석이 다른 고객에게 선택된 좌석인지 검증
+    const alreadyChoosedSeats = await this.orderListRepository.find({
+      where: {
+        userId: Not(userId),
+        contentId,
+        seat: In(seatsAfter),
+      },
+      select: {
+        seat: true,
+      },
+    });
+
+    if (alreadyChoosedSeats.length > 0) {
+      return {
+        msg: '이미 다른 고객에게 선택된 좌석입니다.',
+        alreadyChoosedSeats,
+      };
+    }
+
+    //좌석의 갯수가 달라질 때 예외 처리
+    // const editLength: number = seatsAfter.length - seatsBefore.length;
+    // if (editLength > 0) {
+    //   // this.seatsReservationTemporarilyWhilePay()
+    // } else if (editLength === 0) {
+    //   for (let i = 0; i < editLength; i++) {
+    //     await this.orderListRepository.;
+    //   }
+    // } else {
+    // }
+
+    //일괄 예매취소 후 재예매 하는 방식으로 구현. 리턴값 필요 없어서 await 뺐음
+    await this.deleteSeatsByIds(userId, orderListIds, [1, 2]);
+    await this.seatsReservationTemporarilyWhilePay(
+      userId,
+      contentId,
+      seatsAfter
+    );
+
+    //createdAt을 기존의 타임스탬프로 변경
+    //논의 해보고 이 정보를 담을 컬럼 새로 추가 유무 결정
+    await this.orderListRepository.update(
+      { userId, contentId, seat: In(seatsAfter) },
+      { createdAt: originalCreatedAt }
+    );
+
+    return { msg: '좌석 변경 완료' };
   }
 
-  //예매 취소
-  async deleteReservedSeats(
+  //좌석 예매 취소 - 입력한 orderStatus Array에 해당하는 좌석 취소 (결제, 미결제 다 가능)
+  //contents 테이블 확정되면 공연 시작시간과 연관지어서 환불 못하게 하는 기능 추가 필요
+  async deleteSeatsByIds(
     userId: number,
-    contentId: number,
-    performInfo: number
+    orderListIds: Array<number>,
+    orderStatusArray: Array<number>
   ) {
-    // await this.orderListRepository.
+    //해당 유저의 orderListId가 올바른지 먼저 검증
+    const orders = await this.orderListRepository.find({
+      where: {
+        userId,
+        id: In(orderListIds),
+        orderStatus: In(orderStatusArray),
+      },
+    });
+
+    if (orders.length !== orderListIds.length) {
+      return { msg: '잘못된 접근입니다.' };
+    }
+
+    const query = `
+      update seats s
+      left join orderList ol on s.contentId = ol.contentId
+      set s.orderStatus = 0
+      where s.deletedAt is null
+      and s.seat = ol.seat
+      and ol.id in (${orderListIds})
+    `;
+
+    // seats 테이블 orderStatus 초기화
+    await this.seatRepository.query(query);
+    await this.orderListRepository.softDelete(orderListIds);
+
+    if (orderStatusArray.includes(3) && orderStatusArray.length === 1) {
+      return { msg: '예매 취소 성공' };
+    } else {
+      return { msg: '좌석 해제 성공' };
+    }
+  }
+
+  //선점 좌석 해제 기능 (deleteSeatsById와 기능적으로 동일)
+  async releaseSeatsById(
+    userId: number,
+    orderListIds: Array<number>,
+    orderStatusArray: Array<number>
+  ) {
+    const msg = await this.deleteSeatsByIds(
+      userId,
+      orderListIds,
+      orderStatusArray
+    );
+
+    return msg;
+  }
+
+  //지정된 초 만큼 초과된 선점 좌석들 해제 && 일정 주기 실행
+  async releaseSeatsInterval(
+    exceededSeconds: number,
+    orderStatusArray: Array<number>
+  ) {
+    //현재시간에서 지정된 초 만큼 빼서 timeNow로 toString
+    let date: Date = new Date();
+    date.setTime(date.getTime() - exceededSeconds * 1000);
+    const timeNow: String = this.dateToStringForQuery(date);
+
+    //선점 해제 대상 좌석들 orderList Id find
+    //updatedAt이 기준
+    let query = `
+      select ol.id from orderList ol
+      left join seats s on s.contentId = ol.contentId 
+      where ol.deletedAt is NULL
+      and s.seat = ol.seat
+      and ol.orderStatus in (${orderStatusArray})
+      and ol.updatedAt < "${timeNow}"
+    `;
+
+    const targetSeatsIds = await this.orderListRepository.query(query);
+
+    if (targetSeatsIds.length === 0) {
+      return {
+        msg: `선점 후 ${exceededSeconds}초 경과한 해제 필요 좌석 없음`,
+      };
+    }
+
+    let orderListIds: Array<number> = new Array(targetSeatsIds.length);
+
+    //array로 orderList Id들 추출
+    for (let i = 0; i < targetSeatsIds.length; i++) {
+      orderListIds[i] = targetSeatsIds[i].id;
+    }
+
+    //seats테이블 orderStatus 초기화, orderList 테이블 softDelete
+    query = `    
+      update seats s
+      left join orderList ol on s.contentId = ol.contentId
+      set s.orderStatus = 0
+      where s.deletedAt is null
+      and s.seat = ol.seat
+      and ol.id in (${orderListIds})
+    `;
+
+    await this.seatRepository.query(query);
+    await this.orderListRepository.softDelete(orderListIds);
+
+    return {
+      msg: `선점 후 ${exceededSeconds}초 경과한 ${targetSeatsIds.length}개의 좌석 선점 해제 완료`,
+    };
+  }
+
+  //결제내역, 결제 후 취소 내역 모두 출력
+  async getAllOrders(userId: number) {
+    const orders = await this.orderListRepository.find({
+      where: {
+        userId,
+        orderStatus: 3,
+      },
+      order: {
+        id: 'DESC',
+      },
+    });
+
+    return orders;
+  }
+
+  async getAnOrder(userId: number, orderId: number) {
+    const order = await this.orderListRepository.findOne({
+      where: {
+        id: orderId,
+        userId,
+        orderStatus: 3,
+      },
+    });
+
+    return order;
   }
 
   // 여기서부터 API 미연결 함수들
   //타임세일 정보 출력 (모든 회차)
-  async getCurrentTimeSale(contentId: number) {
+  async getCurrentAllTimeSaleByPerformId(performId: string) {
     let today: Date = new Date();
     let timeNow: string = this.dateToStringForQuery(today);
 
-    let query =
-      `select contentId, performInfo, rate, ` +
-      `start` +
-      `, ` +
-      `end` +
-      ` from timeSale ts
-      left join contents c on c.id = ts.contentId
-      where ts.` +
-      `end` +
-      ` > "${timeNow}" and ts. ` +
-      `start` +
-      `<= "${timeNow}" and ts.contentId = ${contentId}`;
+    let query = `
+      select c. performId, ts.contentId, c.performRound, rate, startTime, endTime from contents c
+      left join timeSale ts on c.id = ts.contentId 
+      where c.deletedAt is null
+      and ts.deletedAt is null
+      and c.performId = "${performId}"
+      and ts.endTime > "${timeNow}"
+      and ts.startTime < "${timeNow}"
+      `;
 
     const timeSale = await this.timeSaleRepository.query(query);
 
@@ -249,22 +425,19 @@ export class OrderSeatsService {
   }
 
   //타임세일 정보 출력 (특정 회차)
-  async getCurrentTimeSaleForARound(contentId: number, performInfo: number) {
+  async getCurrentTimeSaleByContentId(contentId: number) {
     let today: Date = new Date();
     let timeNow: string = this.dateToStringForQuery(today);
 
-    let query =
-      `select contentId, performInfo, rate, ` +
-      `start` +
-      `, ` +
-      `end` +
-      ` from timeSale ts
-      left join contents c on c.id = ts.contentId
-      where ts.` +
-      `end` +
-      ` > "${timeNow}" and ts. ` +
-      `start` +
-      `<= "${timeNow}" and ts.contentId = ${contentId} and ts.performInfo = ${performInfo}`;
+    let query = `
+      select c. performId, ts.contentId, c.performRound, rate, startTime, endTime from contents c
+      left join timeSale ts on c.id = ts.contentId 
+      where c.deletedAt is null
+      and ts.deletedAt is null
+      and ts.contentId = ${contentId}
+      and ts.endTime > "${timeNow}"
+      and ts.startTime < "${timeNow}"
+      `;
 
     const timeSale = await this.timeSaleRepository.query(query);
 
@@ -285,23 +458,22 @@ export class OrderSeatsService {
     return result;
   }
 
-  //예매 가능한(orderStatus === 0) 좌석이 있는지 검증 함수
+  //설정한 orderStatus들의 좌석이 존재하는지 검증 함수
   async checkASeatOrderStatus(
     contentId: number,
-    performInfo: number,
-    seat: string
+    seat: string,
+    orderStatusArray: Array<number>
   ): Promise<boolean> {
     const result = await this.seatRepository.findOne({
       where: {
         contentId,
-        performInfo,
         seat,
-        orderStatus: 0,
+        orderStatus: In(orderStatusArray),
         deletedAt: null,
       },
     });
 
-    if (result == null) {
+    if (result === null) {
       return false;
     }
     return true;
@@ -311,15 +483,15 @@ export class OrderSeatsService {
   async getReservedSeatsInfoSpecific(
     userId: number,
     contentId: number,
-    performInfo: number,
-    seats: Array<string>
+    seats: Array<string>,
+    orderStatusArray: Array<number>
   ) {
     const result = await this.orderListRepository.find({
       where: {
         userId,
         contentId,
-        performInfo,
-        orderStatus: In([1, 2]),
+        deletedAt: null,
+        orderStatus: In(orderStatusArray),
         seat: In(seats),
       },
     });
