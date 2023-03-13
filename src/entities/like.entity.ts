@@ -15,9 +15,6 @@ export class Like {
   @PrimaryGeneratedColumn({ type: 'int', name: 'id' })
   id: number;
 
-  // @Column('int')
-  // reviewid: number;
-
   @ManyToOne(() => Review, review => review.likes)
   review: Review;
 
@@ -28,7 +25,7 @@ export class Like {
   // userid: number;
 
   @Column('varchar', { length: 400 })
-  commnet: string;
+  comment: string;
 
   @CreateDateColumn()
   createdAt: Date;
