@@ -21,6 +21,8 @@ import { ReviewModule } from './review.module';
 import { TimeSaleModule } from './time-sale.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { ScheduleModule } from '@nestjs/schedule';
+import { CommentModule } from './comment.module';
 
 @Module({
   imports: [
@@ -47,6 +49,7 @@ import { join } from 'path';
     KopisApiModule,
     TimeSaleModule,
     ReviewModule,
+    CommentModule,
   ],
   controllers: [AppController],
   providers: [AppService, AuthMiddleware],
