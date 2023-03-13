@@ -19,6 +19,8 @@ import { KopisApiModule } from './kopis-api.module';
 import { PerformModule } from './perform.module';
 import { ReviewModule } from './review.module';
 import { TimeSaleModule } from './time-sale.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -34,6 +36,9 @@ import { TimeSaleModule } from './time-sale.module';
       imports: [ConfigModule],
       useClass: JwtConfigService,
       inject: [ConfigService],
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', '../static'),
     }),
     ContentModule,
     UserModule,
