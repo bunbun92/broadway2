@@ -74,7 +74,8 @@
         align-items: center;
       }
       .header_nav_home {
-        width: 400px;
+        width: 600px;
+        height: 100%;
       }
       .logo {
         width: 400px;
@@ -91,7 +92,10 @@
 
         display: flex;
         justify-content: end;
-        align-items: center;
+        align-items: end;
+      }
+      .header_nav_columns {
+        margin-right: 20px;
       }
       .header_under {
         width: 100%;
@@ -99,16 +103,37 @@
 
         display: flex;
         align-items: center;
+        justify-content: space-between;
+      }
+      .header_under a {
+        color: #ffcd4a;
+        font-weight: bold;
+        font-size: 20px;
+        text-decoration: none;
+      }
+      .header_under_zone1 {
+        width: 80%;
+        height: 100%;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+
+        background-color: aqua;
+      }
+      .header_under_zone2 {
+        width: 20%;
+        height: 100%;
+        background-color: yellowgreen;
+
+        display: flex;
+        align-items: center;
         justify-content: end;
       }
-      .header_nav_columns {
-        margin-right: 20px;
-      }
-
       a {
         color: white;
         font-weight: bold;
-        font-size: 13px;
+        font-size: 15px;
         text-decoration: none;
       }
 
@@ -212,13 +237,12 @@
       .reserveBtn {
         width: 175px;
         height: 40px;
-        background-color: goldenrod;
+        background-color: #ffcd4a;
 
         border-radius: 10px;
         border: 0px;
 
         font-weight: 600;
-        color: white;
       }
       .oneSet {
         display: flex;
@@ -242,19 +266,24 @@
             </div>
           </div>
           <div class="header_under">
-            <!-- <button style="background-color: black; border: none">
-              <img
-                src="img/search.png"
-                style="height: 25px"
-                onclick="search()"
-              />
-            </button> -->
-            <form>
-              <p>
-                <input type="text" class="form-text" />
-                <input type="button" class="img-button" />
-              </p>
-            </form>
+            <span class="header_under_zone1">
+              <a href="/">빠른예매</a>
+              <a href="/">공연정보</a>
+              <a href="/">극장정보</a>
+              <a href="/"></a>
+            </span>
+            <span class="header_under_zone2">
+              <form>
+                <p>
+                  <input
+                    type="text"
+                    class="form-text"
+                    placeholder="공연명 검색"
+                  />
+                  <input type="button" class="img-button" />
+                </p>
+              </form>
+            </span>
           </div>
         </span>
       </nav>
