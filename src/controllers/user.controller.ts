@@ -16,14 +16,6 @@ export class UserController {
 
   @Post('/signup')
   async createUser(@Body() data: CreateUserDto) {
-    // const id = data.userId;
-    // const pw = data.password;
-    // const name = data.name;
-    // const email = data.email;
-    // const type = data.userType;
-    // if (!id || !pw || !name || !email || !type) {
-    //   throw new NotAcceptableException('모든 항목을 입력하세요.');
-    // }
     return await this.userService.createUser(
       data.userId,
       data.password,

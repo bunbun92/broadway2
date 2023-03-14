@@ -1,4 +1,5 @@
 import { IsNumber, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class CreateUserDto {
   @IsString()
@@ -13,6 +14,7 @@ export class CreateUserDto {
   @IsString()
   readonly email: string;
 
+  @Type(() => Number)
   @IsNumber()
   readonly userType: number;
 }

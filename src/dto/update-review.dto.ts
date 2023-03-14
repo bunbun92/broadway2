@@ -4,9 +4,6 @@ import { Type } from 'class-transformer';
 export class UpdateReviewDto {
   @Type(() => Number)
   @IsNumber()
-  readonly reviewId: number;
-
-  @IsNumber()
   readonly contentId: number;
 
   @IsNumber()
