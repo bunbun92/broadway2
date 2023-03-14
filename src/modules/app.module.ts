@@ -42,6 +42,7 @@ import { CommentModule } from './comment.module';
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', '../static'),
     }),
+    ScheduleModule.forRoot(),
     ContentModule,
     UserModule,
     PerformModule,
