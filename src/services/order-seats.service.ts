@@ -101,7 +101,7 @@ export class OrderSeatsService {
   //선택(임시확보, 선점)한 좌석 정보 표시
   //현재 가격관련된 정보 DB구조 안나와서 완성되면 추가완성 필요
   async getReservedSeats(userId: number, contentId: number) {
-    const seats = this.orderListRepository.find({
+    const seats = await this.orderListRepository.find({
       where: {
         userId,
         contentId,
@@ -113,7 +113,7 @@ export class OrderSeatsService {
     //타임세일이 진행중일 때만 값이 반환됨 (length > 0)
     const timeSale = await this.getCurrentTimeSaleByContentId(contentId);
     if (timeSale.length > 0) {
-      return (await seats).map(seat => {
+      return seats.map(seat => {
         return {
           orderListid: seat.id,
           userId: seat.userId,
@@ -249,7 +249,7 @@ export class OrderSeatsService {
     // } else {
     // }
 
-    //일괄 예매취소 후 재예매 하는 방식으로 구현. 리턴값 필요 없어서 await 뺐음
+    //일괄 예매취소 후 재예매 하는 방식으로 구현.
     await this.deleteSeatsByIds(userId, orderListIds, [1, 2]);
     await this.seatsReservationTemporarilyWhilePay(
       userId,
