@@ -24,6 +24,7 @@ import { join } from 'path';
 // import { ScheduleModule } from '@nestjs/schedule';
 import { CommentModule } from './comment.module';
 import { RouterModule } from '../renderers/router.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
