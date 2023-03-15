@@ -23,6 +23,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 // import { ScheduleModule } from '@nestjs/schedule';
 import { CommentModule } from './comment.module';
+import { RouterModule } from '../renderers/router.module';
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import { CommentModule } from './comment.module';
       rootPath: join(__dirname, '..', '../static'),
       // serveRoot: '/static',
     }),
+    ScheduleModule.forRoot(),
     ContentModule,
     UserModule,
     PerformModule,
@@ -51,6 +53,7 @@ import { CommentModule } from './comment.module';
     TimeSaleModule,
     ReviewModule,
     CommentModule,
+    RouterModule,
   ],
   controllers: [AppController],
   providers: [AppService, AuthMiddleware],

@@ -116,13 +116,6 @@ export class OrderSeatsController {
     return msg;
   }
 
-  // @Delete('/releaseSeatsInterval/:seconds')
-  // async releaseSeatsInterval(@Param('seconds') seconds: number) {
-  //   const msg = await this.orderSeatsService.releaseSeatsInterval(seconds, [1]);
-
-  //   return msg;
-  // }
-
   @Get('/orders')
   async getAllOrders() {
     const userId = 1;
