@@ -27,6 +27,7 @@ export class AppController {
   getSignup() {
     return { message: 'thank you!' };
   }
+
   // @Get()
   // getKopisApi(): string {
   //   return this.appService.getKopisApi();

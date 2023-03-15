@@ -21,7 +21,7 @@ import { ReviewModule } from './review.module';
 import { TimeSaleModule } from './time-sale.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
-import { ScheduleModule } from '@nestjs/schedule';
+// import { ScheduleModule } from '@nestjs/schedule';
 import { CommentModule } from './comment.module';
 import { RouterModule } from '../renderers/router.module';
 
@@ -42,6 +42,7 @@ import { RouterModule } from '../renderers/router.module';
     }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', '../static'),
+      // serveRoot: '/static',
     }),
     ScheduleModule.forRoot(),
     ContentModule,
