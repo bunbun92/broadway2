@@ -1,9 +1,18 @@
 import { Controller, Get, Render } from '@nestjs/common';
 
-@Controller('router')
+// @Controller('router')
+// export class RouterController {
+//   @Get('/')
+//   @Render('test.ejs')
+//   getTest() {
+//     return { msg: 'test' };
+//   }
+// }
+
+@Controller('comment')
 export class RouterController {
   @Get('/')
-  @Render('test.ejs')
+  @Render('comment.ejs')
   getTest() {
     return { msg: 'test' };
   }
