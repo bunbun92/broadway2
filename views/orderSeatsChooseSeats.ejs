@@ -23,42 +23,7 @@
     ></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
-      $(document).ready(function () {
-        get_products();
-        random_products();
-      });
-
-      function get_products() {
-        $.ajax({
-          type: 'GET',
-          url: '/products',
-          data: {},
-          success: function (response) {
-            for (let e of response.data) {
-              let id = e.productId;
-              let name = e.productName;
-              let spec = e.productExp;
-              let price = e.price;
-              let photo = e.productPhoto;
-              let quantity = e.quantity;
-              let count = e.userCount;
-              let created = e.createdAt;
-              let updated = e.updatedAt;
-              let temp_html = `<a class ="divTextHidden" href="/${id}"><div class="products">
-                            <div class="photoBox">
-                              <img src="${photo}"/>
-                            </div>
-                            <p>${name}</p>
-                            <p>${price}원</p>
-                          </div></a>
-                          <div class = "displayNone">${spec}${quantity}${count}${created}${updated}</div>`;
-              $('.product_list').append(temp_html);
-            }
-          },
-        });
-      }
-
-      function search() {}
+      $(document).ready(function () {});
     </script>
     <style>
       /* header */
@@ -234,32 +199,37 @@
       }
 
       .orderSeatsleftZone {
-        background-color: aqua;
+        background-color: rgb(48, 46, 46);
         display: inline-block;
         width: 800px;
         height: 600px;
         border-radius: 20px 20px 20px 20px / 20px 20px 20px 20px;
+        border: 1px solid rgb(168, 168, 168);
         margin-right: 10px;
       }
 
       .orderSeatsRightZone {
-        background-color: yellow;
+        background-color: rgb(46, 46, 48);
+        border: 1px solid rgb(168, 168, 168);
         display: inline-block;
         width: 300px;
         border-radius: 20px 20px 20px 20px / 20px 20px 20px 20px;
       }
 
       .stageZone {
+        /* background-color: rgb(87, 196, 159); */
         margin-top: 20px;
         display: flex;
         justify-content: center;
-        background-color: rgb(87, 196, 159);
       }
 
       .stage {
+        background-color: rgb(201, 199, 199);
         width: 400px;
         height: 50px;
-        background-color: grey;
+        color: rgb(56, 56, 56);
+        font-size: 170%;
+        font-weight: bold;
         text-align: center;
         border-radius: 10px 10px 10px 10px / 10px 10px 10px 10px;
       }
@@ -269,14 +239,14 @@
       }
 
       .seatsZone {
+        /* background-color: rgb(88, 88, 243); */
         margin-top: 40px;
         display: flex;
         justify-content: center;
-        background-color: rgb(88, 88, 243);
       }
 
       .seats {
-        background-color: blueviolet;
+        /* background-color: blueviolet; */
       }
 
       .seatsHorizontalLine {
@@ -284,14 +254,15 @@
         margin-top: 5px;
       }
       .seat {
+        background-color: lightgray;
         width: 30px;
         height: 30px;
         margin: 5px;
-        padding: 5px;
+        padding: 3px;
         display: inline-block;
         border-radius: 5px 5px 5px 5px / 5px 5px 5px 5px;
-        border-color: black;
-        background-color: lightgray;
+        border: 2px solid orange;
+        font-weight: bold;
       }
 
       .seat:hover {
@@ -300,78 +271,157 @@
       }
 
       .showCurrentContentZone {
+        /* background-color: rgb(206, 206, 206); */
+        border-radius: 10px 10px 0px 0px / 10px 10px 10px 10px;
+        border-bottom: 1px solid rgb(196, 196, 196);
+        border: 1px solid rgb(214, 214, 214);
+        color: rgb(236, 236, 236);
+
+        margin-left: 7.5px;
         margin-top: 10px;
+        width: 95%;
         height: 15%;
-        background-color: saddlebrown;
+
         display: flex;
         justify-content: center;
       }
 
       .currentContent {
-        background-color: chocolate;
+        /* background-color: chocolate; */
         text-align: center;
+        font-size: 120%;
+        font-weight: bold;
       }
 
       .choosedSeatsListZone {
+        /* background-color: rgb(161, 134, 134); */
         margin-top: 10px;
         height: 55%;
-        background-color: rgb(161, 134, 134);
+
         /* display: flex; */
         /* justify-content: center; */
       }
 
       .choosedSeatList {
+        /* background-color: darkolivegreen; */
+        /* border-radius: 10px 10px 10px 10px / 10px 10px 10px 10px; */
+        /* border-top: 1px solid white;
+        border-bottom: 1px solid white; */
         height: 20%;
-        margin-top: 5px;
-        background-color: darkolivegreen;
+        margin-top: 10px;
+
         /* display: inline-block; */
       }
 
+      .partitionLine {
+        margin-top: 10px;
+        border-top: 1px solid rgb(223, 223, 223);
+      }
+
       .choosedSeatListLeftZone {
+        /* border-radius: 10px 10px 10px 10px / 10px 10px 10px 10px; */
+        border: 1px solid rgb(202, 202, 202);
+        margin-left: 10px;
+        /* background-color: rgb(204, 204, 204); */
         display: inline-block;
         width: 80%;
-        background-color: antiquewhite;
+        color: whitesmoke;
       }
 
       .showTheaterAndSeat {
-        background-color: darkkhaki;
+        /* background-color: darkkhaki; */
+        margin-top: 5px;
+        margin-left: 20px;
         float: left;
         text-align: center;
       }
 
+      .boldSeatNumber {
+        font-size: 130%;
+      }
+
       .showGradeAndPrice {
-        background-color: darkcyan;
+        /* background-color: darkcyan; */
+        margin-top: 7px;
+        margin-right: 7px;
         float: right;
         text-align: right;
       }
 
       .choosedSeatListRightZone {
-        display: inline-block;
-        background-color: aquamarine;
+        /* background-color: aquamarine; */
+        display: inline;
+      }
+
+      .cancelButton {
+        width: 10%;
+        margin-top: 5%;
+        margin-right: 3.5%;
+        float: right;
+      }
+
+      .cancelButton:hover {
+        filter: brightness(0.7);
+        cursor: pointer;
+      }
+
+      .cancelButton:active {
+        margin-top: 5.2%;
+        margin-right: 3.1%;
+        border-radius: 8.5px;
+        filter: brightness(0.7);
+        /* box-shadow: 1px 1px 0 rgb(0, 0, 0, 0.5); */
+        position: relative;
       }
 
       .showPriceZone {
+        /* background-color: deeppink; */
         height: 7%;
         margin-top: 10px;
-        background-color: deeppink;
+        border-top: 1px solid rgb(201, 201, 201);
+
         display: flex;
         justify-content: center;
       }
 
       .price {
-        background-color: cadetblue;
+        margin-top: 3px;
+        color: rgb(233, 233, 233);
+        font-weight: bold;
+        font-size: 120%;
+        /* background-color: cadetblue; */
       }
 
       .postButtonZone {
-        height: 15%;
-        margin-top: 10px;
-        background-color: hotpink;
+        /* background-color: hotpink; */
+        height: 10%;
+        /* margin-top: 5px; */
         display: flex;
         justify-content: center;
       }
 
-      .postButtons {
-        background-color: chartreuse;
+      .postButtonArea {
+        /* background-color: chartreuse; */
+        text-align: center;
+        /* background-color: white; */
+        /* border-radius: 5px 5px 5px 5px / 5px 5px 5px 5px; */
+      }
+
+      .postButton {
+        border: 1px solid rgb(207, 207, 207);
+        margin-top: 7px;
+        font-size: 130%;
+        border-radius: 5px 5px 5px 5px / 5px 5px 5px 5px;
+      }
+
+      .postButton:hover {
+        background-color: orange;
+      }
+
+      .postButton:active {
+        margin-top: 8px;
+        margin-right: -1px;
+        background-color: orange;
       }
     </style>
     <title>broadway9th</title>
@@ -450,45 +500,52 @@
               14:20 ~ 16:20 <br />
             </span>
           </div>
+          <div class="partitionLine"></div>
           <div class="choosedSeatsListZone">
             <div class="choosedSeatList">
               <span class="choosedSeatListLeftZone">
                 <span class="showTheaterAndSeat">
                   예술의전당 <br />
-                  C1
+                  <span class="boldSeatNumber">C1</span>
                 </span>
                 <span class="showGradeAndPrice">
                   R석 <br />
                   ₩25,000
                 </span>
               </span>
-              <span class="choosedSeatListRightZone">XXX</span>
+              <span class="choosedSeatListRightZone"
+                ><img src="img/cancel.png" class="cancelButton"
+              /></span>
             </div>
             <div class="choosedSeatList">
               <span class="choosedSeatListLeftZone">
                 <span class="showTheaterAndSeat">
                   예술의전당 <br />
-                  C2
+                  <span class="boldSeatNumber">C2</span>
                 </span>
                 <span class="showGradeAndPrice">
                   R석 <br />
                   ₩25,000
                 </span>
               </span>
-              <span class="choosedSeatListRightZone">XXX</span>
+              <span class="choosedSeatListRightZone"
+                ><img src="img/cancel.png" class="cancelButton"
+              /></span>
             </div>
             <div class="choosedSeatList">
               <span class="choosedSeatListLeftZone">
                 <span class="showTheaterAndSeat">
                   예술의전당 <br />
-                  C3
+                  <span class="boldSeatNumber">C3</span>
                 </span>
                 <span class="showGradeAndPrice">
                   R석 <br />
                   ₩25,000
                 </span>
               </span>
-              <span class="choosedSeatListRightZone">XXX</span>
+              <span class="choosedSeatListRightZone"
+                ><img src="img/cancel.png" class="cancelButton"
+              /></span>
             </div>
           </div>
 
@@ -496,26 +553,13 @@
             <span class="price"> 예상 금액: ₩75,000 </span>
           </div>
           <div class="postButtonZone">
-            <span class="postButtons"><button>다 골랐어요</button></span>
+            <span class="postButtonArea">
+              <button class="postButton">다 골랐어요</button></span
+            >
           </div>
         </div>
       </div>
     </div>
     <!-- <script src="../static/scripts/home.js"></script> -->
-    <script>
-      function logout() {
-        $.ajax({
-          type: 'GET',
-          url: '/api/auth/logout',
-          success: function (response) {
-            alert(response.message);
-            window.location.href = '/login';
-          },
-          error: function (response) {
-            alert(response.responseJSON.message);
-          },
-        });
-      }
-    </script>
   </body>
 </html>
