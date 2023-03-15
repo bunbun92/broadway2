@@ -13,4 +13,10 @@ export class RenderOrderSeatsController {
   getTest3() {
     return { msg: 'test3요' };
   }
+
+  @Get('/chooseSeats')
+  @Render('orderSeatsChooseSeats.ejs')
+  getOrderSeatsChooseSeats() {
+    return;
+  }
 }
