@@ -1,16 +1,17 @@
 import { Controller, Get, Render } from '@nestjs/common';
+import { join } from 'path';
 import { AppService } from '../services/app.service';
 
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  // @Get()
-  // getHello(): string {
-  //   return this.appService.getHello();
-  // }
+  @Get('/getHello')
+  getHello(): string {
+    return this.appService.getHello();
+  }
 
-  @Get()
+  @Get('/')
   @Render('main.ejs')
   getMain() {
     return { message: 'thank you!' };
@@ -27,6 +28,7 @@ export class AppController {
   getSignup() {
     return { message: 'thank you!' };
   }
+
   // @Get()
   // getKopisApi(): string {
   //   return this.appService.getKopisApi();
