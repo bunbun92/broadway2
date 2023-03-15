@@ -16,22 +16,35 @@ export class OrderSeatsService {
     @InjectRepository(OrderList)
     private orderListRepository: Repository<OrderList>
   ) {}
-  //공연 정보 상세 출력
-  async getAContentByPerformId(performId: string) {
-    const content = await this.contentRepository.find({
+  //공연 정보 상세 출력 (모든 회차)
+  async getContentsByPerformId(performId: string) {
+    const contents = await this.contentRepository.find({
       where: {
         deletedAt: null,
         performId,
       },
+      relations: ['kopisApi'],
     });
 
     //타임세일이 진행중일 때만 값이 반환됨 (length > 0)
     const timeSale = await this.getCurrentAllTimeSaleByPerformId(performId);
     if (timeSale.length === 0) {
-      return content;
+      return contents;
     }
 
-    return { content, timeSale };
+    return { contents, timeSale };
+  }
+
+  //공연 정보 상세 출력 (특정 회차)
+  async getAContentByContentId(contentId: number) {
+    const content = await this.contentRepository.findOne({
+      where: {
+        id: contentId,
+      },
+      relations: ['kopisApi'],
+    });
+
+    return content;
   }
 
   //공연의 특정회차 모든 좌석들의 정보 출력
@@ -41,6 +54,7 @@ export class OrderSeatsService {
         contentId,
         deletedAt: null,
       },
+      order: { seat: 'ASC' },
     });
 
     return seats;
