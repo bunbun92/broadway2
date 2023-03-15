@@ -23,81 +23,7 @@
     ></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
-      $(document).ready(function () {
-        printSeats(1);
-        printContent(1);
-      });
-
-      function printSeats(contentId) {
-        $.ajax({
-          type: 'GET',
-          url: `/order-seats/${contentId}/seats`,
-          success: function (response) {
-            let rows = response;
-            console.log(rows);
-
-            let tempHtml = `<div class="seatsHorizontalLine">`;
-            let currentSeatAlphabet = 'A';
-
-            document.getElementById('seats').innerHTML = '';
-
-            for (let i = 0; i < rows.length; i++) {
-              let seatAlphabet = rows[i].seat[0];
-              if (seatAlphabet !== currentSeatAlphabet) {
-                currentSeatAlphabet = seatAlphabet;
-
-                tempHtml += `</div><div class="seatsHorizontalLine">`;
-              }
-
-              if (rows[i].orderStatus > 0) {
-                tempHtml += `                                  
-                  <span class="seatDisable" id= "${rows[i].seat}">${rows[i].seat}</span>                
-              `;
-              } else {
-                tempHtml += `                                  
-                  <span class="seat" id= "${rows[i].seat}">${rows[i].seat}</span>                
-              `;
-              }
-            }
-
-            tempHtml += `</div>`;
-
-            $('#seats').append(tempHtml);
-
-            return;
-          },
-        });
-
-        return;
-      }
-
-      function printContent(contentId) {
-        $.ajax({
-          type: 'GET',
-          url: `/order-seats/content/${contentId}`,
-          success: function (response) {
-            console.log(response);
-            let tempHtml = ``;
-            document.getElementById('contentInfo').innerHTML = '';
-
-            let contentName = response['kopisApi']['performName'];
-            let round = response['performRound'];
-            let date = response['performDate'].split(' ')[0];
-            let time = response['performDate'].split(' ')[1].substr(0, 5);
-
-            tempHtml = `
-              ${contentName} ${round}회차 <br />
-              ${date} <br />
-              ${time} ~ 00:00 <br />
-            `;
-
-            $('#contentInfo').append(tempHtml);
-
-            return;
-          },
-        });
-        return;
-      }
+      // $(document).ready(function () {});
     </script>
     <style>
       /* header */
@@ -329,28 +255,14 @@
       }
       .seat {
         background-color: lightgray;
-        width: 40px;
-        height: 40px;
+        width: 30px;
+        height: 30px;
         margin: 5px;
         padding: 3px;
         display: inline-block;
         border-radius: 5px 5px 5px 5px / 5px 5px 5px 5px;
         border: 2px solid orange;
         font-weight: bold;
-        text-align: center;
-      }
-
-      .seatDisable {
-        background-color: rgb(34, 34, 34);
-        width: 40px;
-        height: 40px;
-        margin: 5px;
-        padding: 3px;
-        display: inline-block;
-        border-radius: 5px 5px 5px 5px / 5px 5px 5px 5px;
-        border: 2px solid rgb(155, 155, 155);
-        font-weight: bold;
-        text-align: center;
       }
 
       .seat:hover {
@@ -555,7 +467,7 @@
             </span>
           </div>
           <div class="seatsZone">
-            <span class="seats" id="seats">
+            <span class="seats">
               <div class="seatsHorizontalLine">
                 <span class="seat">A1</span>
                 <span class="seat">A2</span>
@@ -582,7 +494,7 @@
         </div>
         <div class="orderSeatsRightZone">
           <div class="showCurrentContentZone">
-            <span class="currentContent" id="contentInfo">
+            <span class="currentContent">
               위키드 Wicked 3회차 <br />
               23-02-03 <br />
               14:20 ~ 16:20 <br />
