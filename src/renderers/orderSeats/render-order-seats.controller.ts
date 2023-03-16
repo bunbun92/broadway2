@@ -14,9 +14,21 @@ export class RenderOrderSeatsController {
   //   return { msg: 'test3요' };
   // }
 
+  @Get('/checkAlreadyReserved')
+  @Render('orderSeatsCheckAlreadyReserved.ejs')
+  getOrderSeatsCheckAlreadyReserved() {
+    return;
+  }
+
   @Get('/chooseSeats')
   @Render('orderSeatsChooseSeats.ejs')
   getOrderSeatsChooseSeats() {
+    return;
+  }
+
+  @Get('/editSeats')
+  @Render('orderSeatsEditSeats.ejs')
+  getOrderSeatsEditSeats() {
     return;
   }
 

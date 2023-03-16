@@ -80,7 +80,7 @@ export class OrderSeatsController {
   @Post('/:contentId/payReservedSeats')
   async payReservedSeats(
     @Param('contentId') contentId: number,
-    @Body() data: UpdateOrderSeatsDto
+    @Body() data: CreateOrderSeatsDto
   ) {
     const userId = 1;
     const msg = await this.orderSeatsService.payReservedSeats(

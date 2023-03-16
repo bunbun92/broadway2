@@ -98,18 +98,29 @@ export class OrderSeatsService {
     // for (let i = 0; i < seats.length; i++) {}
 
     for (let i = 0; i < seats.length; i++) {
-      await this.seatRepository.update(
+      let price = 0;
+      const seatInfo = await this.seatRepository.findOne({
+        where: {
+          contentId,
+          seat: seats[i],
+        },
+      });
+
+      price = seatInfo.price;
+
+      this.seatRepository.update(
         // { contentId, seat: seats[i], deletedAt: null },
         // deletedAt: null 을 하면 안되는 이유가멀까
         { contentId, seat: seats[i] },
         { orderStatus: 1 }
       );
 
-      await this.orderListRepository.insert({
+      this.orderListRepository.insert({
         userId,
         contentId,
         orderStatus: 1,
         seat: seats[i],
+        priceBeforeDiscount: price,
       });
     }
 
@@ -119,29 +130,44 @@ export class OrderSeatsService {
   //선택(임시확보, 선점)한 좌석 정보 표시
   //현재 가격관련된 정보 DB구조 안나와서 완성되면 추가완성 필요
   async getReservedSeats(userId: number, contentId: number) {
-    const seats = await this.orderListRepository.find({
-      where: {
-        userId,
-        contentId,
-        orderStatus: In([1, 2]),
-        deletedAt: null,
-      },
-    });
+    // const seats = await this.orderListRepository.find({
+    //   where: {
+    //     userId,
+    //     contentId,
+    //     orderStatus: In([1, 2]),
+    //     deletedAt: null,
+    //   },
+    //   relations: ['seats'],
+    // });
+
+    const query = `
+      select ol.id, ol.userId, ol.contentId, ol.seat, ol.orderStatus, ol.priceBeforeDiscount, s.theater from orderList ol
+      left join seats s on s.contentId = ol.contentId
+      where s.seat = ol.seat
+      and ol.userId = ${userId}
+      and ol.contentId = ${contentId}
+      and ol.orderStatus in(1, 2)
+      and ol.deletedAt is null
+    `;
+
+    const seats = await this.orderListRepository.query(query);
 
     //타임세일이 진행중일 때만 값이 반환됨 (length > 0)
     const timeSale = await this.getCurrentTimeSaleByContentId(contentId);
     if (timeSale.length > 0) {
       return seats.map(seat => {
         return {
-          orderListid: seat.id,
+          orderListId: seat.id,
           userId: seat.userId,
           contentId: seat.contentId,
           seat: seat.seat,
           orderStatus: seat.orderStatus,
           timeSaleRate: timeSale[0]['rate'],
+          timeSaleEndTime: this.dateToStringForQuery(timeSale[0]['endTime']),
+          theater: seat.theater,
+          priceBeforeDiscount: seat.priceBeforeDiscount,
           priceAfterDiscount:
-            // seat.priceBeforeDiscount * (1 - timeSale[0]['rate']),
-            1000 * (1 - timeSale[0]['rate']), //가격 구조 완성되면 제대로 설정해야함
+            seat.priceBeforeDiscount * (1 - timeSale[0]['rate']), //가격 구조 완성되면 제대로 설정해야함
         };
       });
     }
@@ -156,23 +182,26 @@ export class OrderSeatsService {
     contentId: number,
     seats: Array<string>
   ) {
-    let price: number = 1000; // 결제관련 DB 구현 후 이부분 수정 필요
-    const timeSale = await this.getCurrentTimeSaleByContentId(contentId);
-
-    if (timeSale.length > 0) {
-      price *= 1 - timeSale[0]['rate'];
-    }
+    let price: number = 1; // 결제관련 DB 구현 후 이부분 수정 필요
 
     //현재 확보된 DB내의 좌석정보와 req.body에서 받은 좌석정보가 완벽하게 일치하는지 한번 더 검증
-    const seatsOrderStatusCheck = this.getReservedSeatsInfoSpecific(
+    const seatsOrderStatusCheck = await this.getReservedSeatsInfoSpecific(
       userId,
       contentId,
       seats,
       [1, 2]
     );
 
-    if ((await seatsOrderStatusCheck).length < seats.length) {
-      return { msg: '잘못된 접근입니다. 좌석 확보 정보 만료' };
+    if (seatsOrderStatusCheck.length < seats.length) {
+      return { errMsg: '잘못된 접근입니다. 좌석 확보 정보 만료' };
+    }
+
+    price = seatsOrderStatusCheck[0].priceBeforeDiscount;
+
+    const timeSale = await this.getCurrentTimeSaleByContentId(contentId);
+
+    if (timeSale.length > 0) {
+      price *= 1 - timeSale[0]['rate'];
     }
 
     //아래 orderListRepository와 seatRepository join해서 한번에 바꾸는 방법 고려
@@ -180,18 +209,17 @@ export class OrderSeatsService {
       {
         userId,
         contentId,
-        deletedAt: null,
+        // deletedAt: null,
         orderStatus: In([1, 2]),
         seat: In(seats),
-        timeSaleRate: timeSale[0]['rate'],
       },
-      { orderStatus: 3, pricePaid: price }
+      { orderStatus: 3, pricePaid: price, timeSaleRate: timeSale[0]['rate'] }
     );
 
     await this.seatRepository.update(
       {
         contentId,
-        deletedAt: null,
+        // deletedAt: null,
         orderStatus: In([1, 2]),
         seat: In(seats),
       },
