@@ -34,7 +34,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
         Comment,
         Like,
       ],
-      synchronize: true,
+      synchronize: false,
     };
   }
 }

@@ -1,4 +1,5 @@
 import { Controller, Get, Render, Res, Req, Post } from '@nestjs/common';
+import { join } from 'path';
 import { AppService } from '../services/app.service';
 import { Response, Request } from 'express';
 
@@ -18,6 +19,15 @@ export class AppController {
       console.log('true', jwt);
       res.render('main.ejs', loginTrue);
     }
+  @Get('/getHello')
+  getHello(): string {
+    return this.appService.getHello();
+  }
+
+  @Get('/')
+  @Render('main.ejs')
+  getMain() {
+    return { message: 'thank you!' };
   }
 
   @Get('/login')
