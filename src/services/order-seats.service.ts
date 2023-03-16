@@ -69,6 +69,10 @@ export class OrderSeatsService {
     let tempString = '';
     let falseCount = 0;
 
+    if (seats.length === 0 || seats.length > 4) {
+      return { errMsg: '잘못된 접근입니다. 클라이언트 변조 의심' };
+    }
+
     // const timeSale = await this.getCurrentTimeSaleByPerformIdAndPerformRound(
     //   contentId,
     //   performInfo
@@ -88,7 +92,7 @@ export class OrderSeatsService {
     }
 
     if (falseCount > 0) {
-      return { msg: '이미 선택된 좌석입니다: ' + tempString };
+      return { errMsg: '이미 선택된 좌석입니다: ' + tempString };
     }
 
     // for (let i = 0; i < seats.length; i++) {}
@@ -179,6 +183,7 @@ export class OrderSeatsService {
         deletedAt: null,
         orderStatus: In([1, 2]),
         seat: In(seats),
+        timeSaleRate: timeSale[0]['rate'],
       },
       { orderStatus: 3, pricePaid: price }
     );
