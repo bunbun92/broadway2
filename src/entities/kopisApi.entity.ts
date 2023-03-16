@@ -8,6 +8,8 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Content } from './content.entity';
+import { Theater } from './theater-info.entity';
+import { PriceInfo } from './theater-price.entity';
 
 @Entity({ schema: 'broadway', name: 'kopisApi' })
 export class KopisApi {
@@ -52,4 +54,7 @@ export class KopisApi {
 
   @OneToMany(type => Content, contents => contents.kopisApi)
   contents: Content;
+
+  @OneToMany(type => PriceInfo, priceInfo => priceInfo.kopisApi)
+  priceInfo: PriceInfo;
 }
