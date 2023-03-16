@@ -17,7 +17,10 @@ export class UserService {
     private jwtService: JwtService
   ) {}
 
-  async login(userId: string, password: string) {
+  async login(
+    userId: string,
+    password: string
+  ): Promise<{ accessToken: string } | undefined> {
     const user = await this.userRepository.findOne({
       where: { userId, deletedAt: null },
       select: ['id', 'password'],
@@ -34,8 +37,10 @@ export class UserService {
     }
 
     const payload = { id: user.id };
-    const accessToken = await this.jwtService.signAsync(payload);
-    return accessToken;
+    // const accessToken = await this.jwtService.signAsync(payload);
+    return {
+      accessToken: this.jwtService.sign(payload),
+    };
   }
 
   async createUser(
@@ -61,6 +66,12 @@ export class UserService {
     const payload = { id: insertResult.identifiers[0].id };
     const accessToken = await this.jwtService.signAsync(payload);
     return accessToken;
+  }
+
+  async getMyInfoById(id: number) {
+    return await this.userRepository.findOne({
+      where: { id, deletedAt: null },
+    });
   }
 
   async updateUser(

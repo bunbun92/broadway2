@@ -1,13 +1,13 @@
 function logout() {
   $.ajax({
-    type: 'GET',
-    url: '/api/auth/logout',
+    type: 'POST',
+    url: '/user/logout',
     success: function (response) {
-      alert(response.message);
-      window.location.href = '/login';
+      alert('로그아웃에 성공하였습니다.');
+      window.location.href = '/';
     },
     error: function (response) {
-      alert(response.responseJSON.message);
+      alert('로그아웃에 실패하였습니다.');
     },
   });
 }
@@ -47,4 +47,7 @@ function get_products() {
   });
 }
 
-function search() {}
+function customAlert(text) {
+  $('#alertText').text(text);
+  $('#alertModal').modal('show');
+}

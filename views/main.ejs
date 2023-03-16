@@ -27,8 +27,8 @@
     <title>broadway9th</title>
   </head>
   <body>
-    <%- include('header.ejs') %>
-
+    <% if(login) { %> <%- include('headerPostLogin.ejs') %> <% }else{ %> <%-
+    include('header.ejs') %> <% } %>
     <div class="zone1">
       <div class="postsWrap">
         <div class="postboxes">
