@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <!-- <link href="../static/styles/home.css" rel="stylesheet" type="text/css" /> -->
+    <meta http-equiv="page-enter" content="blendTrans(duration=0.3)" />
+    <meta http-equiv="page-exit" content="blendTrans(duration=0.3)" />
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -23,9 +25,14 @@
     ></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
+      let seatCountGlobal = 0;
+      let theaterGlobal = '';
+      let seatsArrayGlobal = new Array();
+
       $(document).ready(function () {
         printSeats(1);
         printContent(1);
+        sortAndPrintChoosedSeatsListAndTotalPrice();
       });
 
       function printSeats(contentId) {
@@ -35,6 +42,7 @@
           success: function (response) {
             let rows = response;
             console.log(rows);
+            theaterGlobal = rows[0].theater;
 
             let tempHtml = `<div class="seatsHorizontalLine">`;
             let currentSeatAlphabet = 'A';
@@ -43,6 +51,7 @@
 
             for (let i = 0; i < rows.length; i++) {
               let seatAlphabet = rows[i].seat[0];
+              let seat = rows[i].seat;
               if (seatAlphabet !== currentSeatAlphabet) {
                 currentSeatAlphabet = seatAlphabet;
 
@@ -50,12 +59,14 @@
               }
 
               if (rows[i].orderStatus > 0) {
-                tempHtml += `                                  
-                  <span class="seatDisable" id= "${rows[i].seat}">${rows[i].seat}</span>                
+                tempHtml += `
+                  <span class="seatDisable" id= "${seat}">${seat}</span>
               `;
               } else {
-                tempHtml += `                                  
-                  <span class="seat" id= "${rows[i].seat}">${rows[i].seat}</span>                
+                tempHtml += `
+                  <span class="seat" id= "${seat}" onclick="chooseSeat(${seat})">${seat}</span>
+                  <span style="display:hidden" id= "${seat}Grade" value="R"></span>
+                  <span style="display:hidden" id= "${seat}Price" value="${rows[i].price}"> </span>
               `;
               }
             }
@@ -97,6 +108,143 @@
           },
         });
         return;
+      }
+
+      function chooseSeat(seat) {
+        if (seatCountGlobal === 4) {
+          alert('한번에 4개의 좌석까지 예약할 수 있습니다.');
+          return;
+        }
+        seat.setAttribute('class', 'seatChoosed');
+        seat.setAttribute('onclick', `releaseSeat(${seat.getAttribute('id')})`);
+        pushSeatToSeatsArray(seat.getAttribute('id'), seatsArrayGlobal);
+        seatCountGlobal++;
+        sortAndPrintChoosedSeatsListAndTotalPrice();
+        // console.log(seatCountGlobal);
+        // console.log(seatsArrayGlobal);
+
+        return;
+      }
+
+      function releaseSeat(seat) {
+        seat.setAttribute('class', 'seat');
+        seat.setAttribute('onclick', `chooseSeat(${seat.getAttribute('id')})`);
+        spliceSeatFromSeatsArray(seat.getAttribute('id'), seatsArrayGlobal);
+        seatCountGlobal--;
+        sortAndPrintChoosedSeatsListAndTotalPrice();
+        // console.log(seatCountGlobal);
+        // console.log(seatsArrayGlobal);
+
+        return;
+      }
+
+      function sortAndPrintChoosedSeatsListAndTotalPrice() {
+        seatsArrayGlobal.sort();
+        let totalPrice = 0;
+        let tempHtml = `
+        `;
+
+        for (let i = 0; i < seatsArrayGlobal.length; i++) {
+          let price = document
+            .getElementById(`${seatsArrayGlobal[i]}Price`)
+            .getAttribute('value');
+          let grade = document
+            .getElementById(`${seatsArrayGlobal[i]}Grade`)
+            .getAttribute('value');
+
+          totalPrice += parseInt(price);
+
+          tempHtml += `
+            <div class="choosedSeatList">
+                <span class="choosedSeatListLeftZone">
+                  <span class="showTheaterAndSeat">
+                    ${theaterGlobal} <br />
+                    <span class="boldSeatNumber">${seatsArrayGlobal[i]}</span>
+                  </span>
+                  <span class="showGradeAndPrice">
+                    ${grade}석 <br />
+                    ₩${price}
+                  </span>
+                </span>
+                <span class="choosedSeatListRightZone"
+                  ><img src="img/cancel.png" class="cancelButton" onclick="releaseSeat(${seatsArrayGlobal[i]})"
+                /></span>
+              </div>
+          `;
+        }
+
+        document.getElementById('choosedSeatsListZone').innerHTML = '';
+        document.getElementById('showPriceZone').innerHTML = '';
+        $('#choosedSeatsListZone').append(tempHtml);
+        $('#showPriceZone').append(
+          `<span class="price"> 예상 금액: ₩${totalPrice} </span>`
+        );
+
+        return;
+      }
+
+      function pushSeatToSeatsArray(seat, array) {
+        array.push(seat);
+        return array;
+      }
+
+      function spliceSeatFromSeatsArray(seat, array) {
+        for (let i = 0; i < array.length; i++) {
+          if (seat === array[i]) {
+            array.splice(i, 1);
+            return array;
+          }
+        }
+
+        return;
+      }
+
+      async function nextStep() {
+        const link = '/render-order-seats/paySeats';
+
+        if (seatCountGlobal === 0) {
+          alert('좌석을 선택해 주세요');
+          return;
+        }
+
+        const check = await seatReservationWhilePay(1);
+        // console.log(check);
+
+        if (check === false) {
+          return;
+        }
+
+        location.href = link;
+
+        return;
+      }
+
+      function seatReservationWhilePay(contentId) {
+        // console.log(seatsArrayGlobal);
+
+        try {
+          $.ajax({
+            type: 'POST',
+            url: `/order-seats/${contentId}/seatsRTWP`,
+            data: {
+              seats: seatsArrayGlobal,
+            },
+            success: function (response) {
+              // console.log(response);
+              console.log(response.ok);
+
+              if (response.errMsg) {
+                alert(response.errMsg);
+                return false;
+              }
+
+              return true;
+            },
+          });
+        } catch {
+          console.log('꾸꾸');
+          return false;
+        }
       }
     </script>
     <style>
@@ -272,7 +420,7 @@
         justify-content: center;
       }
 
-      .orderSeatsleftZone {
+      .orderSeatsLeftZone {
         background-color: rgb(48, 46, 46);
         display: inline-block;
         width: 800px;
@@ -353,8 +501,30 @@
         text-align: center;
       }
 
-      .seat:hover {
+      .seatChoosed {
         background-color: orange;
+        width: 40px;
+        height: 40px;
+        margin: 5px;
+        padding: 3px;
+        display: inline-block;
+        border-radius: 5px 5px 5px 5px / 5px 5px 5px 5px;
+        border: 2px solid orange;
+        font-weight: bold;
+        text-align: center;
+      }
+
+      .seat:hover {
+        background-color: rgb(247, 224, 182);
+        cursor: pointer;
+      }
+
+      .seat:active {
+        background-color: orange;
+        cursor: pointer;
+      }
+
+      .seatChoosed:hover {
         cursor: pointer;
       }
 
@@ -548,7 +718,7 @@
 
     <div class="zone1">
       <div class="orderSeatsWholeZone">
-        <div class="orderSeatsleftZone">
+        <div class="orderSeatsLeftZone">
           <div class="stageZone">
             <span class="stage">
               <span class="stageText">STAGE</span>
@@ -589,7 +759,7 @@
             </span>
           </div>
           <div class="partitionLine"></div>
-          <div class="choosedSeatsListZone">
+          <div class="choosedSeatsListZone" id="choosedSeatsListZone">
             <div class="choosedSeatList">
               <span class="choosedSeatListLeftZone">
                 <span class="showTheaterAndSeat">
@@ -637,12 +807,14 @@
             </div>
           </div>
 
-          <div class="showPriceZone">
+          <div class="showPriceZone" id="showPriceZone">
             <span class="price"> 예상 금액: ₩75,000 </span>
           </div>
           <div class="postButtonZone">
             <span class="postButtonArea">
-              <button class="postButton">다 골랐어요</button></span
+              <button class="postButton" onclick="nextStep()">
+                다 골랐어요
+              </button></span
             >
           </div>
         </div>
