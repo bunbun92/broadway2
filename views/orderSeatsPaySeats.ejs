@@ -205,8 +205,13 @@
             seats: seatsArrayGlobal,
           },
           success: function (response) {
-            console.log(response.errMsg);
-            console.log(response.msg);
+            if (response.errMsg) {
+              alert(response.errMsg);
+              return;
+            }
+
+            alert(response.msg);
+            location.href = '/';
           },
         });
       }
