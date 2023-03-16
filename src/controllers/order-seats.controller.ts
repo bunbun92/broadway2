@@ -6,30 +6,47 @@ import {
   Param,
   Patch,
   Post,
+  Res,
 } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 import { CreateOrderSeatsDto } from 'src/dto/create-order-seats.dto';
 import { DeleteOrderSeatsDto } from 'src/dto/delete-order-seats.dto';
 import { UpdateOrderSeatsDto } from 'src/dto/update-order-seats.dto';
 import { OrderSeatsService } from '../services/order-seats.service';
+import { Response } from 'express';
 
 @Controller('order-seats')
 export class OrderSeatsController {
   constructor(private readonly orderSeatsService: OrderSeatsService) {}
 
   @Get('/:performId/content') // url 이름 다시생각해보기
-  async getAContentByPerformId(@Param('performId') performId: string) {
-    const content = await this.orderSeatsService.getAContentByPerformId(
+  async getContentsByPerformId(@Param('performId') performId: string) {
+    const contents = await this.orderSeatsService.getContentsByPerformId(
       performId
+    );
+
+    return contents;
+  }
+
+  @Get('/content/:contentId')
+  async getAContentByContentId(@Param('contentId') contentId: number) {
+    const content = await this.orderSeatsService.getAContentByContentId(
+      contentId
     );
 
     return content;
   }
 
   @Get('/:contentId/seats')
-  async getAllSeatsOfAContent(@Param('contentId') contentId: number) {
+  async getAllSeatsOfAContent(
+    @Param('contentId') contentId: number
+    // @Res() res: Response
+  ) {
+    console.log(contentId);
+    console.log(typeof contentId);
     const seats = await this.orderSeatsService.getAllSeatsOfAContent(contentId);
 
+    // return res.send(seats);
     return seats;
   }
 
@@ -63,7 +80,7 @@ export class OrderSeatsController {
   @Post('/:contentId/payReservedSeats')
   async payReservedSeats(
     @Param('contentId') contentId: number,
-    @Body() data: UpdateOrderSeatsDto
+    @Body() data: CreateOrderSeatsDto
   ) {
     const userId = 1;
     const msg = await this.orderSeatsService.payReservedSeats(
