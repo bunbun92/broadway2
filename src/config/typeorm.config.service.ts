@@ -10,6 +10,9 @@ import { KopisApi } from 'src/entities/kopisApi.entity';
 import { Review } from 'src/entities/review.entity';
 import { Comment } from 'src/entities/comment.entity';
 import { Like } from 'src/entities/like.entity';
+import { PriceInfo } from 'src/entities/theater-price.entity';
+import { SeatsInfo } from 'src/entities/theater-seats.entity';
+import { Theater } from 'src/entities/theater-info.entity';
 
 @Injectable()
 export class TypeOrmConfigService implements TypeOrmOptionsFactory {
@@ -33,6 +36,9 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
         Review,
         Comment,
         Like,
+        Theater,
+        SeatsInfo,
+        PriceInfo,
       ],
       synchronize: false,
     };

@@ -25,6 +25,7 @@ import { join } from 'path';
 import { CommentModule } from './comment.module';
 import { RouterModule } from '../renderers/router.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { TheatersModule } from './theaters.module';
 
 @Module({
   imports: [
@@ -54,6 +55,7 @@ import { ScheduleModule } from '@nestjs/schedule';
     TimeSaleModule,
     ReviewModule,
     CommentModule,
+    TheatersModule,
     RouterModule,
   ],
   controllers: [AppController],
