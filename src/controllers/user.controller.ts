@@ -13,6 +13,8 @@ import { CreateUserDto } from '../dto/create-user.dto';
 import { LoginUserDto } from '../dto/login-user.dto';
 import { UpdateUserDto } from '../dto/update-user.dto';
 import { DeleteUserDto } from '../dto/delete-user.dto';
+import { GetUserInfoByIdDto } from '../dto/get-userInfoById.dto';
+
 import { Response } from 'express';
 
 @Controller('user')
@@ -54,8 +56,8 @@ export class UserController {
   }
 
   @Get('/:id')
-  async getMyInfoById(@Param('id') id: number) {
-    return await this.userService.getMyInfoById(id);
+  async getMyInfoById(@Body() data: GetUserInfoByIdDto) {
+    return await this.userService.getMyInfoById(data.id);
   }
 
   @Put('/update')

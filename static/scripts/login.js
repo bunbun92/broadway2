@@ -15,7 +15,7 @@ function login() {
     },
     success: function (response) {
       customAlert(response.message);
-      window.location.replace('/');
+      window.location.replace('/render-user/home');
 
       // if (response.data === 2) {
       //   window.location.replace('/admin-users');

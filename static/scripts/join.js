@@ -22,7 +22,7 @@ function join() {
     },
     success: function (response) {
       alert('회원가입이 완료되었습니다!');
-      window.location.replace('/login');
+      window.location.replace('/render-user/login');
     },
     error: function (response) {
       console.log('응, 아니야.', response);

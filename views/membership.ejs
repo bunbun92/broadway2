@@ -21,67 +21,17 @@
       crossorigin="anonymous"
     ></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    
-    <link rel="stylesheet" href="header.css" />
-    <link rel="stylesheet" href="join.css" />
-    <link rel="stylesheet" href="membership.css" />
+
+    <link rel="stylesheet" href="styles/header.css" />
+    <link rel="stylesheet" href="styles/join.css" />
+    <link rel="stylesheet" href="styles/membership.css" />
 
     <title>broadway9th membership</title>
   </head>
   <body>
     <%- include('headerPostLogin.ejs') %>
 
-    <div class="zone_login">
-      <div class="wrap">
-        <div style="color: #ffcd4a">
-          <h1 style="font-weight: bolder">회원정보</h1>
-        </div>
-      <div class="joinInputs">
-        <label for="userId">아이디</label>
-        <div class="InfoBox">qqq</div>
-        <label for="password">비밀번호</label>
-        <input
-          type="text"
-          class="inputId"
-          id="password"
-          placeholder="비밀번호는 영어 대소문자와 숫자를 사용한 3글자 이상만 가능합니다."
-        />
-        <label for="pwCheck">비밀번호 확인</label>
-        <input
-          type="text"
-          class="inputId"
-          id="pwCheck"
-          placeholder="같은 비밀번호를 한번 더 입력해주세요."
-        />
-        <label for="name">이름</label>
-        <input
-          type="text"
-          class="inputId"
-          id="name"
-          placeholder="닉네임은 한글,영어 대소문자,숫자만 사용가능합니다."
-        />
-        <label for="email">이메일</label>
-        <input
-          type="text"
-          class="inputId"
-          id="email"
-          placeholder="aaa@aaa.aaa 이메일 양식을 지켜주세요."
-        />
-        <label for="userType">userType</label>
-        <div class="InfoBox">1</div>
-
-      </div>
-      <div class="joinBtns">
-        <button
-          class="tologinBtn"
-          type="button"
-          onclick="location.href='/'"
-        >
-          취소
-        </button>
-        <button class="joinBtn" type="button" onclick="join()">정보수정</button>
-      </div>
-    </div>
+    <div class="zone_login" id="zoneUpdate"></div>
     <script src="scripts/membership.js"></script>
 
     <script></script>

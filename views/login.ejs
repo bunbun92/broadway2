@@ -22,8 +22,8 @@
     ></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-    <link rel="stylesheet" href="header.css" />
-    <link rel="stylesheet" href="login.css" />
+    <link rel="stylesheet" href="styles/header.css" />
+    <link rel="stylesheet" href="styles/login.css" />
 
     <title>broadway9th login</title>
   </head>
@@ -50,7 +50,10 @@
             </form>
           </div>
           <div class="loginBtns">
-            <button class="toJoinBtn" onclick="location.href='/join'">
+            <button
+              class="toJoinBtn"
+              onclick="location.href='/render-user/join'"
+            >
               회원가입
             </button>
             <button class="loginBtn" onclick="login()">로그인</button>

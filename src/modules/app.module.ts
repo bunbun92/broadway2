@@ -61,9 +61,12 @@ import { ScheduleModule } from '@nestjs/schedule';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AuthMiddleware).forRoutes(
-      { path: 'user/update', method: RequestMethod.PUT }
+    consumer
+      .apply(AuthMiddleware)
+      .forRoutes
+      // '*'
+      // { path: 'user/update', method: RequestMethod.PUT }
       // { path: '/', method: RequestMethod.GET }
-    );
+      ();
   }
 }

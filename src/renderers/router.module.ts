@@ -5,6 +5,8 @@ import { join } from 'path';
 import { RenderContentModule } from './content/render-content.module';
 import { RenderOrderSeatsModule } from './orderSeats/render-order-seats.module';
 import { RouterController } from './router.controller';
+import { UserModule } from './user/render-user.module';
+import { ReviewModule } from './review/render-review.module';
 
 @Module({
   imports: [
@@ -15,6 +17,8 @@ import { RouterController } from './router.controller';
       rootPath: join(__dirname, '..', '../static'),
       serveRoot: '/router',
     }),
+    UserModule,
+    ReviewModule,
   ],
   controllers: [RouterController],
 })
