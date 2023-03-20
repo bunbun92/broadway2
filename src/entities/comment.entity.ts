@@ -23,8 +23,8 @@ export class Comment {
   @ManyToOne(() => User, user => user.comments)
   user: User;
 
-  @Column('int')
-  reviewId: number;
+  // @Column('int')
+  // reviewId: number;
 
   @Column('int')
   userId: number;

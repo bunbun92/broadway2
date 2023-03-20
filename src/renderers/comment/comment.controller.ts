@@ -1,10 +1,11 @@
-import { Controller, Get, Render } from '@nestjs/common';
+import { Controller, Get, Render, Param } from '@nestjs/common';
 
-@Controller('comment')
+@Controller('reviews')
 export class CommentController {
-  @Get('/')
+  @Get('/:reviewId/comments')
+  // reveiws/1/comments
   @Render('comment.ejs')
-  getTest4() {
-    return { msg: '댓글 좀 .. ' };
+  getComments(@Param('reviewId') reviewId: string) {
+    return { reviewId };
   }
 }
