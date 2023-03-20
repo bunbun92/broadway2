@@ -22,7 +22,7 @@ export class ReviewController {
 
     return review;
   }
-
+  // / review/1/reviews
   // 특정 공연 리뷰목록 조회
   @Get('/:contentId/reviews')
   async getReviewsByContentId(@Param('contentId') contentId: number) {
