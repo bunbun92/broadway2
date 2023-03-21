@@ -42,12 +42,23 @@ export class OrderSeatsController {
     @Param('contentId') contentId: number
     // @Res() res: Response
   ) {
-    console.log(contentId);
-    console.log(typeof contentId);
     const seats = await this.orderSeatsService.getAllSeatsOfAContent(contentId);
 
     // return res.send(seats);
     return seats;
+  }
+
+  @Get('/:contentId/seatsWithMine')
+  async getAllSeatsAndMySeatsOfAContent(@Param('contentId') contentId: number) {
+    const userId = 1;
+
+    const seats = await this.orderSeatsService.getAllSeatsOfAContent(contentId);
+    const mySeats = await this.orderSeatsService.getReservedSeats(
+      userId,
+      contentId
+    );
+
+    return { seats, mySeats };
   }
 
   @Post('/:contentId/seatsRTWP')

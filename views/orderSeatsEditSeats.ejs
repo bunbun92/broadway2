@@ -38,9 +38,10 @@
       function printSeats(contentId) {
         $.ajax({
           type: 'GET',
-          url: `/order-seats/${contentId}/seats`,
+          url: `/order-seats/${contentId}/seatsWithMine`,
           success: function (response) {
-            let rows = response;
+            //좌석 전체 출력
+            let rows = response['seats'];
             console.log(rows);
             theaterGlobal = rows[0].theater;
 
@@ -61,6 +62,8 @@
               if (rows[i].orderStatus > 0) {
                 tempHtml += `
                   <span class="seatDisable" id= "${seat}">${seat}</span>
+                  <span style="display:hidden" id= "${seat}Grade" value="R"></span>
+                  <span style="display:hidden" id= "${seat}Price" value="${rows[i].price}"> </span>
               `;
               } else {
                 tempHtml += `
@@ -74,6 +77,15 @@
             tempHtml += `</div>`;
 
             $('#seats').append(tempHtml);
+
+            //본인 선택한 좌석 변환 부분
+
+            rows = response['mySeats'];
+
+            for (let i = 0; i < rows.length; i++) {
+              seatsArrayGlobal.push(rows[i].seat);
+              seatCountGlobal++;
+            }
 
             return;
           },

@@ -60,6 +60,13 @@ export class OrderSeatsService {
     return seats;
   }
 
+  // //공연의 특정회차 모든 좌석들 정보 출력 + 본인의 선택 좌석 정보 출력
+  // async getAllSeatsAndMySeatsOfAContent(userId: number, contentId: number){
+  //   const query = `
+
+  //   `;
+  // }
+
   //예매 중 좌석 임시 확보(선점)하기
   async seatsReservationTemporarilyWhilePay(
     userId: number,
