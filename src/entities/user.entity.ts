@@ -11,6 +11,9 @@ import {
 import { Comment } from './comment.entity';
 import { Content } from './content.entity';
 import { Like } from './like.entity';
+import { Theater } from './theater-info.entity';
+import { PriceInfo } from './theater-price.entity';
+import { SeatsInfo } from './theater-seats.entity';
 import { TimeSale } from './time-sale.entity';
 
 @Entity({ schema: 'broadway', name: 'users' })
@@ -48,6 +51,15 @@ export class User {
 
   @OneToMany(type => TimeSale, timeSale => timeSale.users)
   timeSale: TimeSale;
+
+  @OneToMany(type => Theater, theaterInfo => theaterInfo.users)
+  theaterInfo: Theater;
+
+  @OneToMany(type => PriceInfo, priceInfo => priceInfo.users)
+  priceInfo: PriceInfo;
+
+  @OneToMany(type => SeatsInfo, seatsInfo => seatsInfo.users)
+  seatsInfo: SeatsInfo;
 
   @OneToMany(() => Comment, comment => comment.user)
   comments: Comment[];

@@ -12,11 +12,13 @@ import { CommentService } from '../services/comment.service';
 import { CreateCommentDto } from '../dto/create-comment.dto';
 import { UpdateCommentDto } from '../dto/update-comment.dto';
 
+// review/:id/comments/
 @Controller('comments')
 export class CommentController {
   constructor(private readonly CommentService: CommentService) {}
 
-  @Post('/')
+  // localhost:3000/comment
+  @Post()
   async createComments(@Body() data: CreateCommentDto) {
     return await this.CommentService.createComment(data);
   }
@@ -43,7 +45,7 @@ export class CommentController {
   //   return comment;
   // }
 
-  // comments/2
+  // comments/:reviewId
   @Get('/:id')
   async getComments(@Param('id') id: number) {
     return this.CommentService.getComments(id);

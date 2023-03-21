@@ -27,7 +27,7 @@ export class Review {
   @Column('varchar', { length: 1000 })
   review: string;
 
-  @OneToMany(() => Comment, comment => comment.review)
+  @OneToMany(() => Comment, comments => comments.review)
   comments: Comment[];
 
   @OneToMany(() => Like, like => like.review)

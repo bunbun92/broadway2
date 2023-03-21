@@ -15,9 +15,9 @@ export class CommentService {
     return this.commentRepository.find();
   }
 
-  async getComments(reviewId: number) {
+  async getComments(id: number) {
     return await this.commentRepository.find({
-      where: { reviewId, deletedAt: null },
+      where: { id, deletedAt: null },
     });
   }
 
