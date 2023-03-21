@@ -44,7 +44,7 @@ import { TheatersModule } from './theaters.module';
     }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', '../static'),
-      // serveRoot: '/static',
+      serveRoot: '/static',
     }),
     ScheduleModule.forRoot(),
     ContentModule,
@@ -55,8 +55,8 @@ import { TheatersModule } from './theaters.module';
     TimeSaleModule,
     ReviewModule,
     CommentModule,
-    TheatersModule,
     RouterModule,
+    TheatersModule,
   ],
   controllers: [AppController],
   providers: [AppService, AuthMiddleware],

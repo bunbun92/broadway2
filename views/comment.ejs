@@ -218,24 +218,46 @@
 <script>
   $(document).ready(function () {
     const reviewId = '<%= reviewId %>'; ///1
+
     getAll(reviewId); // 인자 정해짐  //2
 
     // get All 가져오기
-    async function getAll(reviewId) {
-      const review = await $.ajax({
-        type: 'Get',
+    function getAll(reviewId) {
+      let review = null;
+      let content = null;
+      let conmment = null;
+
+      $.ajax({
+        type: 'GET',
         url: `/review/${reviewId}`,
+        success: function (data) {
+          review = data;
+        },
+      }).then(function () {
+        console.log(review.review.contentId);
+        $.ajax({
+          type: 'GET',
+          url: `/order-seats/content/${review.review.contentId}`,
+          success: function (data) {
+            console.log(data);
+            content = data;
+          },
+        }).then(function () {
+          $.ajax({
+            type: 'GET',
+            url: `/comments`,
+            success: function (data) {
+              console.log(data);
+              conmment = data;
+            },
+          }).then(function () {
+            // innnerHTMLL 만들기
+            console.log(review);
+            console.log(content);
+            console.log(conmment);
+          });
+        });
       });
-
-      const comments = await $.ajax({
-        type: 'Get',
-        url: `/comments`,
-      });
-
-      console.log(review);
-      console.log(comments);
     }
-
-    // content Info 가져오기
   });
 </script>
