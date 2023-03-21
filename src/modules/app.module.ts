@@ -25,7 +25,6 @@ import { join } from 'path';
 import { CommentModule } from './comment.module';
 import { RouterModule } from '../renderers/router.module';
 import { ScheduleModule } from '@nestjs/schedule';
-import { TheatersModule } from './theaters.module';
 
 @Module({
   imports: [
@@ -44,7 +43,7 @@ import { TheatersModule } from './theaters.module';
     }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', '../static'),
-      // serveRoot: '/static',
+      serveRoot: '/static',
     }),
     ScheduleModule.forRoot(),
     ContentModule,
@@ -55,7 +54,6 @@ import { TheatersModule } from './theaters.module';
     TimeSaleModule,
     ReviewModule,
     CommentModule,
-    TheatersModule,
     RouterModule,
   ],
   controllers: [AppController],
