@@ -2,14 +2,14 @@ $(document).ready(function () {
   getMySpec();
 });
 
-// const params = res.local.user;
-// const userId = Number(params);
-// console.log(params);
-
 function getMySpec() {
+  // const params = res.local.user;
+  // const userId = Number(params);
+  // console.log(userId);
+  // console.log(res.local);
   $.ajax({
     type: 'GET',
-    url: `/user`,
+    url: `/user/`,
     data: {},
     success: function (response) {
       for (let e of response) {

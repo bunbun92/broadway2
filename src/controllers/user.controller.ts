@@ -25,6 +25,7 @@ export class UserController {
   async login(@Body() data: LoginUserDto, @Res() res: Response): Promise<any> {
     const jwt = await this.userService.login(data.userId, data.password);
     res.setHeader('Authorization', 'Bearer ' + jwt.accessToken);
+    // res.set('Authorization', 'Bearer ' + jwt.accessToken);
     res.cookie('jwt', jwt.accessToken, {
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000, //1 day
@@ -55,9 +56,15 @@ export class UserController {
     );
   }
 
-  @Get('/:id')
-  async getMyInfoById(@Body() data: GetUserInfoByIdDto) {
-    return await this.userService.getMyInfoById(data.id);
+  @Get('/')
+  async getMyInfoById(@Res() res: Response) {
+    // console.log(res.locals.user);
+    // console.log(res.locals);
+    // console.log(res);
+
+    const id = res.locals.user;
+
+    return await this.userService.getMyInfoById(id);
   }
 
   @Put('/update')
