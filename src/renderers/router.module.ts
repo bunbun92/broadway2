@@ -5,10 +5,12 @@ import { join } from 'path';
 import { RenderContentModule } from './content/render-content.module';
 import { RenderOrderSeatsModule } from './orderSeats/render-order-seats.module';
 import { RouterController } from './router.controller';
+import { RenderTheaterModule } from './theater/render-theater.module';
 
 @Module({
   imports: [
     RenderOrderSeatsModule,
+    RenderTheaterModule,
     RenderContentModule,
     CommentModule,
     ServeStaticModule.forRoot({

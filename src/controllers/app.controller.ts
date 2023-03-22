@@ -10,23 +10,23 @@ export class AppController {
   //   return this.appService.getHello();
   // }
 
-  // @Get()
-  // @Render('main.ejs')
-  // getMain() {
-  //   return { message: 'thank you!' };
-  // }
+  @Get()
+  @Render('main.ejs')
+  getMain() {
+    return { message: 'thank you!' };
+  }
 
-  // @Get('/login')
-  // @Render('login.ejs')
-  // getLogin() {
-  //   return { message: 'thank you!' };
-  // }
+  @Get('/login')
+  @Render('login.ejs')
+  getLogin() {
+    return { message: 'thank you!' };
+  }
 
-  // @Get('/join')
-  // @Render('join.ejs')
-  // getSignup() {
-  //   return { message: 'thank you!' };
-  // }
+  @Get('/join')
+  @Render('join.ejs')
+  getSignup() {
+    return { message: 'thank you!' };
+  }
   // @Get()
   // getKopisApi(): string {
   //   return this.appService.getKopisApi();

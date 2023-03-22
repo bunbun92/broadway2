@@ -44,7 +44,7 @@ import { TheatersModule } from './theaters.module';
     }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', '../static'),
-      serveRoot: '/static',
+      //serveRoot: '/static',
     }),
     ScheduleModule.forRoot(),
     ContentModule,
