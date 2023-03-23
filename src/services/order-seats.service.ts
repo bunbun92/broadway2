@@ -135,7 +135,6 @@ export class OrderSeatsService {
   }
 
   //선택(임시확보, 선점)한 좌석 정보 표시
-  //현재 가격관련된 정보 DB구조 안나와서 완성되면 추가완성 필요
   async getReservedSeats(userId: number, contentId: number) {
     // const seats = await this.orderListRepository.find({
     //   where: {
@@ -173,8 +172,9 @@ export class OrderSeatsService {
           timeSaleEndTime: this.dateToStringForQuery(timeSale[0]['endTime']),
           theater: seat.theater,
           priceBeforeDiscount: seat.priceBeforeDiscount,
-          priceAfterDiscount:
-            seat.priceBeforeDiscount * (1 - timeSale[0]['rate']), //가격 구조 완성되면 제대로 설정해야함
+          priceAfterDiscount: Math.trunc(
+            seat.priceBeforeDiscount * (1 - timeSale[0]['rate'])
+          ), //가격 구조 완성되면 제대로 설정해야함
         };
       });
     }
@@ -255,7 +255,7 @@ export class OrderSeatsService {
     );
 
     if (seats.length < seatsBefore.length) {
-      return { msg: '잘못된 접근입니다. 좌석 확보 정보 만료' };
+      return { errMsg: '잘못된 접근입니다. 좌석 확보 정보 만료' };
     }
 
     //기존의 타임스탬프가 훼손되지 않도록 보존 후 입력할것임
@@ -287,7 +287,7 @@ export class OrderSeatsService {
 
     if (alreadyChoosedSeats.length > 0) {
       return {
-        msg: '이미 다른 고객에게 선택된 좌석입니다.',
+        errMsg: '이미 다른 고객에게 선택된 좌석입니다.',
         alreadyChoosedSeats,
       };
     }
@@ -455,6 +455,22 @@ export class OrderSeatsService {
     });
 
     return order;
+  }
+
+  //진행중인 예매 모두 출력
+  async getAllProcessingReservations(userId: number) {
+    const query = `
+      select ol.id, ol.contentId, ol.orderStatus, c.performRound, k.performName, c.performDate from orderList ol
+      left join contents c on c.id = ol.contentId
+      left join kopisApi k on k.performId = c.performId 
+      where ol.orderStatus in (1,2)
+      and ol.userId = ${userId}
+      and ol.deletedAt is null
+    `;
+
+    const reservations = await this.orderListRepository.query(query);
+
+    return reservations;
   }
 
   // 여기서부터 API 미연결 함수들

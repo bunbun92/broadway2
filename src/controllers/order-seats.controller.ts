@@ -103,7 +103,7 @@ export class OrderSeatsController {
     return msg;
   }
 
-  @Patch('/:contentId/editReservedSeats/')
+  @Patch('/:contentId/editReservedSeats')
   async editReservedSeats(
     @Param('contentId') contentId: number,
     @Body() data: UpdateOrderSeatsDto
@@ -158,6 +158,15 @@ export class OrderSeatsController {
     const order = await this.orderSeatsService.getAnOrder(userId, orderId);
 
     return order;
+  }
+
+  @Get('/processingReservations')
+  async getAllProcessingReservations() {
+    const userId = 1;
+    const reservations =
+      await this.orderSeatsService.getAllProcessingReservations(userId);
+
+    return reservations;
   }
 
   //일정 주기로 선점 좌석 해제 평소엔 꺼놔야함

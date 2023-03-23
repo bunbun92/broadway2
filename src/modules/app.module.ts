@@ -61,10 +61,13 @@ import { TheatersModule } from './theaters.module';
   controllers: [AppController],
   providers: [AppService, AuthMiddleware],
 })
+// export class AppModule implements NestModule {
+//   configure(consumer: MiddlewareConsumer) {
+//     consumer.apply(AuthMiddleware);
+//     // .forRoutes({ path: 'user/update', method: RequestMethod.PUT });
+//   }
 export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(AuthMiddleware)
-      .forRoutes({ path: 'user/update', method: RequestMethod.PUT });
+  configure(consumer: MiddlewareConsumer): any {
+    consumer.apply(AuthMiddleware);
   }
 }
