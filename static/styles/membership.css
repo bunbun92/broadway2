@@ -1,0 +1,90 @@
+.zone_login {
+  height: 800px;
+  background-image: linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.8),
+      rgba(0, 0, 0, 0.8)
+    ),
+    url('../img/street-login.jpeg');
+  background-position: center;
+  background-size: cover;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.wrap {
+  width: 600px;
+  height: 600px;
+  padding: 100px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  border: 5px solid #ffcd4a;
+}
+
+.joinInputs {
+  display: flex;
+  flex-direction: column;
+
+  color: white;
+}
+
+.inputId {
+  width: 400px;
+  height: 30px;
+  margin-bottom: 15px;
+}
+
+.InfoBox {
+  border: 1px white;
+  background-color: lightgray;
+  width: 400px;
+  height: 30px;
+  margin-bottom: 15px;
+  padding-left: 5px;
+
+  color: black;
+}
+
+.joinBtns {
+  margin-top: 40px;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.tologinBtn {
+  margin-right: 20px;
+
+  width: 150px;
+  height: 40px;
+  font-weight: 600;
+  color: white;
+  background-color: transparent;
+
+  border-radius: 10px;
+  border-color: white;
+  border-style: double;
+}
+
+.tologinBtn:hover {
+  background-color: white;
+  color: black;
+}
+
+.joinBtn {
+  width: 250px;
+  height: 40px;
+  background-color: #ffcd4a;
+
+  border-radius: 10px;
+  border: 0px;
+
+  font-weight: 600;
+}

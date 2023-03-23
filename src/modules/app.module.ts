@@ -42,10 +42,6 @@ import { TheatersModule } from './theaters.module';
       useClass: JwtConfigService,
       inject: [ConfigService],
     }),
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', '../static'),
-      serveRoot: '/static',
-    }),
     ScheduleModule.forRoot(),
     ContentModule,
     UserModule,
@@ -63,8 +59,11 @@ import { TheatersModule } from './theaters.module';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(AuthMiddleware)
-      .forRoutes({ path: 'user/update', method: RequestMethod.PUT });
+    consumer.apply(AuthMiddleware);
+    // .forRoutes('/user/logout');
+    // '*'
+    // { path: 'user/update', method: RequestMethod.PUT }
+    // { path: '/', method: RequestMethod.GET }
+    // ();
   }
 }
