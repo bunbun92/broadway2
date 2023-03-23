@@ -15,14 +15,21 @@ export class CommentService {
     return this.commentRepository.find();
   }
 
+  async getCommentByReviewId(reviewId) {
+    return this.commentRepository.find({
+      where: { reviewId },
+      relations: ['user'],
+    });
+  }
+
   async getComments(id: number) {
     return await this.commentRepository.find({
       where: { id, deletedAt: null },
     });
   }
 
-  createComment(data: CreateCommentDto) {
-    this.commentRepository.insert(data);
+  createComment(data: any) {
+    this.commentRepository.save(data);
   }
 
   async updateComment(id, data) {

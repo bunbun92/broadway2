@@ -1,12 +1,12 @@
 import { IsNumber, IsString } from 'class-validator';
 
 export class CreateCommentDto {
-  @IsNumber()
-  readonly reviewId: number;
-
-  @IsNumber()
+  // @IsNumber()
   readonly userId: number;
 
-  @IsString()
+  // @IsString()
   readonly comment: string;
+
+  // @IsString()
+  readonly reviewId: string;
 }
