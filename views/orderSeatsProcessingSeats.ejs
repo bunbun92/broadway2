@@ -37,8 +37,7 @@
             console.log(response);
             let rows = response;
             let tempHtml = ``;
-            let target = document.getElementById('processingSeatsListZone');
-            target.innerHTML = '';
+            document.getElementById('processingSeatsListZone').innerHTML = '';
 
             for (let i = 0; i < rows.length; i++) {
               let date = rows[i].performDate.split(' ')[0];
@@ -46,17 +45,23 @@
                 <div class="processingSeatZone">
                   <div class="processingSeatLeftZone">${date} ${rows[i].performName} ${rows[i].performRound}회차</div>
                   <div class="processingSeatRightZone">
-                    <button class="continueButton">이어서 진행하기</button>
+                    <button class="continueButton" onclick="continueReservation(${rows[i].contentId})">이어서 진행하기</button>
                     <button class="deleteButton">취소</button>
                   </div>
                 </div>
               `;
             }
+
+            $('#processingSeatsListZone').append(tempHtml);
+
+            return;
           },
         });
       }
 
-      function continueReservation(contentId) {}
+      function continueReservation(contentId) {
+        location.href = `/render-order-seats/editSeats?contentId=${contentId}`;
+      }
     </script>
     <style>
       /* header */
