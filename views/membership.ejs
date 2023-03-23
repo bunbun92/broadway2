@@ -23,32 +23,17 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <link rel="stylesheet" href="styles/header.css" />
+    <link rel="stylesheet" href="styles/join.css" />
+    <link rel="stylesheet" href="styles/membership.css" />
 
-    <title>broadway9th</title>
+    <title>broadway9th membership</title>
   </head>
   <body>
-    <% if(login) { %> <%- include('headerPostLogin.ejs') %> <% }else{ %> <%-
-    include('header.ejs') %> <% } %>
-    <div class="zone1">
-      <div class="postsWrap" id="postsWrap">
-        <!-- <div class="postboxes">
-          <div class="oneSet">
-            <div class="postImg">
-              <img
-                class="posts"
-                src="https://www.kopis.or.kr/upload/pfmPoster/PF_PF213951_230224_140008.png"
-              />
-            </div>
-            <div class="nondisplay">강지성 첼로독주회</div>
-          </div>
+    <%- include('headerPostLogin.ejs') %>
 
-          <div class="buttons">
-            <button class="specBtn">상세정보</button>
-            <button class="reserveBtn">예매하기</button>
-          </div>
-        </div> -->
-      </div>
-    </div>
-    <script src="scripts/main.js"></script>
+    <div class="zone_login" id="zoneUpdate"></div>
+    <script src="scripts/membership.js"></script>
+
+    <script></script>
   </body>
 </html>

@@ -9,4 +9,9 @@ export class ContentController {
   async getAllContents() {
     return await this.contentService.getAllContents();
   }
+
+  @Get('/getone')
+  async getOneContent() {
+    return await this.contentService.getOneContent();
+  }
 }

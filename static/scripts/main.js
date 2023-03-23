@@ -1,50 +1,52 @@
 function logout() {
   $.ajax({
-    type: 'GET',
-    url: '/api/auth/logout',
+    type: 'POST',
+    url: '/user/logout',
     success: function (response) {
-      alert(response.message);
-      window.location.href = '/login';
+      alert('로그아웃에 성공하였습니다.');
+      window.location.href = '/render-user/home';
     },
     error: function (response) {
-      alert(response.responseJSON.message);
+      alert('로그아웃에 실패하였습니다.');
     },
   });
 }
 
-// $(document).ready(function () {
-//   get_products();
-//   random_products();
-// });
+$(document).ready(function () {
+  get_performs();
+});
 
-function get_products() {
+function get_performs() {
   $.ajax({
     type: 'GET',
-    url: '/products',
+    url: '/content/getone',
     data: {},
     success: function (response) {
-      for (let e of response.data) {
-        let id = e.productId;
-        let name = e.productName;
-        let spec = e.productExp;
-        let price = e.price;
-        let photo = e.productPhoto;
-        let quantity = e.quantity;
-        let count = e.userCount;
-        let created = e.createdAt;
-        let updated = e.updatedAt;
-        let temp_html = `<a class ="divTextHidden" href="/${id}"><div class="products">
-                            <div class="photoBox">
-                              <img src="${photo}"/>
-                            </div>
-                            <p>${name}</p>
-                            <p>${price}원</p>
-                          </div></a>
-                          <div class = "displayNone">${spec}${quantity}${count}${created}${updated}</div>`;
-        $('.product_list').append(temp_html);
-      }
+      console.log('리스폰스', response);
+      console.log('리스폰스.content', response.content);
+      console.log('리스폰스.content.performId', response.content.performId);
+
+      // for (let e of response.content) {
+      let e = response.content;
+      let performId = e.performId;
+      let posterImg = e.poster;
+      let temp_html = `<div class="postboxes">
+        <img
+          class="posts"
+          src="${posterImg}"
+        />
+        <div class="buttons">
+          <button class="specBtn" onclick="location.href='/render-content/${performId}'">상세정보</button>
+          <button class="reserveBtn">예매하기</button>
+        </div>
+      </div>`;
+      $('.postsWrap').append(temp_html);
+      // }
     },
   });
 }
 
-function search() {}
+function customAlert(text) {
+  $('#alertText').text(text);
+  $('#alertModal').modal('show');
+}
