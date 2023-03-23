@@ -2,7 +2,7 @@ import { Controller, Get, Render } from '@nestjs/common';
 
 @Controller('theater')
 export class RenderTheaterController {
-  @Get('/')
+  @Get('/create')
   @Render('theater.ejs')
   getTheaterList() {
     return;

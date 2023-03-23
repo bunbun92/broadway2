@@ -1,12 +1,25 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Req,
+} from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { CreatePriceInfoDto } from 'src/dto/create-price-info.dto';
 import { CreateSeatsInfoDto } from 'src/dto/create-seats-info.dto';
 import { CreateTheaterDto } from 'src/dto/create-theater.dto';
 import { TheatersService } from 'src/services/theaters.service';
+import { Request } from 'express';
 
 @Controller('theaters')
 export class TheatersController {
-  constructor(private readonly theatersService: TheatersService) {}
+  constructor(
+    private readonly theatersService: TheatersService,
+    private jwtService: JwtService
+  ) {}
 
   @Get('/')
   async getAllTheaterList() {
@@ -18,16 +31,17 @@ export class TheatersController {
     return await this.theatersService.getAllTheaterInfo();
   }
 
-  @Get('/myList/:userId')
-  async getMyTheaterInfo(@Param('userId') userId: number) {
+  @Get('/myList')
+  async getMyTheaterInfo(@Req() req: Request) {
+    const jwt = req.cookies.jwt;
+    const userId = this.jwtService.verify(jwt)['id'];
     return await this.theatersService.getMyTheaterInfo(userId);
   }
 
-  @Post('/createTheater/:userId')
-  createTheaterInfo(
-    @Param('userId') userId: number,
-    @Body() data: CreateTheaterDto
-  ) {
+  @Post('/createTheater')
+  createTheaterInfo(@Req() req: Request, @Body() data: CreateTheaterDto) {
+    const jwt = req.cookies.jwt;
+    const userId = this.jwtService.verify(jwt)['id'];
     this.theatersService.createTheaterInfo(data.theater, userId);
   }
 

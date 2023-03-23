@@ -22,10 +22,34 @@
     ></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-    <link rel="stylesheet" href="header.css" />
+    <link rel="stylesheet" href="styles/header.css" />
 
     <title>broadway9th</title>
   </head>
+  
+  <style>
+    input[type='text'] {
+      width: 200px;
+      padding: 10px;
+      font-size: 16px;
+    }
+
+    input[type='text'] + button {
+      height: 30px;
+      width: 30px;
+      font-size: 16px;
+      margin-left: -35px;
+      border-radius: 5px;
+    }
+
+    input[type='text'] + button:first-of-type {
+      margin-top: -5px;
+    }
+
+    input[type='text'] + button:last-of-type {
+      margin-bottom: -5px;
+    }
+  </style>
   <body>
     <%- include('header.ejs') %>
     <table>
@@ -37,6 +61,17 @@
             name="theater-choice"
           />
           <datalist id="theaters-select" name="theaters-select"></datalist>
+        </td>
+        <td>
+          <button type="button" class="btn btn-secondary" onclick="addMyTheater()">극장 정보 등록</button>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <select>
+        </td>
+        <td>
+          <input type="number" min="1" />
         </td>
       </tr>
     </table>
