@@ -1,13 +1,14 @@
 function join() {
   let userId = $('#userId').val();
   let password = $('#password').val();
-  // let passwordCheck = $('#passwordCheck').val();
+  let pwCheck = $('#pwCheck').val();
   let name = $('#name').val();
   let email = $('#email').val();
-  let userType = Number($('#userType').val());
-  // if (password !== passwordCheck) {
-  //   return customAlert('패스워드를 다시 체크해주세요');
-  // }
+  let userType = $('#userType').val();
+
+  if (password !== pwCheck) {
+    return alert('비밀번호와 비밀번호 확인이 일치하지 않습니다.');
+  }
 
   $.ajax({
     type: 'POST',
@@ -20,8 +21,8 @@ function join() {
       userType,
     },
     success: function (response) {
-      customAlert(response.message);
-      window.location.replace('/login');
+      alert('회원가입이 완료되었습니다!');
+      window.location.replace('/render-user/login');
     },
     error: function (response) {
       console.log('응, 아니야.', response);

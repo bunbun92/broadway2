@@ -10,8 +10,8 @@ import { CommentController } from './comment.controller';
       isGlobal: true,
     }),
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', '../..static'),
-      serveRoot: '/comment',
+      rootPath: join(__dirname, '..', '../../static'),
+      serveRoot: '/reviews/comments',
     }),
   ],
   controllers: [CommentController],
