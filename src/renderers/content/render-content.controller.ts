@@ -8,13 +8,9 @@ export class RenderContentController {
   //   return { msg: 'test4용' };
   // }
 
-  @Get('/?id=${performId}')
+  @Get('/:performId')
   @Render('detail.ejs')
   getDetail() {
-    const searchParams = new URLSearchParams(location.search);
-    const performId = searchParams.get('performId');
-    console.log(performId);
-
     return { message: 'thank you!' };
   }
 }

@@ -28,8 +28,72 @@
     <title>broadway9th</title>
   </head>
   <body>
-    <% if(login) { %> <%- include('headerPostLogin.ejs') %> <% }else{ %> <%-
-    include('header.ejs') %> <% } %>
+    <%- include('headerPostLogin.ejs') %>
+    <div class="detailZone1">
+      <span class="detailRight">
+        <div class="posterbox">
+          <img
+            class="detailPoster"
+            src="http://www.kopis.or.kr/upload/pfmPoster/PF_PF214620_230308_161027.gif"
+          />
+          <div class="Detailbuttons">
+            <div class="starBox">
+              <img src="img/starGold.png" style="height: 20px" />
+              &nbsp;4.25
+            </div>
+            <button class="detailReserveBtn">예매하기</button>
+          </div>
+          <div class="InfoBox">
+            <p>제목 : 별이 쏟아지는 물창 아래서</p>
+            <p>장소 : 달서아트센터 (구. 웃는얼굴아트센터)</p>
+            <p>장르 : 연극</p>
+            <p>상태 : 공연예정</p>
+            <p>시작 : 2023.03.30</p>
+            <p>종료 : 2023.03.30</p>
+          </div>
+        </div>
+      </span>
+      <span class="detailLeft">
+        <div class="reviewWriteBtnBox">
+          <button class="reviewWriteBtn">리뷰 작성하기</button>
+        </div>
+        <div class="reviewBox">
+          <div class="reviewContent">
+            정말 재밌었어요. 다시보고싶은데 방법이없네 거참
+          </div>
+          <div class="iconBox"></div>
+        </div>
+        <div class="reviewBox">
+          <div class="starDateBox">
+            <span class="starBox"
+              ><img src="img/starGold.png" style="height: 20px" />&nbsp;<img
+                src="img/starGold.png"
+                style="height: 20px" />&nbsp;<img
+                src="img/starGold.png"
+                style="height: 20px" />&nbsp;<img
+                src="img/starGold.png"
+                style="height: 20px"
+            /></span>
+            <span class="DateBox"></span>
+          </div>
+          <div class="reviewContent">
+            정말 재밌었어요. 다시보고싶은데 방법이없네 거참. 정말 재밌었어요.
+            다시보고싶은데 방법이없네 거참. 정말 재밌었어요. 다시보고싶은데
+            방법이없네 거참
+          </div>
+          <div class="iconBox">
+            <button class="likeBtn">
+              <img src="img/heartPinkEmpty.png" style="height: 20px" />&nbsp;30
+              Likes</button
+            >&nbsp;&nbsp;
+            <button class="commentBtn">
+              <img src="img/comment.png" style="height: 20px" />&nbsp;45
+              Comments
+            </button>
+          </div>
+        </div>
+      </span>
+    </div>
 
     <script src="scripts/detail.js"></script>
   </body>
