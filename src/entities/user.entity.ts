@@ -61,7 +61,7 @@ export class User {
   @OneToMany(type => SeatsInfo, seatsInfo => seatsInfo.users)
   seatsInfo: SeatsInfo;
 
-  @OneToMany(() => Comment, comment => comment.user)
+  @OneToMany(() => Comment, comments => comments.user)
   comments: Comment[];
 
   @OneToMany(() => Like, like => like.user)
