@@ -7,6 +7,7 @@ import {
   Put,
   Body,
   Patch,
+  Query,
 } from '@nestjs/common';
 import { CommentService } from '../services/comment.service';
 import { CreateCommentDto } from '../dto/create-comment.dto';
@@ -18,32 +19,25 @@ export class CommentController {
   constructor(private readonly CommentService: CommentService) {}
 
   // localhost:3000/comment
-  @Post()
+  @Post('/')
   async createComments(@Body() data: CreateCommentDto) {
     return await this.CommentService.createComment(data);
   }
 
   // check Api
-  @Get()
-  async getAllComments() {
-    return await this.CommentService.getAllComments();
+  @Get('/')
+  async getAllComments(@Query('reviewId') reviewId) {
+    if (reviewId) {
+      return await this.CommentService.getCommentByReviewId(reviewId);
+    } else {
+      return await this.CommentService.getAllComments();
+    }
   }
 
   // 특정공연 리뷰에 대한 댓글
 
   // /contents/1/rewiews/1/comments
   // /comments/2
-
-  // @Get('/:id')
-
-  //  /comments/1/comment
-
-  // @Get('/:reviewId/comment')
-  // async getComments(@Param('id') reviewId: number) {
-  //   const comment = await this.CommentService.getComments(reviewId);
-
-  //   return comment;
-  // }
 
   // comments/:reviewId
   @Get('/:id')

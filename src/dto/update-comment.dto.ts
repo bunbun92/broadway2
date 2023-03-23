@@ -6,6 +6,7 @@ export class UpdateCommentDto {
   @IsNumber()
   readonly reviewId: number;
 
+  @Type(() => Number)
   @IsNumber()
   readonly userId: number;
 

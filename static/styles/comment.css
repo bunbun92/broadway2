@@ -69,12 +69,22 @@
   border-radius: 8px;
 }
 
+.user-form {
+  width: 80%;
+  margin: 100 auto;
+  margin-top: 5rem;
+}
+
 .row1 {
   display: flex;
   justify-content: center;
+  margin: 20px;
 }
 
-.row2 {
+.row3 {
+  display: none;
+}
+/* .row2 {
   display: flex;
   justify-content: center;
-}
+}  */
