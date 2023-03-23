@@ -1,4 +1,10 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Get, Render } from '@nestjs/common';
 
 @Controller('render-review')
-export class ReviewController {}
+export class ReviewController {
+  @Get('/create')
+  @Render('detailCreateReview.ejs')
+  getDetail() {
+    return { message: 'thank you!' };
+  }
+}

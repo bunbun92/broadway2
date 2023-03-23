@@ -20,11 +20,11 @@ export class ReviewService {
   }
 
   // 특정 공연 리뷰목록 조회
-  async getReviewsByContentId(contentId: number) {
+  async getReviewsByPerformId(performId: string) {
     const reviews = await this.reviewRepository.find({
       where: {
         deletedAt: null,
-        contentId: contentId,
+        performId,
       },
     });
     return { reviews };
@@ -43,13 +43,13 @@ export class ReviewService {
 
   // 리뷰 작성
   createReview(
-    contentId: number,
+    performId: string,
     userId: number,
     rating: number,
     review: string
   ) {
     this.reviewRepository.insert({
-      contentId,
+      performId,
       userId,
       rating,
       review,
@@ -59,14 +59,14 @@ export class ReviewService {
   // 리뷰 수정
   async updateReview(
     id: number,
-    contentId: number,
+    performId: string,
     userId: number,
     rating: number,
     review: string
   ) {
     await this.reviewRepository.update(
       { id },
-      { contentId, userId, rating, review }
+      { performId, userId, rating, review }
     );
   }
 

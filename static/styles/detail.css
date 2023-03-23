@@ -113,13 +113,32 @@
   border-style: double;
 
   color: black;
-  font-weight: bold;
 
   display: flex;
   flex-direction: column;
 }
 
+.starDateBox {
+  margin-bottom: 15px;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.starBox {
+  width: 130px;
+
+  border: 0;
+}
+
+.dateBox {
+  font-weight: lighter;
+}
+
 .reviewContent {
+  font-weight: bold;
 }
 
 .iconBox {
