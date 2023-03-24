@@ -1,15 +1,16 @@
+import { Type } from 'class-transformer';
 import { IsNumber } from 'class-validator';
 
 export class CreateSeatsInfoDto {
+  @Type(() => Number)
   @IsNumber()
   readonly theaterId: number;
 
+  @Type(() => Number)
   @IsNumber()
-  readonly userId: number;
+  readonly maxRowIndex: number;
 
+  @Type(() => Number)
   @IsNumber()
-  readonly rowMax: number;
-
-  @IsNumber()
-  readonly columnMax: number;
+  readonly maxColumnIndex: number;
 }
