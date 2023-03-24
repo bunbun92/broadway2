@@ -1,8 +1,8 @@
 import { IsNumber, IsString } from 'class-validator';
 
 export class CreateReviewDto {
-  @IsNumber()
-  readonly contentId: number;
+  @IsString()
+  readonly performId: string;
 
   @IsNumber()
   readonly userId: number;
