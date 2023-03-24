@@ -60,6 +60,13 @@ export class OrderSeatsService {
     return seats;
   }
 
+  // //공연의 특정회차 모든 좌석들 정보 출력 + 본인의 선택 좌석 정보 출력
+  // async getAllSeatsAndMySeatsOfAContent(userId: number, contentId: number){
+  //   const query = `
+
+  //   `;
+  // }
+
   //예매 중 좌석 임시 확보(선점)하기
   async seatsReservationTemporarilyWhilePay(
     userId: number,
@@ -128,7 +135,6 @@ export class OrderSeatsService {
   }
 
   //선택(임시확보, 선점)한 좌석 정보 표시
-  //현재 가격관련된 정보 DB구조 안나와서 완성되면 추가완성 필요
   async getReservedSeats(userId: number, contentId: number) {
     // const seats = await this.orderListRepository.find({
     //   where: {
@@ -166,8 +172,9 @@ export class OrderSeatsService {
           timeSaleEndTime: this.dateToStringForQuery(timeSale[0]['endTime']),
           theater: seat.theater,
           priceBeforeDiscount: seat.priceBeforeDiscount,
-          priceAfterDiscount:
-            seat.priceBeforeDiscount * (1 - timeSale[0]['rate']), //가격 구조 완성되면 제대로 설정해야함
+          priceAfterDiscount: Math.trunc(
+            seat.priceBeforeDiscount * (1 - timeSale[0]['rate'])
+          ), //가격 구조 완성되면 제대로 설정해야함
         };
       });
     }
@@ -248,7 +255,7 @@ export class OrderSeatsService {
     );
 
     if (seats.length < seatsBefore.length) {
-      return { msg: '잘못된 접근입니다. 좌석 확보 정보 만료' };
+      return { errMsg: '잘못된 접근입니다. 좌석 확보 정보 만료' };
     }
 
     //기존의 타임스탬프가 훼손되지 않도록 보존 후 입력할것임
@@ -280,7 +287,7 @@ export class OrderSeatsService {
 
     if (alreadyChoosedSeats.length > 0) {
       return {
-        msg: '이미 다른 고객에게 선택된 좌석입니다.',
+        errMsg: '이미 다른 고객에게 선택된 좌석입니다.',
         alreadyChoosedSeats,
       };
     }
@@ -355,11 +362,44 @@ export class OrderSeatsService {
   }
 
   //선점 좌석 해제 기능 (deleteSeatsById와 기능적으로 동일)
-  async releaseSeatsById(
+  async releaseSeatsByIds(
     userId: number,
     orderListIds: Array<number>,
     orderStatusArray: Array<number>
   ) {
+    const msg = await this.deleteSeatsByIds(
+      userId,
+      orderListIds,
+      orderStatusArray
+    );
+
+    return msg;
+  }
+
+  //contentId 받아서 좌석 예매 취소
+  async deleteSeatsByContentId(
+    userId: number,
+    contentId: number,
+    orderStatusArray: Array<number>
+  ) {
+    // contentId에 해당하는 예매내역이 있는지 먼저 검증
+    const seats = await this.orderListRepository.find({
+      where: {
+        userId,
+        contentId,
+        orderStatus: In(orderStatusArray),
+      },
+    });
+
+    if (seats.length === 0) {
+      return { errMsg: '잘못된 접근입니다. 좌석 확보 정보 만료' };
+    }
+
+    //seats 에서 orderListId 배열 추출
+    let orderListIds: Array<number> = new Array(seats.length);
+    for (let i = 0; i < seats.length; i++) {
+      orderListIds[i] = seats[i].id;
+    }
     const msg = await this.deleteSeatsByIds(
       userId,
       orderListIds,
@@ -448,6 +488,27 @@ export class OrderSeatsService {
     });
 
     return order;
+  }
+
+  //진행중 or 예매완료된 예매 모두 출력
+  async getAllProcessingReservations(
+    userId: number,
+    orderStatusArray: Array<number>
+  ) {
+    const query = `
+      select ol.id, ol.contentId, ol.orderStatus, c.performRound, k.performName, c.performDate from orderList ol
+      left join contents c on c.id = ol.contentId
+      left join kopisApi k on k.performId = c.performId 
+      where ol.orderStatus in (${orderStatusArray})
+      and ol.userId = ${userId}
+      and ol.deletedAt is null
+      group by ol.contentId 
+      order by ol.id desc
+    `;
+
+    const reservations = await this.orderListRepository.query(query);
+
+    return reservations;
   }
 
   // 여기서부터 API 미연결 함수들

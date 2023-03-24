@@ -7,10 +7,12 @@ import { RenderOrderSeatsModule } from './orderSeats/render-order-seats.module';
 import { RouterController } from './router.controller';
 import { ReviewModule } from './review/render-review.module';
 import { UserModule } from './user/render-user.module';
+import { RenderTheaterModule } from './theater/render-theater.module';
 
 @Module({
   imports: [
     RenderOrderSeatsModule,
+    RenderTheaterModule,
     RenderContentModule,
     CommentModule,
     ServeStaticModule.forRoot({

@@ -17,17 +17,24 @@ export class TheatersService {
     @InjectRepository(KopisApi) private kopisApiRepository: Repository<KopisApi>
   ) {}
 
-  async getAllTheaterInfo() {
-    return await this.theaterRepository.find({
-      where: { deletedAt: null },
-      relations: ['users'],
-    });
-  }
+  // async getAllTheaterInfo() {
+  //   return await this.theaterRepository.find({
+  //     where: { deletedAt: null },
+  //     relations: ['users'],
+  //   });
+  // }
 
   async getMyTheaterInfo(userId: number) {
     return await this.theaterRepository.find({
       where: { userId, deletedAt: null },
       relations: ['users'],
+    });
+  }
+
+  async getTheaterIdByName(theater: string, userId: number) {
+    return await this.theaterRepository.findOne({
+      where: { theater, userId },
+      select: ['id'],
     });
   }
 
@@ -58,14 +65,14 @@ export class TheatersService {
 
   createSeatsInfo(
     theaterId: number,
-    userId: number,
-    rowMax: number,
-    columnMax: number
+    maxRowIndex: number,
+    maxColumnIndex: number,
+    userId: number
   ) {
     const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
-    for (let i = 0; i < rowMax; i++) {
-      for (let j = 0; j < columnMax; j++) {
+    for (let i = 0; i < maxRowIndex; i++) {
+      for (let j = 0; j < maxColumnIndex; j++) {
         const rowIndex = alphabet[i];
         const formattedColumnIndex = j < 9 ? `0${j + 1}` : `${j + 1}`;
         const seat = `${rowIndex}${formattedColumnIndex}`;
