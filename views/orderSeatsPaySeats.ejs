@@ -29,9 +29,13 @@
       let theaterGlobal = '';
       let seatsArrayGlobal = new Array();
 
+      const contentId = new URL(window.location.href).searchParams.get(
+        'contentId'
+      );
+
       $(document).ready(function () {
-        printContentAndPoster(1);
-        printReservedSeatsListAndTotalPrice(1);
+        printContentAndPoster(contentId);
+        printReservedSeatsListAndTotalPrice(contentId);
       });
 
       function printContentAndPoster(contentId) {
@@ -227,7 +231,7 @@
 
         // location.href = link;
 
-        payNow(1);
+        payNow(contentId);
 
         return;
       }

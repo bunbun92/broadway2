@@ -24,9 +24,9 @@ export class ReviewController {
   }
   // / review/1/reviews
   // 특정 공연 리뷰목록 조회
-  @Get('/:contentId/reviews')
-  async getReviewsByContentId(@Param('contentId') contentId: number) {
-    const review = await this.reviewService.getReviewsByContentId(contentId);
+  @Get('/:performId/reviews')
+  async getReviewsByPerformId(@Param('performId') performId: string) {
+    const review = await this.reviewService.getReviewsByPerformId(performId);
 
     return review;
   }
@@ -43,7 +43,7 @@ export class ReviewController {
   @Post('/')
   createReview(@Body() data: CreateReviewDto) {
     return this.reviewService.createReview(
-      data.contentId,
+      data.performId,
       data.userId,
       data.rating,
       data.review
@@ -55,7 +55,7 @@ export class ReviewController {
   updateReview(@Param('id') reviewId: number, @Body() data: UpdateReviewDto) {
     return this.reviewService.updateReview(
       reviewId,
-      data.contentId,
+      data.performId,
       data.userId,
       data.rating,
       data.review

@@ -8,7 +8,7 @@ export class RenderContentController {
   //   return { msg: 'test4용' };
   // }
 
-  @Get('/:performId')
+  @Get('/')
   @Render('detail.ejs')
   getDetail() {
     return { message: 'thank you!' };

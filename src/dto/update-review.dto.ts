@@ -2,9 +2,8 @@ import { IsNumber, IsString } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class UpdateReviewDto {
-  @Type(() => Number)
-  @IsNumber()
-  readonly contentId: number;
+  @IsString()
+  readonly performId: string;
 
   @IsNumber()
   readonly userId: number;

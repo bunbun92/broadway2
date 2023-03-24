@@ -36,7 +36,7 @@ function get_performs() {
           src="${posterImg}"
         />
         <div class="buttons">
-          <button class="specBtn" onclick="location.href='/render-content/${performId}'">상세정보</button>
+          <button class="specBtn" onclick="location.href='/render-content/?id=${performId}'">상세정보</button>
           <button class="reserveBtn">예매하기</button>
         </div>
       </div>`;

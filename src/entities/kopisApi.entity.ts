@@ -8,6 +8,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Content } from './content.entity';
+import { Review } from './review.entity';
 import { Theater } from './theater-info.entity';
 import { PriceInfo } from './theater-price.entity';
 
@@ -57,4 +58,7 @@ export class KopisApi {
 
   @OneToMany(type => PriceInfo, priceInfo => priceInfo.kopisApi)
   priceInfo: PriceInfo;
+
+  @OneToMany(type => Review, reviews => reviews.kopisApi)
+  reviews: Review;
 }

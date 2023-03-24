@@ -3,10 +3,13 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { KopisApi } from './kopisApi.entity';
 import { Comment } from './comment.entity';
 import { Like } from './like.entity';
 
@@ -15,8 +18,8 @@ export class Review {
   @PrimaryGeneratedColumn({ type: 'int', name: 'id' })
   id: number;
 
-  @Column('int')
-  contentId: number;
+  @Column('varchar')
+  performId: string;
 
   @Column('int')
   userId: number;
@@ -32,6 +35,12 @@ export class Review {
 
   @OneToMany(() => Like, like => like.review)
   likes: Like[];
+
+  @ManyToOne(() => KopisApi, KopisApi => KopisApi.reviews, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'performId', referencedColumnName: 'performId' })
+  kopisApi: KopisApi;
 
   @CreateDateColumn()
   createdAt: Date;

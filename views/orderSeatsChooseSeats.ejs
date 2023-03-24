@@ -29,9 +29,13 @@
       let theaterGlobal = '';
       let seatsArrayGlobal = new Array();
 
+      const contentId = new URL(window.location.href).searchParams.get(
+        'contentId'
+      );
+
       $(document).ready(function () {
-        printSeats(1);
-        printContent(1);
+        printSeats(contentId);
+        printContent(contentId);
         sortAndPrintChoosedSeatsListAndTotalPrice();
       });
 
@@ -200,7 +204,7 @@
       }
 
       async function nextStep() {
-        const link = '/render-order-seats/paySeats';
+        const link = `/render-order-seats/paySeats?contentId=${contentId}`;
 
         if (seatCountGlobal === 0) {
           alert('좌석을 선택해 주세요');
@@ -208,7 +212,7 @@
         }
 
         //조건절 제대로 구현하기 지금은 임시로 seatReservationWhilePay에 링크넣음
-        const check = await seatReservationWhilePay(1);
+        const check = await seatReservationWhilePay(contentId);
 
         // if (check === false) {
         //   return;
@@ -238,7 +242,7 @@
                 return false;
               }
 
-              const link = '/render-order-seats/paySeats';
+              const link = `/render-order-seats/paySeats?contentId=${contentId}`;
               location.href = link;
               return true;
             },
