@@ -16,10 +16,6 @@ function get_buttonURL() {
 }
 
 function get_reviews(performId) {
-  // const searchParams = new URLSearchParams(location.search);
-  // const performIdx = searchParams.get('id');
-  console.log('악시오스 발동!!!', performId);
-
   $.ajax({
     type: 'GET',
     url: `/review/${performId}/reviews`,
