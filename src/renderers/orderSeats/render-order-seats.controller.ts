@@ -31,4 +31,10 @@ export class RenderOrderSeatsController {
   getOrderSeatsProcessingSeats() {
     return;
   }
+
+  @Get('/reservedSeats')
+  @Render('orderSeatsReservedSeats.ejs')
+  getOrderSeatsReservedSeats() {
+    return;
+  }
 }

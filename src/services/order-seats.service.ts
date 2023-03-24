@@ -362,11 +362,44 @@ export class OrderSeatsService {
   }
 
   //선점 좌석 해제 기능 (deleteSeatsById와 기능적으로 동일)
-  async releaseSeatsById(
+  async releaseSeatsByIds(
     userId: number,
     orderListIds: Array<number>,
     orderStatusArray: Array<number>
   ) {
+    const msg = await this.deleteSeatsByIds(
+      userId,
+      orderListIds,
+      orderStatusArray
+    );
+
+    return msg;
+  }
+
+  //contentId 받아서 좌석 예매 취소
+  async deleteSeatsByContentId(
+    userId: number,
+    contentId: number,
+    orderStatusArray: Array<number>
+  ) {
+    // contentId에 해당하는 예매내역이 있는지 먼저 검증
+    const seats = await this.orderListRepository.find({
+      where: {
+        userId,
+        contentId,
+        orderStatus: In(orderStatusArray),
+      },
+    });
+
+    if (seats.length === 0) {
+      return { errMsg: '잘못된 접근입니다. 좌석 확보 정보 만료' };
+    }
+
+    //seats 에서 orderListId 배열 추출
+    let orderListIds: Array<number> = new Array(seats.length);
+    for (let i = 0; i < seats.length; i++) {
+      orderListIds[i] = seats[i].id;
+    }
     const msg = await this.deleteSeatsByIds(
       userId,
       orderListIds,
@@ -457,15 +490,20 @@ export class OrderSeatsService {
     return order;
   }
 
-  //진행중인 예매 모두 출력
-  async getAllProcessingReservations(userId: number) {
+  //진행중 or 예매완료된 예매 모두 출력
+  async getAllProcessingReservations(
+    userId: number,
+    orderStatusArray: Array<number>
+  ) {
     const query = `
       select ol.id, ol.contentId, ol.orderStatus, c.performRound, k.performName, c.performDate from orderList ol
       left join contents c on c.id = ol.contentId
       left join kopisApi k on k.performId = c.performId 
-      where ol.orderStatus in (1,2)
+      where ol.orderStatus in (${orderStatusArray})
       and ol.userId = ${userId}
       and ol.deletedAt is null
+      group by ol.contentId 
+      order by ol.id desc
     `;
 
     const reservations = await this.orderListRepository.query(query);

@@ -43,10 +43,10 @@
               let date = rows[i].performDate.split(' ')[0];
               tempHtml += `
                 <div class="processingSeatZone">
-                  <div class="processingSeatLeftZone">${date} ${rows[i].performName} ${rows[i].performRound}회차</div>
+                  <div class="processingSeatLeftZone" onclick="continueReservation(${rows[i].contentId})">${date} ${rows[i].performName} ${rows[i].performRound}회차</div>
                   <div class="processingSeatRightZone">
                     <button class="continueButton" onclick="continueReservation(${rows[i].contentId})">이어서 진행하기</button>
-                    <button class="deleteButton">취소</button>
+                    <button class="deleteButton" onclick="releaseSeatsByContentId(${rows[i].contentId})">취소하기</button>
                   </div>
                 </div>
               `;
@@ -61,6 +61,28 @@
 
       function continueReservation(contentId) {
         location.href = `/render-order-seats/editSeats?contentId=${contentId}`;
+      }
+
+      function releaseSeatsByContentId(contentId) {
+        console.log(contentId);
+        $.ajax({
+          type: 'DELETE',
+          url: '/order-seats/releaseSeatsByContentId',
+          data: {
+            contentId: contentId,
+          },
+          success: function (response) {
+            if (response.errMsg) {
+              alert(response.errMsg);
+              return;
+            }
+
+            alert(response.msg);
+
+            window.location.reload();
+            return;
+          },
+        });
       }
     </script>
     <style>
@@ -652,12 +674,12 @@
         <div class="processingSeatsTextZone">
           <div class="borderZone" style="border-top: 4px solid"></div>
           <span class="borderButtonChoosed">진행중인 예매</span>
-          <span class="borderButtonNotChoosed">예매내역</span>
+          <span class="borderButtonNotChoosed" onclick="location.href='/render-order-seats/reservedSeats'">예매내역</span>
           <span class="borderButtonNotChoosed">결제내역</span>
         </div>
         <div class="borderZone"></div>
         <div class="processingSeatsListZone" id="processingSeatsListZone">
-          <div class="processingSeatZone">
+          <!-- <div class="processingSeatZone">
             <div class="processingSeatLeftZone">23-03-05 위키드 1회차</div>
             <div class="processingSeatRightZone">
               <button class="continueButton">이어서 진행하기</button
@@ -671,7 +693,7 @@
             <div class="processingSeatRightZone">
               <button class="continueButton">이어서 진행하기</button
               ><button class="deleteButton">취소</button>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
