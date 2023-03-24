@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <!-- <link href="../static/styles/home.css" rel="stylesheet" type="text/css" /> -->
+    <meta http-equiv="page-enter" content="blendTrans(duration=0.3)" />
+    <meta http-equiv="page-exit" content="blendTrans(duration=0.3)" />
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -23,7 +25,65 @@
     ></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
-      // $(document).ready(function () {});
+      $(document).ready(function () {
+        printAllProcessingResevations();
+      });
+
+      function printAllProcessingResevations() {
+        $.ajax({
+          type: 'GET',
+          url: '/order-seats/processingReservations',
+          success: function (response) {
+            console.log(response);
+            let rows = response;
+            let tempHtml = ``;
+            document.getElementById('processingSeatsListZone').innerHTML = '';
+
+            for (let i = 0; i < rows.length; i++) {
+              let date = rows[i].performDate.split(' ')[0];
+              tempHtml += `
+                <div class="processingSeatZone">
+                  <div class="processingSeatLeftZone" onclick="continueReservation(${rows[i].contentId})">${date} ${rows[i].performName} ${rows[i].performRound}회차</div>
+                  <div class="processingSeatRightZone">
+                    <button class="continueButton" onclick="continueReservation(${rows[i].contentId})">이어서 진행하기</button>
+                    <button class="deleteButton" onclick="releaseSeatsByContentId(${rows[i].contentId})">취소하기</button>
+                  </div>
+                </div>
+              `;
+            }
+
+            $('#processingSeatsListZone').append(tempHtml);
+
+            return;
+          },
+        });
+      }
+
+      function continueReservation(contentId) {
+        location.href = `/render-order-seats/editSeats?contentId=${contentId}`;
+      }
+
+      function releaseSeatsByContentId(contentId) {
+        console.log(contentId);
+        $.ajax({
+          type: 'DELETE',
+          url: '/order-seats/releaseSeatsByContentId',
+          data: {
+            contentId: contentId,
+          },
+          success: function (response) {
+            if (response.errMsg) {
+              alert(response.errMsg);
+              return;
+            }
+
+            alert(response.msg);
+
+            window.location.reload();
+            return;
+          },
+        });
+      }
     </script>
     <style>
       /* header */
@@ -198,7 +258,7 @@
         justify-content: center;
       }
 
-      .orderSeatsleftZone {
+      .orderSeatsLeftZone {
         background-color: rgb(48, 46, 46);
         display: inline-block;
         width: 800px;
@@ -255,18 +315,54 @@
       }
       .seat {
         background-color: lightgray;
-        width: 30px;
-        height: 30px;
+        width: 40px;
+        height: 40px;
         margin: 5px;
         padding: 3px;
         display: inline-block;
         border-radius: 5px 5px 5px 5px / 5px 5px 5px 5px;
         border: 2px solid orange;
         font-weight: bold;
+        text-align: center;
+      }
+
+      .seatDisable {
+        background-color: rgb(34, 34, 34);
+        width: 40px;
+        height: 40px;
+        margin: 5px;
+        padding: 3px;
+        display: inline-block;
+        border-radius: 5px 5px 5px 5px / 5px 5px 5px 5px;
+        border: 2px solid rgb(155, 155, 155);
+        font-weight: bold;
+        text-align: center;
+      }
+
+      .seatChoosed {
+        background-color: orange;
+        width: 40px;
+        height: 40px;
+        margin: 5px;
+        padding: 3px;
+        display: inline-block;
+        border-radius: 5px 5px 5px 5px / 5px 5px 5px 5px;
+        border: 2px solid orange;
+        font-weight: bold;
+        text-align: center;
       }
 
       .seat:hover {
+        background-color: rgb(247, 224, 182);
+        cursor: pointer;
+      }
+
+      .seat:active {
         background-color: orange;
+        cursor: pointer;
+      }
+
+      .seatChoosed:hover {
         cursor: pointer;
       }
 
@@ -289,7 +385,7 @@
       .currentContent {
         /* background-color: chocolate; */
         text-align: center;
-        font-size: 120%;
+        font-size: 110%;
         font-weight: bold;
       }
 
@@ -423,6 +519,121 @@
         margin-right: -1px;
         background-color: orange;
       }
+
+      /* 진행중인 예매내역 출력페이지 스타일 */
+
+      .borderButtonNotChoosed {
+        background-color: rgb(31, 33, 54);
+        color: rgb(202, 196, 196);
+        font-weight: bold;
+        font-size: 110%;
+
+        /* padding-left: 7px;
+        padding-right: 7px; */
+        padding: 4px;
+        /* border: 1px solid rgb(150, 145, 167); */
+      }
+
+      .borderButtonNotChoosed:hover {
+        filter: brightness(120%);
+        cursor: pointer;
+      }
+
+      .borderButtonChoosed {
+        background-color: rgb(48, 51, 87);
+        font-weight: bold;
+        font-size: 110%;
+
+        /* padding-left: 7px;
+        padding-right: 7px; */
+        padding: 4px;
+
+        /* color: rgb(233, 199, 48); */
+        color: rgb(235, 233, 240);
+        /* border: 1px solid rgb(150, 145, 167); */
+      }
+
+      .processingSeatsWholeZone {
+        border-top: 2px solid rgb(0, 0, 0);
+        /* display: flex;
+        justify-content: center; */
+      }
+
+      .processingSeatsTextZone {
+        background-color: rgb(31, 33, 54);
+        margin-top: 2px;
+        width: 100%;
+        height: 35px;
+        text-align: center;
+        border-bottom: 2px solid rgb(55, 51, 70);
+        border-top: 2px solid rgb(233, 199, 48);
+      }
+
+      .processingSeatsListZone {
+        background-color: rgb(31, 33, 54);
+        width: 100%;
+        height: 700px;
+        /* display: block; */
+      }
+
+      .borderZone {
+        border-top: 15px solid rgb(31, 33, 54);
+      }
+
+      .processingSeatZone {
+        /* background-color: rgb(93, 93, 233); */
+        display: flex;
+        justify-content: center;
+        margin-bottom: 10px;
+        /* text-align: center; */
+      }
+
+      .processingSeatLeftZone {
+        /* background-color: cadetblue; */
+        width: 50%;
+        display: inline block;
+        color: rgb(220, 217, 228);
+        font-weight: bold;
+        border-radius: 5px 5px 5px 5px / 5px 5px 5px 5px;
+        border: 1px solid rgb(150, 145, 167);
+        padding: 5px;
+      }
+
+      .processingSeatLeftZone:hover {
+        filter: brightness(130%);
+        cursor: pointer;
+      }
+
+      .processingSeatRightZone {
+        /* background-color: aqua; */
+        float: right;
+        display: inline;
+      }
+
+      .continueButton {
+        background-color: rgb(31, 33, 54);
+        color: rgb(220, 217, 228);
+        font-weight: bold;
+        border-radius: 5px 5px 5px 5px / 5px 5px 5px 5px;
+        margin-left: 5px;
+        margin-top: 2px;
+      }
+
+      .continueButton:hover {
+        filter: brightness(130%);
+      }
+
+      .deleteButton {
+        background-color: rgb(31, 33, 54);
+        color: rgb(220, 217, 228);
+        font-weight: bold;
+        margin-left: 5px;
+        margin-top: 2px;
+        border-radius: 5px 5px 5px 5px / 5px 5px 5px 5px;
+      }
+      .deleteButton:hover {
+        filter: brightness(130%);
+      }
     </style>
     <title>broadway9th</title>
   </head>
@@ -458,108 +669,34 @@
       </nav>
     </header>
 
-    <div class="zone1">
-      <div class="orderSeatsWholeZone">
-        <div class="orderSeatsleftZone">
-          <div class="stageZone">
-            <span class="stage">
-              <span class="stageText">STAGE</span>
-            </span>
-          </div>
-          <div class="seatsZone">
-            <span class="seats">
-              <div class="seatsHorizontalLine">
-                <span class="seat">A1</span>
-                <span class="seat">A2</span>
-                <span class="seat">A3</span>
-                <span class="seat">A4</span>
-                <span class="seat">A5</span>
-              </div>
-              <div class="seatsHorizontalLine">
-                <span class="seat">B1</span>
-                <span class="seat">B2</span>
-                <span class="seat">B3</span>
-                <span class="seat">B4</span>
-                <span class="seat">B5</span>
-              </div>
-              <div class="seatsHorizontalLine">
-                <span class="seat">C1</span>
-                <span class="seat">C2</span>
-                <span class="seat">C3</span>
-                <span class="seat">C4</span>
-                <span class="seat">C5</span>
-              </div>
-            </span>
-          </div>
+    <div class="zone1" style="background-color: rgb(255, 255, 255)">
+      <div class="processingSeatsWholeZone">
+        <div class="processingSeatsTextZone">
+          <div class="borderZone" style="border-top: 4px solid"></div>
+          <span class="borderButtonChoosed">진행중인 예매</span>
+          <span class="borderButtonNotChoosed" onclick="location.href='/render-order-seats/reservedSeats'">예매내역</span>
+          <span class="borderButtonNotChoosed">결제내역</span>
         </div>
-        <div class="orderSeatsRightZone">
-          <div class="showCurrentContentZone">
-            <span class="currentContent">
-              위키드 Wicked 3회차 <br />
-              23-02-03 <br />
-              14:20 ~ 16:20 <br />
-            </span>
-          </div>
-          <div class="partitionLine"></div>
-          <div class="choosedSeatsListZone">
-            <div class="choosedSeatList">
-              <span class="choosedSeatListLeftZone">
-                <span class="showTheaterAndSeat">
-                  예술의전당 <br />
-                  <span class="boldSeatNumber">C1</span>
-                </span>
-                <span class="showGradeAndPrice">
-                  R석 <br />
-                  ₩25,000
-                </span>
-              </span>
-              <span class="choosedSeatListRightZone"
-                ><img src="img/cancel.png" class="cancelButton"
-              /></span>
-            </div>
-            <div class="choosedSeatList">
-              <span class="choosedSeatListLeftZone">
-                <span class="showTheaterAndSeat">
-                  예술의전당 <br />
-                  <span class="boldSeatNumber">C2</span>
-                </span>
-                <span class="showGradeAndPrice">
-                  R석 <br />
-                  ₩25,000
-                </span>
-              </span>
-              <span class="choosedSeatListRightZone"
-                ><img src="img/cancel.png" class="cancelButton"
-              /></span>
-            </div>
-            <div class="choosedSeatList">
-              <span class="choosedSeatListLeftZone">
-                <span class="showTheaterAndSeat">
-                  예술의전당 <br />
-                  <span class="boldSeatNumber">C3</span>
-                </span>
-                <span class="showGradeAndPrice">
-                  R석 <br />
-                  ₩25,000
-                </span>
-              </span>
-              <span class="choosedSeatListRightZone"
-                ><img src="img/cancel.png" class="cancelButton"
-              /></span>
+        <div class="borderZone"></div>
+        <div class="processingSeatsListZone" id="processingSeatsListZone">
+          <!-- <div class="processingSeatZone">
+            <div class="processingSeatLeftZone">23-03-05 위키드 1회차</div>
+            <div class="processingSeatRightZone">
+              <button class="continueButton">이어서 진행하기</button
+              ><button class="deleteButton">취소</button>
             </div>
           </div>
-
-          <div class="showPriceZone">
-            <span class="price"> 예상 금액: ₩75,000 </span>
-          </div>
-          <div class="postButtonZone">
-            <span class="postButtonArea">
-              <button class="postButton">다 골랐어요</button></span
-            >
+          <div class="processingSeatZone">
+            <div class="processingSeatLeftZone">
+              23-04-06 물창 아래서 어쩌고 2회차
+            </div>
+            <div class="processingSeatRightZone">
+              <button class="continueButton">이어서 진행하기</button
+              ><button class="deleteButton">취소</button>
+            </div> -->
           </div>
         </div>
       </div>
     </div>
-    <!-- <script src="../static/scripts/home.js"></script> -->
   </body>
 </html>

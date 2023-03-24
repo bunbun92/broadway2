@@ -14,6 +14,7 @@ import { DeleteOrderSeatsDto } from 'src/dto/delete-order-seats.dto';
 import { UpdateOrderSeatsDto } from 'src/dto/update-order-seats.dto';
 import { OrderSeatsService } from '../services/order-seats.service';
 import { Response } from 'express';
+import { DeleteOrderSeatsByContentIdDto } from 'src/dto/delete-order-seats-by-content-id.dto';
 
 @Controller('order-seats')
 export class OrderSeatsController {
@@ -42,12 +43,23 @@ export class OrderSeatsController {
     @Param('contentId') contentId: number
     // @Res() res: Response
   ) {
-    console.log(contentId);
-    console.log(typeof contentId);
     const seats = await this.orderSeatsService.getAllSeatsOfAContent(contentId);
 
     // return res.send(seats);
     return seats;
+  }
+
+  @Get('/:contentId/seatsWithMine')
+  async getAllSeatsAndMySeatsOfAContent(@Param('contentId') contentId: number) {
+    const userId = 1;
+
+    const seats = await this.orderSeatsService.getAllSeatsOfAContent(contentId);
+    const mySeats = await this.orderSeatsService.getReservedSeats(
+      userId,
+      contentId
+    );
+
+    return { seats, mySeats };
   }
 
   @Post('/:contentId/seatsRTWP')
@@ -92,7 +104,7 @@ export class OrderSeatsController {
     return msg;
   }
 
-  @Patch('/:contentId/editReservedSeats/')
+  @Patch('/:contentId/editReservedSeats')
   async editReservedSeats(
     @Param('contentId') contentId: number,
     @Body() data: UpdateOrderSeatsDto
@@ -121,13 +133,39 @@ export class OrderSeatsController {
   }
 
   @Delete('/releaseSeats')
-  async releaseSeatsById(@Body() data: DeleteOrderSeatsDto) {
+  async releaseSeatsByIds(@Body() data: DeleteOrderSeatsDto) {
     const userId = 1;
 
-    const msg = await this.orderSeatsService.releaseSeatsById(
+    const msg = await this.orderSeatsService.releaseSeatsByIds(
       userId,
       data.orderListIds,
       [1, 2]
+    );
+
+    return msg;
+  }
+
+  @Delete('/releaseSeatsByContentId')
+  async releaseSeatsByContentId(@Body() data: DeleteOrderSeatsByContentIdDto) {
+    const userId = 1;
+
+    const msg = await this.orderSeatsService.deleteSeatsByContentId(
+      userId,
+      data.contentId,
+      [1, 2]
+    );
+
+    return msg;
+  }
+
+  @Delete('/deleteSeatsByContentId')
+  async deleteSeatsByContentId(@Body() data: DeleteOrderSeatsByContentIdDto) {
+    const userId = 1;
+
+    const msg = await this.orderSeatsService.deleteSeatsByContentId(
+      userId,
+      data.contentId,
+      [3]
     );
 
     return msg;
@@ -147,6 +185,24 @@ export class OrderSeatsController {
     const order = await this.orderSeatsService.getAnOrder(userId, orderId);
 
     return order;
+  }
+
+  @Get('/processingReservations')
+  async getAllProcessingReservations() {
+    const userId = 1;
+    const reservations =
+      await this.orderSeatsService.getAllProcessingReservations(userId, [1, 2]);
+
+    return reservations;
+  }
+
+  @Get('/reservedReservations')
+  async getAllReservedReservations() {
+    const userId = 1;
+    const reservations =
+      await this.orderSeatsService.getAllProcessingReservations(userId, [3]);
+
+    return reservations;
   }
 
   //일정 주기로 선점 좌석 해제 평소엔 꺼놔야함
