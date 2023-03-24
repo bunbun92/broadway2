@@ -75,16 +75,21 @@
   margin-top: 5rem;
 }
 
+.rowBox {
+  display: flex;
+  justify-content: center;
+}
 .row1 {
   display: flex;
   justify-content: center;
   margin: 20px;
+  margin-left: 50px;
 }
 
 .row3 {
   display: none;
+  padding-left: 300px;
 }
-/* .row2 {
-  display: flex;
-  justify-content: center;
-}  */
+.row2 {
+  margin-left: 50px;
+}
