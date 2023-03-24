@@ -6,13 +6,14 @@ import {
   Param,
   Post,
   Req,
+  Res,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { CreatePriceInfoDto } from 'src/dto/create-price-info.dto';
 import { CreateSeatsInfoDto } from 'src/dto/create-seats-info.dto';
 import { CreateTheaterDto } from 'src/dto/create-theater.dto';
 import { TheatersService } from 'src/services/theaters.service';
-import { Request } from 'express';
+import { Response, Request } from 'express';
 
 @Controller('theaters')
 export class TheatersController {
@@ -26,16 +27,26 @@ export class TheatersController {
     return await this.theatersService.getAllTheaterList();
   }
 
-  @Get('/info')
-  async getAllTheaters() {
-    return await this.theatersService.getAllTheaterInfo();
-  }
+  // @Get('/info')
+  // async getAllTheaters() {
+  //   return await this.theatersService.getAllTheaterInfo();
+  // }
 
   @Get('/myList')
   async getMyTheaterInfo(@Req() req: Request) {
     const jwt = req.cookies.jwt;
     const userId = this.jwtService.verify(jwt)['id'];
     return await this.theatersService.getMyTheaterInfo(userId);
+  }
+
+  @Get('/getTheaterId/:theaterName')
+  async getTheaterIdByName(
+    @Req() req: Request,
+    @Param('theaterName') theaterName: string
+  ) {
+    const jwt = req.cookies.jwt;
+    const userId = this.jwtService.verify(jwt)['id'];
+    return await this.theatersService.getTheaterIdByName(theaterName, userId);
   }
 
   @Post('/createTheater')
@@ -56,12 +67,15 @@ export class TheatersController {
   }
 
   @Post('/createSeats')
-  createSeatsInfo(@Body() data: CreateSeatsInfoDto) {
+  createSeatsInfo(@Req() req: Request, @Body() data: CreateSeatsInfoDto) {
+    const jwt = req.cookies.jwt;
+    const userId = this.jwtService.verify(jwt)['id'];
+    // console.log(data);
     this.theatersService.createSeatsInfo(
       data.theaterId,
-      data.userId,
-      data.rowMax,
-      data.columnMax
+      data.maxRowIndex,
+      data.maxColumnIndex,
+      userId
     );
   }
 

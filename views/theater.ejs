@@ -26,7 +26,7 @@
 
     <title>broadway9th</title>
   </head>
-  
+
   <style>
     input[type='text'] {
       width: 200px;
@@ -63,15 +63,70 @@
           <datalist id="theaters-select" name="theaters-select"></datalist>
         </td>
         <td>
-          <button type="button" class="btn btn-secondary" onclick="addMyTheater()">극장 정보 등록</button>
+          <button
+            type="button"
+            class="btn btn-secondary"
+            onclick="addMyTheater()"
+          >
+            극장 정보 등록
+          </button>
         </td>
       </tr>
+    </table>
+    <table>
       <tr>
         <td>
-          <select>
+          <input
+            list="my-theaters-select"
+            id="my-theater-choice"
+            name="my-theater-choice"
+          />
+          <datalist
+            id="my-theaters-select"
+            name="my-theaters-select"
+          ></datalist>
         </td>
         <td>
-          <input type="number" min="1" />
+          <select id="max-row-index" name="max-row-index">
+            <option>A</option>
+            <option>B</option>
+            <option>C</option>
+            <option>D</option>
+            <option>E</option>
+            <option>F</option>
+            <option>G</option>
+            <option>H</option>
+            <option>I</option>
+            <option>J</option>
+            <option>K</option>
+            <option>L</option>
+            <option>M</option>
+            <option>N</option>
+            <option>O</option>
+            <option>P</option>
+            <option>Q</option>
+            <option>R</option>
+            <option>S</option>
+            <option>T</option>
+            <option>U</option>
+            <option>V</option>
+            <option>W</option>
+            <option>X</option>
+            <option>Y</option>
+            <option>Z</option>
+          </select>
+        </td>
+        <td>
+          <input type="number" id="max-column-index" min="1" />
+        </td>
+        <td>
+          <button
+            type="button"
+            class="btn btn-secondary"
+            onclick="createTheaterSeats()"
+          >
+            좌석 정보 등록
+          </button>
         </td>
       </tr>
     </table>
