@@ -25,64 +25,61 @@
     ></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
+
+      const performId = new URL(window.location.href).searchParams.get(
+        'performId'   
+      );
+
       $(document).ready(function () {
-        printAllPaidOrders();
+        printAllPerformRounds(performId);
       });
 
-      function printAllPaidOrders() {
+      function printAllPerformRounds(performId) {
         $.ajax({
           type: 'GET',
-          url: '/order-seats/orders',
+          url: `/order-seats/${performId}/content`,
           success: function (response) {
             console.log(response);
-            let rows = response;
+            let rows = response["contents"];
+            const performName = rows[0].kopisApi.performName;
+            const genreName = rows[0].kopisApi.genreName;
+            // const posterSrc = rows[0].kopisApi.poster;
+            // const theater = rows[0].kopisApi.theater;
             let tempHtml = ``;
+
             document.getElementById('processingSeatsListZone').innerHTML = '';
 
             for (let i = 0; i < rows.length; i++) {
-              // let date = rows[i].performDate.split(' ')[0];
+              let date = rows[i].performDate;
               tempHtml += `
                 <div class="processingSeatZone">
-                  <div class="processingSeatLeftZone" onclick="continueReservation(${rows[i].contentId})">${date} ${rows[i].performName} ${rows[i].performRound}회차</div>
+                  <div class="processingSeatLeftZone" id="${rows[i].id}" onclick="reserveSeats(${rows[i].id})">${date} ${rows[i].performRound}회차 <span style="font-size: 80%;">${rows[i].kopisApi.theater} </span></div>
                   <div class="processingSeatRightZone">
-                    <button class="continueButton">상세 보기</button>
-                    <button class="deleteButton" onclick="deleteSeatsByContentId(${rows[i].contentId})">예매 취소하기</button>
+                    <button class="continueButton" onclick="reserveSeats(${rows[i].id})">예매하기</button>                    
                   </div>
                 </div>
               `;
             }
 
             $('#processingSeatsListZone').append(tempHtml);
+            $("#contentInfo").append(genreName + ": " + performName);
 
-            return;
-          },
-        });
-      }
+            rows = response["timeSale"];
 
-      function continueReservation(contentId) {
-        location.href = `/render-order-seats/editSeats?contentId=${contentId}`;
-      }
-
-      function deleteSeatsByContentId(contentId) {
-        console.log(contentId);
-        $.ajax({
-          type: 'DELETE',
-          url: '/order-seats/deleteSeatsByContentId',
-          data: {
-            contentId: contentId,
-          },
-          success: function (response) {
-            if (response.errMsg) {
-              alert(response.errMsg);
-              return;
+            tempHtml = `
+              <span style="font-size: 70%; color: orange; float: right"> 타임세일 </span>
+            `;
+            for (let i = 0; i< rows.length; i++){
+              $(`#${rows[i].contentId}`).append(tempHtml);
             }
 
-            alert(response.msg);
-
-            window.location.reload();
             return;
           },
         });
+      }
+
+      function reserveSeats(contentId) {
+        location.href = `/render-order-seats/checkAlreadyReserved?contentId=${contentId}`;
       }
     </script>
     <style>
@@ -673,9 +670,9 @@
       <div class="processingSeatsWholeZone">
         <div class="processingSeatsTextZone">
           <div class="borderZone" style="border-top: 4px solid"></div>
-          <span class="borderButtonNotChoosed" onclick="location.href='/render-order-seats/processingSeats'">진행중인 예매</span>
-          <span class="borderButtonChoosed">예매내역</span>
-          <span class="borderButtonNotChoosed">결제내역</span>
+          <span class="borderButtonChoosed" id="contentInfo"></span>
+          <!-- <span class="borderButtonNotChoosed" onclick="location.href='/render-order-seats/reservedSeats'">예매내역</span>
+          <span class="borderButtonNotChoosed">결제내역</span> -->
         </div>
         <div class="borderZone"></div>
         <div class="processingSeatsListZone" id="processingSeatsListZone">

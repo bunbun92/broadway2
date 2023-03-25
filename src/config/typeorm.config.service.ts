@@ -40,7 +40,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
         SeatsInfo,
         PriceInfo,
       ],
-      synchronize: false,
+      synchronize: true,
     };
   }
 }

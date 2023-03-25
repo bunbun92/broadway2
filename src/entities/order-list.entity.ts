@@ -36,6 +36,9 @@ export class OrderList {
   @Column('int')
   pricePaid: number | null;
 
+  @Column('int')
+  orderId: number | null;
+
   @CreateDateColumn()
   createdAt: Date;
 
