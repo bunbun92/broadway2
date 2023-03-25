@@ -13,6 +13,7 @@ import { Like } from 'src/entities/like.entity';
 import { PriceInfo } from 'src/entities/theater-price.entity';
 import { SeatsInfo } from 'src/entities/theater-seats.entity';
 import { Theater } from 'src/entities/theater-info.entity';
+import { Order } from 'src/entities/order.entity';
 
 @Injectable()
 export class TypeOrmConfigService implements TypeOrmOptionsFactory {
@@ -39,8 +40,9 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
         Theater,
         SeatsInfo,
         PriceInfo,
+        Order,
       ],
-      synchronize: true,
+      synchronize: false,
     };
   }
 }
