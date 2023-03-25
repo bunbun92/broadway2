@@ -42,7 +42,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
         PriceInfo,
         Order,
       ],
-      synchronize: false,
+      synchronize: true,
     };
   }
 }

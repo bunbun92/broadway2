@@ -3,9 +3,12 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Order } from './order.entity';
 
 @Entity({ schema: 'broadway', name: 'orderList' })
 export class OrderList {
@@ -38,6 +41,12 @@ export class OrderList {
 
   @Column('int')
   orderId: number | null;
+
+  @ManyToOne(type => Order, orders => orders.orderList, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'orderId' })
+  orders: Order;
 
   @CreateDateColumn()
   createdAt: Date;
