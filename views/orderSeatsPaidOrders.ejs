@@ -37,22 +37,32 @@
             console.log(response);
             let rows = response;
             let tempHtml = ``;
+            let createdAt = "";
+            let deletedAt = "";
             document.getElementById('processingSeatsListZone').innerHTML = '';
 
             for (let i = 0; i < rows.length; i++) {
               // let date = rows[i].performDate.split(' ')[0];
+              let date = DateToPrettyString(rows[i].createdAt);
               tempHtml += `
                 <div class="processingSeatZone">
-                  <div class="processingSeatLeftZone" onclick="continueReservation(${rows[i].contentId})">${date} ${rows[i].performName} ${rows[i].performRound}회차</div>
+                  <div class="processingSeatLeftZone" >결제일: ${date} <span id="firstSpan${rows[i].id}"style ="color: orange; float: right">결제금액: ${rows[i].paidTotalPrice} </span> <br> 공연: ${rows[i].performName} ${rows[i].performRound}회차 <span id="secondSpan${rows[i].id}" style="color:gray; font-size:80%; float:right"> </span></div>
                   <div class="processingSeatRightZone">
-                    <button class="continueButton">상세 보기</button>
-                    <button class="deleteButton" onclick="deleteSeatsByContentId(${rows[i].contentId})">예매 취소하기</button>
+                    
                   </div>
                 </div>
               `;
             }
 
             $('#processingSeatsListZone').append(tempHtml);
+
+            for (let i = 0; i <rows.length; i++){
+              if(rows[i].deletedAt){
+                let date = DateToPrettyString(rows[i].deletedAt);
+                document.getElementById(`firstSpan${rows[i].id}`).setAttribute("style", "color:grey; float:right;");
+                $(`#secondSpan${rows[i].id}`).append(`${date} 환불됨`);
+              }
+            }
 
             return;
           },
@@ -83,6 +93,13 @@
             return;
           },
         });
+      }
+
+      function DateToPrettyString(str){
+        const date = str.split("T")[0];
+        const time = str.split("T")[1].split(".")[0];
+
+        return date + " " + time;
       }
     </script>
     <style>
@@ -601,7 +618,7 @@
 
       .processingSeatLeftZone:hover {
         filter: brightness(130%);
-        cursor: pointer;
+        /* cursor: pointer; */
       }
 
       .processingSeatRightZone {
@@ -674,8 +691,8 @@
         <div class="processingSeatsTextZone">
           <div class="borderZone" style="border-top: 4px solid"></div>
           <span class="borderButtonNotChoosed" onclick="location.href='/render-order-seats/processingSeats'">진행중인 예매</span>
-          <span class="borderButtonChoosed">예매내역</span>
-          <span class="borderButtonNotChoosed">결제내역</span>
+          <span class="borderButtonNotChoosed" onclick="location.href='/render-order-seats/reservedSeats'">예매내역</span>
+          <span class="borderButtonChoosed">결제내역</span>
         </div>
         <div class="borderZone"></div>
         <div class="processingSeatsListZone" id="processingSeatsListZone">

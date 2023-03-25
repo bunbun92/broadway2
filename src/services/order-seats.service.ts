@@ -532,14 +532,15 @@ export class OrderSeatsService {
   }
 
   //결제내역, 결제 후 취소 내역 모두 출력
-  //orders 테이블 추가로 그쪽에서 가져오기
   async getAllOrders(userId: number) {
     const query = `
-      select * from orderList
-      where orderStatus = 3
-      and pricePaid > 0
-      and userId = ${userId}
-      order by id desc
+      select o.id, o.paidTotalPrice, o.createdAt, o.deletedAt, ol.contentId, ol.orderStatus, c.performRound, k.performName, c.performDate from orders o
+      left join orderList ol on o.id = ol.orderId
+      left join contents c on ol.contentId = c.id
+      left join kopisApi k on k.performId = c.performId 
+      where o.userId = ${userId}
+      group by o.id
+      order by o.id desc
     `;
 
     const orders = await this.orderListRepository.query(query);
