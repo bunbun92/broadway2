@@ -31,34 +31,25 @@
     <%- include('headerPostLogin.ejs') %>
     <div class="detailZone1">
       <span class="detailRight">
-        <div class="posterbox">
-          <img
-            class="detailPoster"
-            src="http://www.kopis.or.kr/upload/pfmPoster/PF_PF214620_230308_161027.gif"
-          />
+        <div>
+          <div class="posterbox" id="posterbox"></div>
           <div class="Detailbuttons">
-            <div class="starBox">
-              <img src="img/starGold.png" style="height: 20px" />
-              &nbsp;4.25
-            </div>
-            <button class="detailReserveBtn">예매하기</button>
+            <div class="starAvgBox" id="starAvgBox"></div>
+            <button class="detailReserveBtn" onclick="window.location.replace">
+              예매하기
+            </button>
           </div>
-          <div class="InfoBox">
-            <p>제목 : 별이 쏟아지는 물창 아래서</p>
-            <p>장소 : 달서아트센터 (구. 웃는얼굴아트센터)</p>
-            <p>장르 : 연극</p>
-            <p>상태 : 공연예정</p>
-            <p>시작 : 2023.03.30</p>
-            <p>종료 : 2023.03.30</p>
-          </div>
+          <div class="InfoBox" id="InfoBox"></div>
         </div>
       </span>
       <span class="detailLeft">
         <div class="reviewWriteBtnBox" id="reviewWriteBtnBox"></div>
         <div class="reviewsContainer" id="reviewsContainer"></div>
+        <nav aria-label="Page navigation example">
+          <ul id="pagination" class="pagination"></ul>
+        </nav>
       </span>
     </div>
-
     <script src="scripts/detail.js"></script>
   </body>
 </html>

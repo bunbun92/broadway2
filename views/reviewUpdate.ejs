@@ -23,42 +23,32 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <link rel="stylesheet" href="styles/header.css" />
-    <link rel="stylesheet" href="styles/detailCreateReview.css" />
+    <link rel="stylesheet" href="styles/reviewManage.css" />
 
     <title>broadway9th</title>
   </head>
   <body>
     <%- include('headerPostLogin.ejs') %>
-    <div class="detailZone1">
-      <span class="detailRight">
-        <div>
-          <div class="posterbox" id="posterbox"></div>
-          <div class="Detailbuttons">
-            <div class="starAvgBox" id="starAvgBox"></div>
-          </div>
-        </div>
-      </span>
-      <span class="detailLeft">
-        <div class="createReviewZone">
-          <div class="inputsBox">
-            <div class="starInputBox">
-              <div class="input-group mb-3">
-                <label
-                  class="input-group-text"
-                  for="starIndex"
-                  style="width: 200px"
-                  >별점</label
-                >
-                <select class="form-select" id="starIndex">
-                  <option selected>-- 별점 선택 --</option>
-                  <option value="5">⭐⭐⭐⭐⭐</option>
-                  <option value="4">⭐⭐⭐⭐</option>
-                  <option value="3">⭐⭐⭐</option>
-                  <option value="2">⭐⭐</option>
-                  <option value="1">⭐</option>
-                </select>
-              </div>
+      <div class="createReviewZone" id="createReviewZone">
+        <div class="inputsBox">
+          <div class="starInputBox">
+            <div class="input-group mb-3">
+              <label
+                class="input-group-text"
+                for="starIndex"
+                style="width: 200px"
+                >별점</label
+              >
+              <select class="form-select" id="starIndex">
+                <option selected>-- 별점 선택 --</option>
+                <option value="5">⭐⭐⭐⭐⭐</option>
+                <option value="4">⭐⭐⭐⭐</option>
+                <option value="3">⭐⭐⭐</option>
+                <option value="2">⭐⭐</option>
+                <option value="1">⭐</option>
+              </select>
             </div>
+          </div>
             <div class="reviewInputs">
               <div class="input-group" style="height: 350px">
                 <span class="input-group-text" style="width: 200px"
@@ -73,15 +63,17 @@
             </div>
           </div>
           <div class="reviewCreateBtns">
-            <div class="reviewCreateBtnBox" , id="reviewCreateBtnBox"></div>
-            <button class="reviewWriteBtn" onclick="create_review(performId)">
-              리뷰 작성
+            <div class="reviewCreateBtnBox" , id="reviewCreateBtnBox">
+            <button class="BackBtn" onclick="display_none()">
+            취소
+          </button></div>
+            <button class="reviewWriteBtn" onclick="update_review()">
+              리뷰 수정
             </button>
           </div>
-        </div>
-      </span>
-    </div>
+        </div>    
+      </div>
 
-    <script src="scripts/reviewCreate.js"></script>
+    <script src="scripts/reviewManage.js"></script>
   </body>
 </html>

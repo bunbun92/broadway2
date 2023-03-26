@@ -2,23 +2,18 @@ $(document).ready(function () {
   getMySpec();
 });
 
+// 해당 계정 내정보 불러오기
 function getMySpec() {
-  // const params = res.local.user;
-  // const userId = Number(params);
-  // console.log(userId);
-  // console.log(res.local);
   $.ajax({
     type: 'GET',
     url: `/user/`,
     data: {},
     success: function (response) {
-      for (let e of response) {
-        let id = e.userId;
-        let pw = e.password;
-        let name = e.name;
-        let email = e.email;
-        let type = e.userType;
-        let temp_html = `<div class="wrap">
+      let id = response.userId;
+      let name = response.name;
+      let email = response.email;
+      let type = response.userType;
+      let temp_html = `<div class="wrap">
         <div style="color: #ffcd4a">
           <h1 style="font-weight: bolder">회원정보</h1>
         </div>
@@ -63,12 +58,59 @@ function getMySpec() {
           type="button"
           onclick="location.href='/render-user/home'"
         >
-          취소
+          홈으로
         </button>
-        <button class="joinBtn" type="button" onclick="join()">정보수정</button>
+        <button class="joinBtn" type="button" onclick="update_info()">정보수정</button>
+      </div>
+      <div class="deleteBox">
+        <button class="deleteBtn"onclick="delete_user()">회원탈퇴하기</button>
       </div>`;
-        $('zoneUpdate').append(temp_html);
-      }
+      $('.zone_login').append(temp_html);
+    },
+  });
+}
+
+// 해당 계정 정보 수정
+function update_info() {
+  let password = $('#password').val();
+  let pwCheck = $('#pwCheck').val();
+  let name = $('#name').val();
+  let email = $('#email').val();
+
+  if (password !== pwCheck) {
+    return alert('비밀번호와 비밀번호 확인이 일치하지 않습니다.');
+  }
+
+  $.ajax({
+    type: 'PUT',
+    url: '/user/update',
+    data: {
+      password,
+      name,
+      email,
+    },
+    success: function (response) {
+      alert('회원정보 수정이 완료되었습니다!');
+      window.location.reload();
+    },
+    error: function (response) {
+      alert('회원정보 수정에 실패하였습니다!');
+    },
+  });
+}
+
+// 해당 계정 회원탈퇴
+function delete_user() {
+  $.ajax({
+    type: 'DELETE',
+    url: '/user/delete',
+    data: {},
+    success: function (response) {
+      alert('회원탈퇴가 정상적으로 완료되었습니다!');
+      window.location.href = '/render-user/home';
+    },
+    error: function (response) {
+      alert('회원탈퇴에 실패하였습니다!');
     },
   });
 }

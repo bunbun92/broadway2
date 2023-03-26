@@ -1,6 +1,6 @@
 $(document).ready(function () {
-  get_buttonURL();
-  get_reviews(performId, 1);
+  get_backBtnURL();
+  get_reviews(reviewId);
   get_poster(performId);
   get_stars(performId);
   get_performInfo(performId);
@@ -8,53 +8,35 @@ $(document).ready(function () {
 
 const searchParams = new URLSearchParams(location.search);
 const performId = searchParams.get('id');
+const reviewId = searchParams.get('reviewId');
 
-// '리뷰 작성하기'버튼의 이동경로에 performId 삽입
-function get_buttonURL() {
-  let temp_html = `
-  <button class="manageBtn"onclick="location.href='/render-review/manage'">내 게시물 관리</button>
-  <button
-      class="reviewWriteBtn"
-      onclick="location.href='/render-review/create?id=${performId}'"
-    >
-      리뷰 작성하기
-    </button>
-  `;
-  $('.reviewWriteBtnBox').append(temp_html);
+// '뒤로가기'버튼의 이동경로에 performId 삽입
+function get_backBtnURL() {
+  let temp_html = `<button
+  class="BackBtn"
+  onclick="location.href='/render-content/?id=${performId}'"
+  >
+  뒤로가기</button>`;
+  $('.BtnsBox').append(temp_html);
 }
 
-// 해당 공연 모든 리뷰 불러오기
-function get_reviews(performId, page) {
+function get_reviews(reviewId) {
   $.ajax({
     type: 'GET',
-    url: `/review/${performId}/reviews`,
-    data: { performId, page },
+    url: `/review/${reviewId}`,
+    data: { reviewId },
     success: function (response) {
-      // let dataCount = response.reviews.length;
-      // console.log('datacount', response.reviews.length);
-      // console.log('datacount', dataCount);
-      // for (let i = 1; i < dataCount + 1; i++) {
-      //   if (i === page) {
-      //     $('.pagination').append(
-      //       `<li class="page-item active"><a class="page-link" onclick="get_reviews(${i})">${i}</a></li>`
-      //     );
-      //   } else {
-      //     $('.pagination').append(
-      //       `<li class="page-item"><a class="page-link" onclick="get_reviews(${i})">${i}</a></li>`
-      //     );
-      //   }
-      // }
+      console.log(response);
+      let e = response.review;
+      let reviewId = e.id;
+      let date = new Date(e.createdAt).toLocaleString().slice(0, -3);
+      let content = e.review;
+      let stars =
+        `<img src="img/starGold.png" style="height: 20px" />&nbsp;`.repeat(
+          e.rating
+        );
 
-      for (const e of response.reviews) {
-        let reviewId = e.id;
-        let date = new Date(e.createdAt).toLocaleString().slice(0, -3);
-        let content = e.review;
-        let stars =
-          `<img src="img/starGold.png" style="height: 20px" />&nbsp;`.repeat(
-            e.rating
-          );
-
-        let temp_html = `<div class="reviewBox">
+      let temp_html = `<div class="reviewBox">
       <div class="starDateBox">
         <span class="starBox"
           >${stars}</span>
@@ -77,8 +59,7 @@ function get_reviews(performId, page) {
         </button>
       </div>
     </div>`;
-        $('.reviewsContainer').append(temp_html);
-      }
+      $('.reviewsContainer').append(temp_html);
     },
     error: function (response) {
       console.log('응, 아니야.', response);

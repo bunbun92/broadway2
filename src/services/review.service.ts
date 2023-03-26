@@ -9,7 +9,7 @@ export class ReviewService {
     @InjectRepository(Review) private reviewRepository: Repository<Review>
   ) {}
 
-  // 전체 리뷰목록 조회
+  // 전체 리뷰 조회
   async getAllReviews() {
     const AllReviews = await this.reviewRepository.find({
       where: {
@@ -17,17 +17,6 @@ export class ReviewService {
       },
     });
     return { AllReviews };
-  }
-
-  // 특정 공연 리뷰목록 조회
-  async getReviewsByPerformId(performId: string) {
-    const reviews = await this.reviewRepository.find({
-      where: {
-        deletedAt: null,
-        performId,
-      },
-    });
-    return { reviews };
   }
 
   // 리뷰 상세내용 조희
@@ -39,6 +28,28 @@ export class ReviewService {
       },
     });
     return { review };
+  }
+
+  // 내가 쓴 모든 리뷰 조회
+  async getReviewsByUserId(userId: number) {
+    const myReviews = await this.reviewRepository.find({
+      where: {
+        deletedAt: null,
+        userId,
+      },
+    });
+    return { myReviews };
+  }
+
+  // 특정 공연 리뷰 조회
+  async getReviewsByPerformId(performId: string) {
+    const reviews = await this.reviewRepository.find({
+      where: {
+        deletedAt: null,
+        performId,
+      },
+    });
+    return { reviews };
   }
 
   // 리뷰 작성
@@ -57,17 +68,8 @@ export class ReviewService {
   }
 
   // 리뷰 수정
-  async updateReview(
-    id: number,
-    performId: string,
-    userId: number,
-    rating: number,
-    review: string
-  ) {
-    await this.reviewRepository.update(
-      { id },
-      { performId, userId, rating, review }
-    );
+  async updateReview(id: number, rating: number, review: string) {
+    await this.reviewRepository.update({ id }, { rating, review });
   }
 
   // 리뷰 삭제

@@ -7,19 +7,21 @@ import {
   Param,
   Get,
   Res,
+  Req,
 } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../services/user.service';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { LoginUserDto } from '../dto/login-user.dto';
 import { UpdateUserDto } from '../dto/update-user.dto';
-import { DeleteUserDto } from '../dto/delete-user.dto';
-import { GetUserInfoByIdDto } from '../dto/get-userInfoById.dto';
-
-import { Response } from 'express';
+import { Response, Request } from 'express';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private jwtService: JwtService
+  ) {}
 
   @Post('/login')
   async login(@Body() data: LoginUserDto, @Res() res: Response): Promise<any> {
@@ -57,29 +59,29 @@ export class UserController {
   }
 
   @Get('/')
-  async getMyInfoById(@Res() res: Response) {
-    // console.log(res.locals.user);
-    // console.log(res.locals);
-    // console.log(res);
+  async getMyInfoById(@Req() req: Request) {
+    const jwt = req.cookies.jwt;
+    const userId = this.jwtService.verify(jwt)['id'];
 
-    const id = res.locals.user;
-
-    return await this.userService.getMyInfoById(id);
+    return await this.userService.getMyInfoById(userId);
   }
 
   @Put('/update')
-  async updateUser(@Body() data: UpdateUserDto) {
+  async updateUser(@Body() data: UpdateUserDto, @Req() req: Request) {
+    const jwt = req.cookies.jwt;
+    const userId = this.jwtService.verify(jwt)['id'];
     await this.userService.updateUser(
-      data.userId,
+      userId,
       data.password,
       data.name,
-      data.email,
-      data.userType
+      data.email
     );
   }
 
   @Delete('/delete')
-  async deleteUser(@Body() data: DeleteUserDto) {
-    await this.userService.deleteUser(data.id);
+  async deleteUser(@Req() req: Request) {
+    const jwt = req.cookies.jwt;
+    const userId = this.jwtService.verify(jwt)['id'];
+    await this.userService.deleteUser(userId);
   }
 }

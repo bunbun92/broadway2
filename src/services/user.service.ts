@@ -84,17 +84,8 @@ export class UserService {
     });
   }
 
-  async updateUser(
-    userId: string,
-    password: string,
-    name: string,
-    email: string,
-    userType: number
-  ) {
-    await this.userRepository.update(
-      { userId },
-      { name, password, email, userType }
-    );
+  async updateUser(id: number, password: string, name: string, email: string) {
+    await this.userRepository.update({ id }, { name, password, email });
   }
 
   async deleteUser(id: number) {
