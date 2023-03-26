@@ -8,10 +8,13 @@ import {
   Body,
   Patch,
   Query,
+  Req,
 } from '@nestjs/common';
 import { CommentService } from '../services/comment.service';
 import { CreateCommentDto } from '../dto/create-comment.dto';
 import { UpdateCommentDto } from '../dto/update-comment.dto';
+// import { JwtService } from '@nestjs/jwt';
+// import { Response, Request } from 'express';
 
 // review/:id/comments/
 @Controller('comments')
@@ -19,19 +22,20 @@ export class CommentController {
   constructor(private readonly CommentService: CommentService) {}
 
   // localhost:3000/comment
-  @Post('/')
-  async createComments(@Body() data: CreateCommentDto) {
-    return await this.CommentService.createComment(data);
-  }
 
   // check Api
   @Get('/')
-  async getAllComments(@Query('reviewId') reviewId) {
+  async getAllComments(@Query('reviewId') reviewId, @Req() req: Request) {
     if (reviewId) {
       return await this.CommentService.getCommentByReviewId(reviewId);
     } else {
       return await this.CommentService.getAllComments();
     }
+  }
+
+  @Post('/')
+  async createComments(@Body() data: CreateCommentDto, @Req() req: Request) {
+    return await this.CommentService.createComment(data);
   }
 
   // 특정공연 리뷰에 대한 댓글

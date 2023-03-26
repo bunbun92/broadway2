@@ -26,11 +26,8 @@ export class OrderSeatsService {
       relations: ['kopisApi'],
     });
 
-    //타임세일이 진행중일 때만 값이 반환됨 (length > 0)
+    //타임세일이 진행중일 때만 timeSale.length > 0
     const timeSale = await this.getCurrentAllTimeSaleByPerformId(performId);
-    if (timeSale.length === 0) {
-      return contents;
-    }
 
     return { contents, timeSale };
   }
@@ -465,19 +462,20 @@ export class OrderSeatsService {
 
   //결제내역, 결제 후 취소 내역 모두 출력
   async getAllOrders(userId: number) {
-    const orders = await this.orderListRepository.find({
-      where: {
-        userId,
-        orderStatus: 3,
-      },
-      order: {
-        id: 'DESC',
-      },
-    });
+    const query = `
+      select * from orderList
+      where orderStatus = 3
+      and pricePaid > 0
+      and userId = ${userId}
+      order by id desc
+    `;
+
+    const orders = await this.orderListRepository.query(query);
 
     return orders;
   }
 
+  //쿼리로 수정 필요
   async getAnOrder(userId: number, orderId: number) {
     const order = await this.orderListRepository.findOne({
       where: {

@@ -37,4 +37,16 @@ export class RenderOrderSeatsController {
   getOrderSeatsReservedSeats() {
     return;
   }
+
+  @Get('/paidOrders')
+  @Render('orderSeatsPaidOrders.ejs')
+  getOrderSeatsPaidOrders() {
+    return;
+  }
+
+  @Get('/performRoundList')
+  @Render('orderSeatsPerformRoundList.ejs')
+  getOrderSeatsPerformRoundList() {
+    return;
+  }
 }
