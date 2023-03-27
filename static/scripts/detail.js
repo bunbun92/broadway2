@@ -54,30 +54,39 @@ function get_reviews(performId, page) {
             e.rating
           );
 
-        let temp_html = `<div class="reviewBox">
-      <div class="starDateBox">
-        <span class="starBox"
-          >${stars}</span>
-        <span class="dateBox">${date}</span>
-      </div>
-      <div class="reviewContent">
-      ${content}
-      </div>
-      <div class="iconBox">
-        <button class="likeBtn">
-          <img src="img/heartPinkEmpty.png" style="height: 20px" />&nbsp;30
-          Likes</button
-        >&nbsp;&nbsp;
-        <button 
-        class="commentBtn"
-        onclick="location.href='/render-review/comment?id=${performId}&reviewId=${reviewId}'"
-        >
-          <img src="img/comment.png" style="height: 20px" />&nbsp;45
-          Comments
-        </button>
-      </div>
-    </div>`;
-        $('.reviewsContainer').append(temp_html);
+        $.ajax({
+          type: 'GET',
+          url: `/comments/get/${reviewId}`,
+          data: { reviewId },
+          success: function (response) {
+            let commentCount = 0;
+            for (const e of response) {
+              commentCount += 1;
+            }
+
+            let temp_html = `
+        <div class="reviewBox">
+          <div class="starDateBox">
+            <span class="starBox"
+              >${stars}</span>
+            <span class="dateBox">${date}</span>
+          </div>
+          <div class="reviewContent">
+          ${content}
+          </div>
+          <div class="iconBox">
+            <button 
+              class="commentBtn"
+              onclick="location.href='/render-review/comment?id=${performId}&reviewId=${reviewId}'"
+              >
+              <img src="img/comment.png" style="height: 20px" />&nbsp;${commentCount}
+              Comments
+            </button>
+          </div>
+        </div>`;
+            $('.reviewsContainer').append(temp_html);
+          },
+        });
       }
     },
     error: function (response) {

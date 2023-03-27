@@ -1,6 +1,5 @@
 .detailZone1 {
   width: 100%;
-  height: 100%;
   background-color: rgb(253, 246, 237);
 
   display: flex;
@@ -168,11 +167,15 @@
 }
 
 .reviewContent {
+  width: 640px;
   font-weight: bold;
 }
 
 .iconBox {
   margin-top: 15px;
+
+  display: flex;
+  justify-content: right;
 }
 
 .likeBtn {
@@ -204,7 +207,7 @@
 }
 
 .commentWriteBtn {
-  width: 150px;
+  width: 170px;
   height: 50px;
   background-color: #ffcd4a;
 
@@ -213,4 +216,128 @@
   border-style: double;
 
   font-weight: 600;
+}
+
+.commentBox {
+  background-color: transparent;
+  margin-bottom: 30px;
+  padding: 30px;
+  width: 700px;
+
+  border-radius: 10px;
+  border-color: gray;
+  border-style: double;
+
+  color: black;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.commentDateBox {
+  width: 630px;
+  margin-bottom: 15px;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nameBox {
+  background-color: black;
+  color: white;
+  font-weight: bold;
+
+  padding-left: 5px;
+  padding-right: 5px;
+
+  border-radius: 5px;
+}
+
+/* -------------------------------------------- */
+
+.commentUpdateBox {
+  background-color: transparent;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  padding: 30px;
+  width: 700px;
+
+  border-radius: 10px;
+  border-color: gray;
+  border-style: double;
+
+  color: black;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.UpdateDateBox {
+  width: 630px;
+  margin-bottom: 15px;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: right;
+  align-items: center;
+}
+
+.reviewCreateBtns {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.commentWriteBackBtn {
+  width: 150px;
+  height: 40px;
+  padding: 5px;
+  margin-right: 20px;
+  background-color: transparent;
+
+  border-radius: 10px;
+  border-color: gray;
+  border-style: double;
+
+  font-weight: 600;
+}
+
+.commentWriteBtn {
+  width: 150px;
+  height: 40px;
+  padding: 5px;
+  background-color: #ffcd4a;
+
+  border-radius: 10px;
+  border-color: gray;
+  border-style: double;
+
+  font-weight: 600;
+}
+
+.updatezone {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.commentsContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.updateInputs {
+  width: 900px;
+
+  display: flex;
+  justify-content: center;
+}
+
+.commentsUpdateContainer {
+  display: flex;
+  justify-content: center;
 }

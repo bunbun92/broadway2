@@ -58,6 +58,11 @@ export class UserController {
     );
   }
 
+  @Get('/get/:userId')
+  async getInfoById(@Param('userId') userId: number) {
+    return await this.userService.getInfoById(userId);
+  }
+
   @Get('/')
   async getMyInfoById(@Req() req: Request) {
     const jwt = req.cookies.jwt;

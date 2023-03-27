@@ -49,11 +49,14 @@
           <input
             type="text"
             class="inputId"
-            id="userId"
+            id="commentContent"
             placeholder=" 댓글을 입력해주세요."
           />
-          <button class="commentWriteBtn">작성</button>
+          <button class="commentWriteBtn" onclick="create_review(reviewId)">
+            작성
+          </button>
         </div>
+        <div class="commentsContainer" id="commentsContainer"></div>
       </span>
     </div>
 

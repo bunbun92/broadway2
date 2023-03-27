@@ -46,29 +46,6 @@ function get_myReviews() {
   });
 }
 
-// 해당 리뷰 수정
-function update_review(reviewId) {
-  let rating = Number($('#starIndex').val());
-  let review = $('#reviewContent').val();
-
-  $.ajax({
-    type: 'PUT',
-    url: `/review/update/${reviewId}`,
-    data: {
-      reviewId,
-      rating,
-      review,
-    },
-    success: function (response) {
-      alert('리뷰 수정이 완료되었습니다!');
-      window.location.reload();
-    },
-    error: function (response) {
-      alert('리뷰 수정에 실패하였습니다!');
-    },
-  });
-}
-
 // 해당 리뷰 삭제
 function delete_review(reviewId) {
   $.ajax({

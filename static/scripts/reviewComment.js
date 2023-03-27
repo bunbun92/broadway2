@@ -1,6 +1,7 @@
 $(document).ready(function () {
   get_backBtnURL();
   get_reviews(reviewId);
+  get_comments(reviewId);
   get_poster(performId);
   get_stars(performId);
   get_performInfo(performId);
@@ -8,7 +9,7 @@ $(document).ready(function () {
 
 const searchParams = new URLSearchParams(location.search);
 const performId = searchParams.get('id');
-const reviewId = searchParams.get('reviewId');
+const reviewId = Number(searchParams.get('reviewId'));
 
 // '뒤로가기'버튼의 이동경로에 performId 삽입
 function get_backBtnURL() {
@@ -20,13 +21,13 @@ function get_backBtnURL() {
   $('.BtnsBox').append(temp_html);
 }
 
+// 해당 리뷰 상세내용 불러오기
 function get_reviews(reviewId) {
   $.ajax({
     type: 'GET',
     url: `/review/${reviewId}`,
     data: { reviewId },
     success: function (response) {
-      console.log(response);
       let e = response.review;
       let reviewId = e.id;
       let date = new Date(e.createdAt).toLocaleString().slice(0, -3);
@@ -44,26 +45,106 @@ function get_reviews(reviewId) {
       </div>
       <div class="reviewContent">
       ${content}
-      </div>
-      <div class="iconBox">
-        <button class="likeBtn">
-          <img src="img/heartPinkEmpty.png" style="height: 20px" />&nbsp;30
-          Likes</button
-        >&nbsp;&nbsp;
-        <button 
-        class="commentBtn"
-        onclick="location.href='/render-review/comment?id=${performId}&reviewId=${reviewId}'"
-        >
-          <img src="img/comment.png" style="height: 20px" />&nbsp;45
-          Comments
-        </button>
-      </div>
+      </div>      
     </div>`;
       $('.reviewsContainer').append(temp_html);
     },
     error: function (response) {
       console.log('응, 아니야.', response);
       alert('리뷰 작성 실패!');
+    },
+  });
+}
+
+// 해당 리뷰 모든 댓글 불러오기
+function get_comments(reviewId) {
+  $.ajax({
+    type: 'GET',
+    url: `/comments/get/${reviewId}`,
+    data: { reviewId },
+    success: function (response) {
+      console.log(response);
+      for (const e of response) {
+        let commentId = e.id;
+        let userId = e.userId;
+        let comment = e.comment;
+        let date = new Date(e.createdAt).toLocaleString().slice(0, -3);
+
+        $.ajax({
+          type: 'GET',
+          url: `/user/get/${userId}`,
+          data: { userId },
+          success: function (response) {
+            console.log('res', response);
+            let userName = response.name;
+
+            let temp_html = `
+              <div class="commentBox">
+                <div class="commentDateBox"> 
+                  <span class="nameBox">${userName}</span>
+                  <span class="dateBox">${date}</span>
+                </div>
+                <div class="reviewContent">
+                ${comment}
+                </div>
+                <div class="iconBox">
+                  <button class="likeBtn" 
+                    onclick="location.href='/reviews/update?id=${performId}&reviewId=${reviewId}&commentId=${commentId}'">
+                    <img src="img/edit.png" style="height: 20px" />&nbsp;수정
+                  </button>&nbsp;
+                  <button class="commentBtn"
+                    onclick="delete_comment(${commentId})">
+                    <img src="img/trash.png" style="height: 20px" />&nbsp;삭제
+                  </button>
+                </div>
+              </div>`;
+            $('.commentsContainer').append(temp_html);
+          },
+          error: function (response) {
+            alert('user 실패!');
+          },
+        });
+      }
+    },
+    error: function (response) {
+      alert('comment 실패!');
+    },
+  });
+}
+
+// 해당 리뷰 댓글 작성하기
+function create_review(reviewId) {
+  let comment = $('#commentContent').val();
+
+  $.ajax({
+    type: 'POST',
+    url: `/comments/create/${reviewId}`,
+    data: {
+      reviewId,
+      comment,
+    },
+    success: function (response) {
+      alert('댓글 작성이 완료되었습니다!');
+      window.location.reload();
+    },
+    error: function (response) {
+      alert('댓글 작성 실패!');
+    },
+  });
+}
+
+// 해당 댓글 삭제
+function delete_comment(commentId) {
+  $.ajax({
+    type: 'DELETE',
+    url: `/comments/delete/${commentId}`,
+    data: { commentId },
+    success: function (response) {
+      alert('댓글 삭제가 정상적으로 완료되었습니다!');
+      window.location.reload();
+    },
+    error: function (response) {
+      alert('댓글 삭제에 실패하였습니다!');
     },
   });
 }

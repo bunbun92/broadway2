@@ -78,6 +78,12 @@ export class UserService {
     return accessToken;
   }
 
+  async getInfoById(id: number) {
+    return await this.userRepository.findOne({
+      where: { id, deletedAt: null },
+    });
+  }
+
   async getMyInfoById(id: number) {
     return await this.userRepository.findOne({
       where: { id, deletedAt: null },
