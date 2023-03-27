@@ -1,6 +1,8 @@
+import { Type } from 'class-transformer';
 import { IsNumber, IsString } from 'class-validator';
 
 export class CreatePerformDto {
+  @Type(() => Number)
   @IsNumber()
   readonly performRound: number;
 
@@ -9,8 +11,4 @@ export class CreatePerformDto {
 
   @IsString()
   readonly performTime: string;
-
-  // jwt 사용시 userId 삭제
-  @IsNumber()
-  readonly userId: number;
 }
