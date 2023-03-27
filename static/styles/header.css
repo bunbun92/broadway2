@@ -108,21 +108,6 @@ input.img-button {
   position: relative;
 }
 
-.postImg {
-  /* width: 100%;
-  vertical-align: middle; */
-}
-
-.posts {
-  width: 300px;
-  height: 500px;
-  padding: 100px 15px 5px 15px;
-}
-
-.posts:hover {
-  filter: brightness(50%);
-}
-
 /* .nondisplay {
   position: absolute;
   width: 272px;
@@ -168,15 +153,40 @@ color: white;
   justify-content: center;
 }
 
-/* .postboxes {
-background-color: beige;
+.postboxes {
+  width: 300px;
 
-display: flex;
-flex-direction: column;
-justify-content: center;
-} */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.posts {
+  width: 300px;
+  height: 500px;
+  padding: 100px 15px 0px 15px;
+}
+
+.posts:hover {
+  filter: brightness(50%);
+}
+
+.performTitle {
+  background-color: black;
+
+  margin-bottom: 10px;
+
+  width: 270px;
+  color: white;
+  font-weight: bold;
+
+  display: flex;
+  justify-content: center;
+}
 
 .buttons {
+  width: 300px;
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;

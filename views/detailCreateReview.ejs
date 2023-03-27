@@ -29,46 +29,59 @@
   </head>
   <body>
     <%- include('headerPostLogin.ejs') %>
-
-    <div class="createReviewZone">
-      <div class="inputsBox">
-        <div class="starInputBox">
-          <div class="input-group mb-3">
-            <label class="input-group-text" for="starIndex" style="width: 200px"
-              >별점</label
-            >
-            <select class="form-select" id="starIndex">
-              <option selected>-- 별점 선택 --</option>
-              <option value="5">⭐⭐⭐⭐⭐</option>
-              <option value="4">⭐⭐⭐⭐</option>
-              <option value="3">⭐⭐⭐</option>
-              <option value="2">⭐⭐</option>
-              <option value="1">⭐</option>
-            </select>
+    <div class="detailZone1">
+      <span class="detailRight">
+        <div>
+          <div class="posterbox" id="posterbox"></div>
+          <div class="Detailbuttons">
+            <div class="starAvgBox" id="starAvgBox"></div>
           </div>
         </div>
-        <div class="reviewInputs">
-          <div class="input-group">
-            <span
-              class="input-group-text"
-              style="width: 200px"
-              style="height: 500px"
-              >리뷰 내용</span
-            >
-            <textarea
-              class="form-control"
-              aria-label="With textarea"
-              style="width: 800px"
-              id="reviewContent"
-            ></textarea>
+      </span>
+      <span class="detailLeft">
+        <div class="createReviewZone">
+          <div class="inputsBox">
+            <div class="starInputBox">
+              <div class="input-group mb-3">
+                <label
+                  class="input-group-text"
+                  for="starIndex"
+                  style="width: 200px"
+                  >별점</label
+                >
+                <select class="form-select" id="starIndex">
+                  <option selected>-- 별점 선택 --</option>
+                  <option value="5">⭐⭐⭐⭐⭐</option>
+                  <option value="4">⭐⭐⭐⭐</option>
+                  <option value="3">⭐⭐⭐</option>
+                  <option value="2">⭐⭐</option>
+                  <option value="1">⭐</option>
+                </select>
+              </div>
+            </div>
+            <div class="reviewInputs">
+              <div class="input-group" style="height: 350px">
+                <span class="input-group-text" style="width: 200px"
+                  >리뷰 내용</span
+                >
+                <textarea
+                  class="form-control"
+                  aria-label="With textarea"
+                  id="reviewContent"
+                ></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="reviewCreateBtns">
+            <div class="reviewCreateBtnBox" , id="reviewCreateBtnBox"></div>
+            <button class="reviewWriteBtn" onclick="create_review(performId)">
+              리뷰 작성
+            </button>
           </div>
         </div>
-      </div>
-      <button class="reviewWriteBtn" onclick="create_review()">
-        리뷰 작성
-      </button>
+      </span>
     </div>
 
-    <script src="scripts/detail.js"></script>
+    <script src="scripts/reviewCreate.js"></script>
   </body>
 </html>

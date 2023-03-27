@@ -13,19 +13,28 @@ $(document).ready(function () {
 
     $('#slectedreviewId').val($(this).data('review')); // reviewId
   });
+  ////
+  $(document).on('click', '#postComments', function (event) {
+    console.log($(this).data('id'));
+    $('#postComments').val($(this).data('id'));
+  });
 
+  ////
   $(document).on('click', '#delete-comment', function (event) {
     deleteComments($(this).data('id'));
   });
   $(document).on('click', '#aaa', function () {
     putComments();
-    alert('gg');
+    alert('내용을 입력해주세요');
   });
+
   // postComments(reviewId);
 });
+
 // 리뷰 = 댓글 리뷰 가져오구 그 뒤에 리뷰아이디 에 해당하는 comment
 
 // get All 가져오기
+//http://localhost:3000/reviews/comments/?id=4
 function getAll(reviewId) {
   let review = null;
   let content = null;
@@ -42,9 +51,25 @@ function getAll(reviewId) {
   }).then(function () {
     console.log(review.review.review);
   });
+  console.log(Id);
+  // $('#demo1 li').bind('click', function () {
+  //   alert($(this).text());
+  // });
+  // $(document).on('click', '#submit_Button', function () {
+  //   putComments();
+  //   alert('내용을 입력 좀 .. ');
+  // });
 
   $('#submit_Button').click(postComments.bind(null, Id));
 }
+
+// function checkInput() {
+//   var input = document.getElementById('postComments').value;
+//   console.log(input);
+//   if (input == '') {
+//     alert(' 내용을 입력해주세요!');
+//   }
+// }
 
 function getComments(reviewId) {
   let conmment = null;
@@ -57,6 +82,8 @@ function getComments(reviewId) {
       console.log(getComments);
 
       getComments.map(comment => {
+        let time = new Date(comment.createdAt).toLocaleString().slice(0, -3);
+        console.log(time);
         console.log(comment);
         $('#commentId').append(
           `
@@ -65,7 +92,9 @@ function getComments(reviewId) {
             <td class="comments">${comment.comment}</td>
             <td class="user-name">${comment.user.name}</td>
             <td class="created-at">
-              <time>${comment.createdAt}</time>
+              
+              <time>${time}</time>
+
             </td>
             <td>
             <button type = "button" data-id =${comment.id} data-user =${comment.userId} data-review =${comment.reviewId} id ="update-comment">수정하기</button>
@@ -86,6 +115,17 @@ function getComments(reviewId) {
 
 function postComments(reviewId) {
   let comment = $('#postComments').val();
+  console.log(comment);
+
+  if (comment == '') {
+    return alert('내용을 입력해주세요.');
+  }
+
+  // if ($('#postComments').val() == '') {
+  //   $('#submit_Button').click(postComments.bind(null));
+
+  //   alert('빈칸인디');
+  // }
 
   $.ajax({
     type: 'Post',
@@ -99,7 +139,9 @@ function postComments(reviewId) {
       reviewId,
     },
     success: function (data) {
+      console.log(data);
       window.location.reload();
+      // alert('내용을 작성해주세요 ');
     },
   });
 }

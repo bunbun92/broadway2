@@ -11,7 +11,7 @@ import { CommentController } from './comment.controller';
     }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', '../../static'),
-      serveRoot: '/reviews/comments',
+      serveRoot: '/reviews',
     }),
   ],
   controllers: [CommentController],

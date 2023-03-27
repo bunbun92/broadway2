@@ -16,7 +16,7 @@
 
 .wrap {
   width: 600px;
-  height: 600px;
+  height: 700px;
   padding: 100px;
 
   display: flex;
@@ -87,4 +87,20 @@
   border: 0px;
 
   font-weight: 600;
+}
+
+.deleteBox {
+  width: 400px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+
+  display: flex;
+  justify-content: right;
+}
+
+.deleteBtn {
+  background-color: transparent;
+  color: white;
+  font-weight: bold;
+  border: 0;
 }

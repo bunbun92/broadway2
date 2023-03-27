@@ -78,23 +78,20 @@ export class UserService {
     return accessToken;
   }
 
+  async getInfoById(id: number) {
+    return await this.userRepository.findOne({
+      where: { id, deletedAt: null },
+    });
+  }
+
   async getMyInfoById(id: number) {
     return await this.userRepository.findOne({
       where: { id, deletedAt: null },
     });
   }
 
-  async updateUser(
-    userId: string,
-    password: string,
-    name: string,
-    email: string,
-    userType: number
-  ) {
-    await this.userRepository.update(
-      { userId },
-      { name, password, email, userType }
-    );
+  async updateUser(id: number, password: string, name: string, email: string) {
+    await this.userRepository.update({ id }, { name, password, email });
   }
 
   async deleteUser(id: number) {

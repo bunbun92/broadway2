@@ -1,21 +1,22 @@
-function logout() {
-  $.ajax({
-    type: 'POST',
-    url: '/user/logout',
-    success: function (response) {
-      alert('로그아웃에 성공하였습니다.');
-      window.location.href = '/render-user/home';
-    },
-    error: function (response) {
-      alert('로그아웃에 실패하였습니다.');
-    },
-  });
-}
-
 $(document).ready(function () {
   get_performs();
 });
 
+// header 검색기능
+function filter() {
+  let search = document.getElementById('search').value.toLowerCase();
+  let perform = document.getElementsByClassName('postboxes');
+  for (let i = 0; i < perform.length; i++) {
+    performTitle = perform[i].getElementsByClassName('performTitle');
+    if (performTitle[0].innerHTML.toLowerCase().includes(search)) {
+      perform[i].style.display = 'flex';
+    } else {
+      perform[i].style.display = 'none';
+    }
+  }
+}
+
+// 모든 공연 불러오기
 function get_performs() {
   $.ajax({
     type: 'GET',
@@ -30,11 +31,14 @@ function get_performs() {
       let e = response.content;
       let performId = e.performId;
       let posterImg = e.poster;
-      let temp_html = `<div class="postboxes">
+      let title = e.performName;
+      let temp_html = `
+      <div class="postboxes">
         <img
           class="posts"
           src="${posterImg}"
         />
+        <div class="performTitle">${title}</div>
         <div class="buttons">
           <button class="specBtn" onclick="location.href='/render-content/?id=${performId}'">상세정보</button>
           <button class="reserveBtn" ">예매하기</button>
@@ -49,4 +53,18 @@ function get_performs() {
 function customAlert(text) {
   $('#alertText').text(text);
   $('#alertModal').modal('show');
+}
+
+function logout() {
+  $.ajax({
+    type: 'POST',
+    url: '/user/logout',
+    success: function (response) {
+      alert('로그아웃에 성공하였습니다.');
+      window.location.href = '/render-user/home';
+    },
+    error: function (response) {
+      alert('로그아웃에 실패하였습니다.');
+    },
+  });
 }

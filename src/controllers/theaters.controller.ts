@@ -49,6 +49,17 @@ export class TheatersController {
     return await this.theatersService.getTheaterIdByName(theaterName, userId);
   }
 
+  @Get('/getPerforms/:theaterName')
+  async getMyTheaterPerforms(@Param('theaterName') theaterName: string) {
+    console.log(theaterName);
+    return await this.theatersService.getMyTheaterPerforms(theaterName);
+  }
+
+  @Get('/getPerformId/:performName')
+  async getPerformId(@Param('performName') performName: string) {
+    return await this.theatersService.getPerformId(performName);
+  }
+
   @Post('/createTheater')
   createTheaterInfo(@Req() req: Request, @Body() data: CreateTheaterDto) {
     const jwt = req.cookies.jwt;
@@ -90,18 +101,33 @@ export class TheatersController {
   }
 
   @Post('/createPriceInfo')
-  createPriceInfo(@Body() data: CreatePriceInfoDto) {
+  createPriceInfo(@Req() req: Request, @Body() data: CreatePriceInfoDto) {
+    const jwt = req.cookies.jwt;
+    const userId = this.jwtService.verify(jwt)['id'];
+
     this.theatersService.createPriceInfo(
       data.grade,
       data.price,
       data.performId,
       data.theaterId,
-      data.userId
+      userId
     );
   }
 
   @Delete('/deletePriceInfo/:performId')
   deletePriceInfo(@Param('performId') performId: string) {
     this.theatersService.deletePriceInfo(performId);
+  }
+
+  @Get('/printSeats/:theaterId')
+  async printSeats(@Req() req: Request, @Param('theaterId') theaterId: number) {
+    const jwt = req.cookies.jwt;
+    const userId = this.jwtService.verify(jwt)['id'];
+
+    // console.log(theaterId, userId);
+
+    const seats = await this.theatersService.printSeats(theaterId, userId);
+
+    return seats;
   }
 }

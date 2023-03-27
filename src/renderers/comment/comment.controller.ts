@@ -8,4 +8,10 @@ export class CommentController {
   getComments(@Param('reviewId') reviewId: string) {
     return { reviewId };
   }
+
+  @Get('/update')
+  @Render('commentUpdate.ejs')
+  getReviewUpdate() {
+    return { message: 'thank you!' };
+  }
 }
