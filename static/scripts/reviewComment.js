@@ -2,6 +2,7 @@ $(document).ready(function () {
   get_backBtnURL();
   get_reviews(reviewId);
   get_comments(reviewId);
+  get_commentBts(reviewId);
   get_poster(performId);
   get_stars(performId);
   get_performInfo(performId);
@@ -63,8 +64,8 @@ function get_comments(reviewId) {
     url: `/comments/get/${reviewId}`,
     data: { reviewId },
     success: function (response) {
-      console.log(response);
-      for (const e of response) {
+      console.log('다타?', response);
+      for (const e of response.data) {
         let commentId = e.id;
         let userId = e.userId;
         let comment = e.comment;
@@ -76,32 +77,74 @@ function get_comments(reviewId) {
           data: { userId },
           success: function (response) {
             console.log('res', response);
+            console.log('userId', userId);
             let userName = response.name;
 
             let temp_html = `
               <div class="commentBox">
                 <div class="commentDateBox"> 
-                  <span class="nameBox">${userName}</span>
+                  <span class="nameBox"><img src="img/user.png" style="height: 20px"/>&nbsp;${userName}</span>
                   <span class="dateBox">${date}</span>
                 </div>
                 <div class="reviewContent">
                 ${comment}
                 </div>
-                <div class="iconBox">
-                  <button class="likeBtn" 
-                    onclick="location.href='/reviews/update?id=${performId}&reviewId=${reviewId}&commentId=${commentId}'">
-                    <img src="img/edit.png" style="height: 20px" />&nbsp;수정
-                  </button>&nbsp;
-                  <button class="commentBtn"
-                    onclick="delete_comment(${commentId})">
-                    <img src="img/trash.png" style="height: 20px" />&nbsp;삭제
-                  </button>
+                <div class="iconBox${commentId}" id="iconBox${commentId}">                
                 </div>
               </div>`;
             $('.commentsContainer').append(temp_html);
           },
           error: function (response) {
             alert('user 실패!');
+          },
+        });
+      }
+    },
+    error: function (response) {
+      alert('comment 실패!');
+    },
+  });
+}
+
+function get_commentBts(reviewId) {
+  $.ajax({
+    type: 'GET',
+    url: `/comments/get/${reviewId}`,
+    data: { reviewId },
+    success: function (response) {
+      console.log(response);
+      for (const e of response.data) {
+        let commentId = e.id;
+        let userId = e.userId;
+        let currentUserId = response.currentUserId;
+        let comment = e.comment;
+        let date = new Date(e.createdAt).toLocaleString().slice(0, -3);
+        console.log('currentUserId', currentUserId);
+        console.log('userId', userId);
+
+        if (userId !== currentUserId) continue;
+
+        $.ajax({
+          type: 'GET',
+          url: `/user/get/${userId}`,
+          data: { userId },
+          success: function (response) {
+            console.log('res', response);
+            let userName = response.name;
+
+            let temp_html = `
+            <button class="likeBtn" 
+            onclick="location.href='/reviews/update?id=${performId}&reviewId=${reviewId}&commentId=${commentId}'">
+            <img src="img/edit.png" style="height: 20px" />&nbsp;수정
+          </button>&nbsp;
+          <button class="commentBtn"
+            onclick="delete_comment(${commentId})">
+            <img src="img/trash.png" style="height: 20px" />&nbsp;삭제
+          </button>`;
+            $(`.iconBox${commentId}`).append(temp_html);
+          },
+          error: function (response) {
+            console.log('user 실패!');
           },
         });
       }

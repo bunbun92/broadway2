@@ -160,6 +160,18 @@
   font-weight: lighter;
 }
 
+.nameBox {
+  font-weight: bold;
+
+  padding-left: 5px;
+  padding-right: 5px;
+
+  border-radius: 5px;
+
+  display: flex;
+  align-items: center;
+}
+
 .reviewContent {
   font-weight: bold;
 }

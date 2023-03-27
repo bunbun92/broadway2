@@ -46,6 +46,7 @@ function get_reviews(performId, page) {
       // }
 
       for (const e of response.reviews) {
+        let userId = e.userId;
         let reviewId = e.id;
         let date = new Date(e.createdAt).toLocaleString().slice(0, -3);
         let content = e.review;
@@ -60,12 +61,22 @@ function get_reviews(performId, page) {
           data: { reviewId },
           success: function (response) {
             let commentCount = 0;
-            for (const e of response) {
+            for (const e of response.data) {
               commentCount += 1;
             }
 
-            let temp_html = `
+            $.ajax({
+              type: 'GET',
+              url: `/user/get/${userId}`,
+              data: { userId },
+              success: function (response) {
+                console.log('res', response);
+                let userName = response.name;
+
+                let temp_html = `
         <div class="reviewBox">
+        <span class="nameBox"><img src="img/user.png" style="height: 20px"/>&nbsp;${userName}</span>
+
           <div class="starDateBox">
             <span class="starBox"
               >${stars}</span>
@@ -84,7 +95,12 @@ function get_reviews(performId, page) {
             </button>
           </div>
         </div>`;
-            $('.reviewsContainer').append(temp_html);
+                $('.reviewsContainer').append(temp_html);
+              },
+              error: function (response) {
+                alert('user 실패!');
+              },
+            });
           },
         });
       }

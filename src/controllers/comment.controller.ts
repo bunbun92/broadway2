@@ -29,8 +29,14 @@ export class CommentController {
   // check Api
   @Get('/get/:reviewId')
   async getAllComments(@Query('reviewId') reviewId, @Req() req: Request) {
+    const jwt = req.cookies.jwt;
+    const currentUserId = this.jwtService.verify(jwt)['id'];
+
     if (reviewId) {
-      return await this.CommentService.getCommentByReviewId(reviewId);
+      return await this.CommentService.getCommentByReviewId(
+        reviewId,
+        currentUserId
+      );
     } else {
       return await this.CommentService.getAllComments();
     }

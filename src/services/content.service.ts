@@ -11,6 +11,15 @@ export class ContentService {
     @InjectRepository(KopisApi) private performRepository: Repository<KopisApi>
   ) {}
 
+  async getAllperforms() {
+    const performs = await this.performRepository.find({
+      where: {
+        deletedAt: null,
+      },
+    });
+    return { performs };
+  }
+
   async getAllContents() {
     return await { id: 1 };
   }

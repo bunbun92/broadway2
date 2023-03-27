@@ -15,11 +15,12 @@ export class CommentService {
     return this.commentRepository.find();
   }
 
-  async getCommentByReviewId(reviewId) {
-    return this.commentRepository.find({
+  async getCommentByReviewId(reviewId, currentUserId) {
+    const data = await this.commentRepository.find({
       where: { deletedAt: null, reviewId },
       relations: ['user'],
     });
+    return { data, currentUserId };
   }
 
   async getComments(id: number) {
