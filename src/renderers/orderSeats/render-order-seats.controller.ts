@@ -1,4 +1,5 @@
-import { Controller, Get, Render } from '@nestjs/common';
+import { Controller, Get, Render, Req, Res } from '@nestjs/common';
+import { Response } from 'express';
 
 @Controller('render-order-seats')
 export class RenderOrderSeatsController {
@@ -28,7 +29,8 @@ export class RenderOrderSeatsController {
 
   @Get('/processingSeats')
   @Render('orderSeatsProcessingSeats.ejs')
-  getOrderSeatsProcessingSeats() {
+  getOrderSeatsProcessingSeats(@Res() res: Response) {
+    console.log('fff' + res.locals.user.id);
     return;
   }
 
