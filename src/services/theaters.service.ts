@@ -1,5 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { _ } from 'lodash';
 import { KopisApi } from 'src/entities/kopisApi.entity';
 import { Theater } from 'src/entities/theater-info.entity';
 import { PriceInfo } from 'src/entities/theater-price.entity';
@@ -48,8 +49,37 @@ export class TheatersService {
     return theaterList.map(theater => theater.theater);
   }
 
-  createTheaterInfo(theater: string, userId: number) {
-    this.theaterRepository.insert({ theater, userId });
+  async getMyTheaterPerforms(theaterName: string) {
+    const performList = await this.kopisApiRepository
+      .createQueryBuilder('kopisApi')
+      .select('DISTINCT(kopisApi.performName)', 'performName')
+      .where({ theater: theaterName })
+      .orderBy('performName')
+      .getRawMany();
+
+    return performList.map(performName => performName.performName);
+  }
+
+  async getPerformId(performName: string) {
+    return await this.kopisApiRepository.findOne({
+      where: { performName },
+      select: ['performId', 'startDate', 'endDate'],
+    });
+  }
+
+  async createTheaterInfo(theater: string, userId: number) {
+    const theaterInDB = await this.theaterRepository.findOne({
+      where: { theater, userId, deletedAt: null },
+    });
+
+    console.log(theater, userId);
+    console.log(theaterInDB);
+
+    if (_.isNil(theaterInDB)) {
+      this.theaterRepository.insert({ theater, userId });
+    } else {
+      throw new Error('이미 내 극장으로 등록되어 있습니다.');
+    }
   }
 
   deleteTheaterInfo(id: number) {
@@ -63,26 +93,37 @@ export class TheatersService {
     });
   }
 
-  createSeatsInfo(
+  async createSeatsInfo(
     theaterId: number,
     maxRowIndex: number,
     maxColumnIndex: number,
     userId: number
   ) {
     const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+    const seatsInDB = await this.seatsInfoRepository.find({
+      where: { theaterId, userId, deletedAt: null },
+      select: ['seat'],
+    });
 
-    for (let i = 0; i < maxRowIndex; i++) {
-      for (let j = 0; j < maxColumnIndex; j++) {
-        const rowIndex = alphabet[i];
-        const formattedColumnIndex = j < 9 ? `0${j + 1}` : `${j + 1}`;
-        const seat = `${rowIndex}${formattedColumnIndex}`;
+    console.log(theaterId, userId);
+    console.log(seatsInDB);
 
-        this.seatsInfoRepository.insert({
-          theaterId,
-          seat,
-          userId,
-        });
+    if (_.isEmpty(seatsInDB)) {
+      for (let i = 0; i < maxRowIndex; i++) {
+        for (let j = 0; j < maxColumnIndex; j++) {
+          const rowIndex = alphabet[i];
+          const formattedColumnIndex = j < 9 ? `0${j + 1}` : `${j + 1}`;
+          const seat = `${rowIndex}${formattedColumnIndex}`;
+
+          this.seatsInfoRepository.insert({
+            theaterId,
+            seat,
+            userId,
+          });
+        }
       }
+    } else {
+      throw new Error('이미 좌석 배치 정보가 등록된 극장입니다.');
     }
   }
 
@@ -97,23 +138,39 @@ export class TheatersService {
     });
   }
 
-  createPriceInfo(
+  async createPriceInfo(
     grade: number,
     price: number,
     performId: string,
     theaterId: number,
     userId: number
   ) {
-    this.priceInfoRepository.insert({
-      grade,
-      price,
-      performId,
-      theaterId,
-      userId,
-    });
+    const priceInfoInDB = await this.getPriceInfoByPerformId(performId);
+    console.log(performId);
+    console.log(priceInfoInDB);
+
+    if (_.isEmpty(priceInfoInDB)) {
+      this.priceInfoRepository.insert({
+        grade,
+        price,
+        performId,
+        theaterId,
+        userId,
+      });
+    } else {
+      throw new Error('이미 가격 정보가 등록된 공연입니다.');
+    }
   }
 
   deletePriceInfo(performId: string) {
     this.priceInfoRepository.softDelete({ performId });
+  }
+
+  async printSeats(theaterId: number, userId: number) {
+    return await this.seatsInfoRepository.find({
+      where: { theaterId, userId, deletedAt: null },
+      select: ['seat'],
+      order: { seat: 'ASC' },
+    });
   }
 }
