@@ -68,8 +68,13 @@ export class TheatersController {
   }
 
   @Delete('/deleteTheater/:theaterId')
-  deleteTheaterInfo(@Param('theaterId') theaterId: number) {
-    this.theatersService.deleteTheaterInfo(theaterId);
+  deleteTheaterInfo(
+    @Req() req: Request,
+    @Param('theaterId') theaterId: number
+  ) {
+    const jwt = req.cookies.jwt;
+    const userId = this.jwtService.verify(jwt)['id'];
+    this.theatersService.deleteTheaterInfo(theaterId, userId);
   }
 
   @Get('/seatsList/:theaterId')

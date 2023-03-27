@@ -1,7 +1,21 @@
+function logout() {
+  $.ajax({
+    type: 'POST',
+    url: '/user/logout',
+    success: function (response) {
+      alert('로그아웃에 성공하였습니다.');
+      window.location.href = '/render-user/home';
+    },
+    error: function (response) {
+      alert('로그아웃에 실패하였습니다.');
+    },
+  });
+}
+
 $(document).ready(function () {
   getTheaterList();
   getMyTheaters();
-  getMyTheatersContent();
+  // getMyTheatersContent();
   $('.input-daterange').datepicker({
     format: 'yyyy-mm-dd',
     autoclose: true,
@@ -35,24 +49,64 @@ function getMyTheaters() {
 
       for (let i = 0; i < rows.length; i++) {
         const option = $('<option>' + rows[i]['theater'] + '</option>');
+        $('#delete-theaters-select').append(option);
+      }
+      for (let i = 0; i < rows.length; i++) {
+        const option = $('<option>' + rows[i]['theater'] + '</option>');
+        $('#my-theaters-select-price').append(option);
+      }
+      for (let i = 0; i < rows.length; i++) {
+        const option = $('<option>' + rows[i]['theater'] + '</option>');
+        $('#my-theaters-select-content').append(option);
+      }
+      for (let i = 0; i < rows.length; i++) {
+        const option = $('<option>' + rows[i]['theater'] + '</option>');
         $('#my-theaters-select').append(option);
       }
     },
   });
 }
 
-function getMyTheatersContent() {
+// function getMyTheatersContent() {
+//   $.ajax({
+//     type: 'GET',
+//     url: '/theaters/myList',
+//     data: {},
+//     success: function (response) {
+//       const rows = response;
+
+//       for (let i = 0; i < rows.length; i++) {
+//         const option = $('<option>' + rows[i]['theater'] + '</option>');
+//         $('#my-theaters-select-content').append(option);
+//       }
+//     },
+//   });
+// }
+
+function getMyTheaterIdForDelete() {
+  let theaterName = $('#delete-theater-choice').val();
+
   $.ajax({
     type: 'GET',
-    url: '/theaters/myList',
+    url: `/theaters/getTheaterId/${theaterName}`,
     data: {},
     success: function (response) {
-      const rows = response;
+      // console.log(response['id']);
+      theaterId = response['id'];
+      deleteMyTheaterByTheaterId(theaterId);
+    },
+  });
+}
 
-      for (let i = 0; i < rows.length; i++) {
-        const option = $('<option>' + rows[i]['theater'] + '</option>');
-        $('#my-theaters-select-content').append(option);
-      }
+function deleteMyTheaterByTheaterId(theaterId) {
+  let theaterName = $('#delete-theater-choice').val();
+
+  $.ajax({
+    type: 'DELETE',
+    url: `/theaters/deleteTheater/${theaterId}`,
+    data: {},
+    success: function (response) {
+      alert(theaterName + '을 내 극장 목록에서 삭제하였습니다.');
     },
   });
 }
@@ -60,7 +114,7 @@ function getMyTheatersContent() {
 function getMyTheaterPerforms() {
   let theaterName = $('#my-theater-choice-price').val();
 
-  console.log(theaterName, typeof theaterName);
+  // console.log(theaterName, typeof theaterName);
 
   $.ajax({
     type: 'GET',
@@ -131,6 +185,7 @@ function createTheaterSeats() {
 }
 
 function createTheaterSeatsById(theaterId) {
+  let theaterName = $('#my-theater-choice').val();
   let maxRowIndexText = $('#max-row-index').val();
   let maxColumnIndex = parseInt($('#max-column-index').val());
 
@@ -147,7 +202,7 @@ function createTheaterSeatsById(theaterId) {
       maxColumnIndex,
     },
     success: function (response) {
-      alert(response['message']);
+      alert(theaterName + '의 좌석 배치 정보를 생성하였습니다.');
       printSeatsById(theaterId);
     },
   });
@@ -223,8 +278,7 @@ function createPriceInfo(theaterId, performId) {
           theaterId,
         },
         success: function (response) {
-          alert(response['message']);
-          location.reload();
+          alert('등급 구분이 없는 공연의 가격 정보를 등록하였습니다.');
         },
       });
     }
@@ -243,8 +297,7 @@ function createPriceInfo(theaterId, performId) {
           theaterId,
         },
         success: function (response) {
-          alert(response['message']);
-          location.reload();
+          alert('VIP석 가격 정보를 등록하였습니다.');
         },
       });
     }
@@ -263,8 +316,7 @@ function createPriceInfo(theaterId, performId) {
           theaterId,
         },
         success: function (response) {
-          alert(response['message']);
-          location.reload();
+          alert('R석 가격 정보를 등록하였습니다.');
         },
       });
     }
@@ -283,8 +335,7 @@ function createPriceInfo(theaterId, performId) {
           theaterId,
         },
         success: function (response) {
-          alert(response['message']);
-          location.reload();
+          alert('S석 가격 정보를 등록하였습니다.');
         },
       });
     }
@@ -303,8 +354,7 @@ function createPriceInfo(theaterId, performId) {
           theaterId,
         },
         success: function (response) {
-          alert(response['message']);
-          location.reload();
+          alert('A석 가격 정보를 등록하였습니다.');
         },
       });
     }
@@ -323,8 +373,7 @@ function createPriceInfo(theaterId, performId) {
           theaterId,
         },
         success: function (response) {
-          alert(response['message']);
-          location.reload();
+          alert('B석 가격 정보를 등록하였습니다.');
         },
       });
     }

@@ -36,7 +36,7 @@
     <title>broadway9th</title>
   </head>
   <body>
-    <%- include('header.ejs') %>
+    <%- include('headerAdmin.ejs') %>
     <div class="accordion" id="accordionPanelsStayOpenExample">
       <div class="accordion-item">
         <h2 class="accordion-header" id="panelsStayOpen-headingOne">
@@ -57,8 +57,9 @@
           aria-labelledby="panelsStayOpen-headingOne"
         >
           <div class="accordion-body">
-            <table>
-              <tr>
+            <p><h5>내 극장 추가하기</h5></p>
+            <p>
+              <table>
                 <td valgn="top">
                   <input
                     list="theaters-select"
@@ -79,8 +80,33 @@
                     극장 등록
                   </button>
                 </td>
-              </tr>
-            </table>
+              </table>
+            </p>
+            <p><h5>극장 관리</h5></p>
+            <p>
+              <table>
+                <td valgn="top">
+                  <input
+                    list="delete-theaters-select"
+                    id="delete-theater-choice"
+                    name="delete-theater-choice"
+                  />
+                  <datalist
+                    id="delete-theaters-select"
+                    name="delete-theaters-select"
+                  ></datalist>
+                </td>
+                <td>
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    onclick="getMyTheaterIdForDelete()"
+                  >
+                    삭제
+                  </button>
+                </td>
+              </table>
+            </p>
           </div>
         </div>
       </div>
@@ -222,13 +248,13 @@
                 <h5>극장 이름</h5>
                 <td>
                   <input
-                    list="my-theaters-select"
+                    list="my-theaters-select-price"
                     id="my-theater-choice-price"
                     name="my-theater-choice-price"
                   />
                   <datalist
-                    id="my-theaters-select"
-                    name="my-theaters-select"
+                    id="my-theaters-select-price"
+                    name="my-theaters-select-price"
                   ></datalist>
                 </td>
                 <td>
