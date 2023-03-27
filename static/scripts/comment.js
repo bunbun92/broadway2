@@ -63,13 +63,13 @@ function getAll(reviewId) {
   $('#submit_Button').click(postComments.bind(null, Id));
 }
 
-function checkInput() {
-  var input = document.getElementById('postComments').value;
-  console.log(input);
-  if (input == '') {
-    alert('입력해주세요!');
-  }
-}
+// function checkInput() {
+//   var input = document.getElementById('postComments').value;
+//   console.log(input);
+//   if (input == '') {
+//     alert(' 내용을 입력해주세요!');
+//   }
+// }
 
 function getComments(reviewId) {
   let conmment = null;
@@ -80,10 +80,10 @@ function getComments(reviewId) {
     success: function (data) {
       getComments = data;
       console.log(getComments);
-      let time = new Date().toLocaleString().slice(0, -3);
-      console.log(time);
 
       getComments.map(comment => {
+        let time = new Date(comment.createdAt).toLocaleString().slice(0, -3);
+        console.log(time);
         console.log(comment);
         $('#commentId').append(
           `
@@ -92,7 +92,9 @@ function getComments(reviewId) {
             <td class="comments">${comment.comment}</td>
             <td class="user-name">${comment.user.name}</td>
             <td class="created-at">
-              <time>${comment.createdAt}</time>
+              
+              <time>${time}</time>
+
             </td>
             <td>
             <button type = "button" data-id =${comment.id} data-user =${comment.userId} data-review =${comment.reviewId} id ="update-comment">수정하기</button>
@@ -115,9 +117,8 @@ function postComments(reviewId) {
   let comment = $('#postComments').val();
   console.log(comment);
 
-  if (comment === '') {
-    alert('내용을 입력해주세요.');
-    return;
+  if (comment == '') {
+    return alert('내용을 입력해주세요.');
   }
 
   // if ($('#postComments').val() == '') {
