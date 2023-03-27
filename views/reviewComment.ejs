@@ -23,7 +23,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <link rel="stylesheet" href="styles/header.css" />
-    <link rel="stylesheet" href="styles/detail.css" />
+    <link rel="stylesheet" href="styles/reviewComment.css" />
 
     <title>broadway9th</title>
   </head>
@@ -43,13 +43,23 @@
         </div>
       </span>
       <span class="detailLeft">
-        <div class="reviewWriteBtnBox" id="reviewWriteBtnBox"></div>
+        <div class="BtnsBox" id="BtnsBox"></div>
         <div class="reviewsContainer" id="reviewsContainer"></div>
-        <nav aria-label="Page navigation example">
-          <ul id="pagination" class="pagination"></ul>
-        </nav>
+        <div class="commentInputs">
+          <input
+            type="text"
+            class="inputId"
+            id="commentContent"
+            placeholder=" 댓글을 입력해주세요."
+          />
+          <button class="commentWriteBtn" onclick="create_review(reviewId)">
+            작성
+          </button>
+        </div>
+        <div class="commentsContainer" id="commentsContainer"></div>
       </span>
     </div>
-    <script src="scripts/detail.js"></script>
+
+    <script src="scripts/reviewComment.js"></script>
   </body>
 </html>

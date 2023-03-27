@@ -15,6 +15,7 @@ import { UpdateOrderSeatsDto } from 'src/dto/update-order-seats.dto';
 import { OrderSeatsService } from '../services/order-seats.service';
 import { Response } from 'express';
 import { DeleteOrderSeatsByContentIdDto } from 'src/dto/delete-order-seats-by-content-id.dto';
+import { DeleteOrderSeatsByOrderIdDto } from 'src/dto/delete-order-seats-by-order-id.dto';
 
 @Controller('order-seats')
 export class OrderSeatsController {
@@ -158,6 +159,19 @@ export class OrderSeatsController {
     return msg;
   }
 
+  @Delete('/deleteSeatsByOrderId')
+  async deleteSeatsByOrderId(@Body() data: DeleteOrderSeatsByOrderIdDto) {
+    const userId = 1;
+
+    const msg = await this.orderSeatsService.deleteSeatsByOrderId(
+      userId,
+      data.orderId,
+      [3]
+    );
+
+    return msg;
+  }
+
   @Delete('/deleteSeatsByContentId')
   async deleteSeatsByContentId(@Body() data: DeleteOrderSeatsByContentIdDto) {
     const userId = 1;
@@ -200,7 +214,7 @@ export class OrderSeatsController {
   async getAllReservedReservations() {
     const userId = 1;
     const reservations =
-      await this.orderSeatsService.getAllProcessingReservations(userId, [3]);
+      await this.orderSeatsService.getAllReservedReservations(userId, [3]);
 
     return reservations;
   }

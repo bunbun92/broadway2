@@ -1,3 +1,76 @@
+.detailZone1 {
+  width: 100%;
+  height: 100%;
+  background-color: rgb(253, 246, 237);
+
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.detailRight {
+  width: 500px;
+
+  display: flex;
+  justify-content: center;
+}
+
+.detailPoster {
+  margin-top: 80px;
+  margin-bottom: 10px;
+  width: 300px;
+  height: 450px;
+  /* padding: 50px 15px 5px 15px; */
+}
+
+.Detailbuttons {
+  width: 300px;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.starBox {
+  width: 100px;
+  height: 40px;
+
+  color: black;
+  font-weight: bold;
+
+  border-radius: 10px;
+  border-color: gray;
+  border-style: double;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.starAvgBox {
+  width: 100px;
+  height: 40px;
+
+  color: black;
+  font-weight: bold;
+
+  border-radius: 10px;
+  border-color: gray;
+  border-style: double;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.detailLeft {
+  width: 1000px;
+
+  display: flex;
+  justify-content: left;
+  flex-direction: column;
+}
+
 .createReviewZone {
   width: 100%;
   height: 900px;
@@ -41,6 +114,25 @@
   width: 150px;
   padding: 5px;
   background-color: #ffcd4a;
+
+  border-radius: 10px;
+  border-color: gray;
+  border-style: double;
+
+  font-weight: 600;
+}
+
+.reviewCreateBtns {
+  display: flex;
+  flex-direction: row;
+}
+
+.BackBtn {
+  margin-top: 20px;
+  margin-right: 20px;
+  width: 150px;
+  padding: 5px;
+  background-color: transparent;
 
   border-radius: 10px;
   border-color: gray;

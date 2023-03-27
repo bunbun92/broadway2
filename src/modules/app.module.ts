@@ -26,6 +26,9 @@ import { CommentModule } from './comment.module';
 import { RouterModule } from '../renderers/router.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { TheatersModule } from './theaters.module';
+import { UserController } from 'src/renderers/user/render-user.controller';
+import { ReviewController } from 'src/renderers/review/render-review.controller';
+import { RenderOrderSeatsController } from 'src/renderers/orderSeats/render-order-seats.controller';
 
 @Module({
   imports: [
@@ -55,7 +58,7 @@ import { TheatersModule } from './theaters.module';
     TheatersModule,
   ],
   controllers: [AppController],
-  providers: [AppService, AuthMiddleware],
+  providers: [AppService, AuthMiddleware, UserController],
 })
 // export class AppModule implements NestModule {
 //   configure(consumer: MiddlewareConsumer) {
@@ -64,7 +67,9 @@ import { TheatersModule } from './theaters.module';
 //   }
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AuthMiddleware);
+    consumer
+      .apply(AuthMiddleware)
+      .forRoutes(RenderOrderSeatsController, '/render-user/membership');
     // .forRoutes('/user/logout');
     // '*'
     // { path: 'user/update', method: RequestMethod.PUT }

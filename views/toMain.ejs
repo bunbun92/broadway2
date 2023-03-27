@@ -22,19 +22,18 @@
     ></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-    <link rel="stylesheet" href="styles/header.css" />
-    <link rel="stylesheet" href="styles/join.css" />
-    <link rel="stylesheet" href="styles/membership.css" />
+    <title>broadway9th</title>
 
-    <title>broadway9th membership</title>
+    <script>
+      // const contentId = new URL(window.location.href).searchParams.get(
+      //   'contentId'
+      // );
+
+      $(document).ready(function () {
+        alert('로그인 화면으로 이동합니다');
+        location.href = '/render-user/login';
+      });
+    </script>
   </head>
-  <body>
-    <%- include('headerPostLogin.ejs') %>
-
-    <div>
-      <div class="zone_login" id="zone_login"></div>
-    </div>
-
-    <script src="scripts/membership.js"></script>
-  </body>
+  <body></body>
 </html>
