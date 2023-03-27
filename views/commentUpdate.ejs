@@ -23,18 +23,32 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <link rel="stylesheet" href="styles/header.css" />
-    <link rel="stylesheet" href="styles/join.css" />
-    <link rel="stylesheet" href="styles/membership.css" />
+    <link rel="stylesheet" href="styles/reviewComment.css" />
 
-    <title>broadway9th membership</title>
+    <title>broadway9th</title>
   </head>
   <body>
     <%- include('headerPostLogin.ejs') %>
-
-    <div>
-      <div class="zone_login" id="zone_login"></div>
+    <div class="detailZone1">
+      <div class="updatezone">
+        <div class="commentsUpdateContainer" id="commentsUpdateContainer"></div>
+        <div class="updateInputs">
+          <input
+            type="text"
+            class="inputId"
+            id="commentContent"
+            placeholder=" 댓글을 입력해주세요."
+          />
+        </div>
+        <div class="reviewCreateBtns">
+          <div class="reviewCreateBtnBox" , id="reviewCreateBtnBox"></div>
+          <button class="commentWriteBtn" onclick="update_comment(commentId)">
+            댓글 수정
+          </button>
+        </div>
+      </span>
     </div>
 
-    <script src="scripts/membership.js"></script>
+    <script src="scripts/commentUpdate.js"></script>
   </body>
 </html>
