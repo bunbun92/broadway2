@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Content } from 'src/entities/content.entity';
 import { OrderList } from 'src/entities/order-list.entity';
+import { Order } from 'src/entities/order.entity';
 import { Seat } from 'src/entities/seats.entity';
 import { TimeSale } from 'src/entities/time-sale.entity';
 import { In, Not, Repository } from 'typeorm';
@@ -14,7 +15,9 @@ export class OrderSeatsService {
     @InjectRepository(TimeSale)
     private timeSaleRepository: Repository<TimeSale>,
     @InjectRepository(OrderList)
-    private orderListRepository: Repository<OrderList>
+    private orderListRepository: Repository<OrderList>,
+    @InjectRepository(Order)
+    private orderRepository: Repository<Order>
   ) {}
   //공연 정보 상세 출력 (모든 회차)
   async getContentsByPerformId(performId: string) {
@@ -180,13 +183,14 @@ export class OrderSeatsService {
   }
 
   //좌석 예매
-  //가격관련 DB완성되면 결제 관련 기능 추가 필요
+  //가격관련 DB완성되면 결제 관련 기능 추가 필요 -- 해결
   async payReservedSeats(
     userId: number,
     contentId: number,
     seats: Array<string>
   ) {
-    let price: number = 1; // 결제관련 DB 구현 후 이부분 수정 필요
+    let price: Array<number> = new Array(seats.length); // 결제관련 DB 구현 후 이부분 수정 필요
+    let totalPrice: number = 0;
 
     //현재 확보된 DB내의 좌석정보와 req.body에서 받은 좌석정보가 완벽하게 일치하는지 한번 더 검증
     const seatsOrderStatusCheck = await this.getReservedSeatsInfoSpecific(
@@ -200,27 +204,56 @@ export class OrderSeatsService {
       return { errMsg: '잘못된 접근입니다. 좌석 확보 정보 만료' };
     }
 
-    price = seatsOrderStatusCheck[0].priceBeforeDiscount;
+    for (let i = 0; i < seatsOrderStatusCheck.length; i++) {
+      price[i] = seatsOrderStatusCheck[i].priceBeforeDiscount;
+      totalPrice += price[i];
+    }
 
     const timeSale = await this.getCurrentTimeSaleByContentId(contentId);
 
     if (timeSale.length > 0) {
-      price *= 1 - timeSale[0]['rate'];
+      totalPrice = 0;
+      for (let i = 0; i < seatsOrderStatusCheck.length; i++) {
+        price[i] = Math.trunc(price[i] * (1 - timeSale[0]['rate']));
+        totalPrice += price[i];
+      }
     }
 
-    //아래 orderListRepository와 seatRepository join해서 한번에 바꾸는 방법 고려
-    await this.orderListRepository.update(
-      {
-        userId,
-        contentId,
-        // deletedAt: null,
-        orderStatus: In([1, 2]),
-        seat: In(seats),
-      },
-      { orderStatus: 3, pricePaid: price, timeSaleRate: timeSale[0]['rate'] }
-    );
+    let query = `
+    insert into orders (userId, paidTotalPrice) values (${userId}, ${totalPrice});
+    `;
 
-    await this.seatRepository.update(
+    const result = await this.orderRepository.query(query);
+
+    //좌석마다 가격이 다를 경우 (등급별 가격) 고려해서 부득이하게 반복문으로 처리
+    for (let i = 0; i < seats.length; i++) {
+      this.orderListRepository.update(
+        {
+          userId,
+          contentId,
+          orderStatus: In([1, 2]),
+          seat: seats[i],
+        },
+        {
+          orderStatus: 3,
+          pricePaid: price[i],
+          timeSaleRate: timeSale[0]['rate'],
+          orderId: result.insertId,
+        }
+      );
+    }
+    // await this.orderListRepository.update(
+    //   {
+    //     userId,
+    //     contentId,
+    //     // deletedAt: null,
+    //     orderStatus: In([1, 2]),
+    //     seat: In(seats),
+    //   },
+    //   { orderStatus: 3, pricePaid: price, timeSaleRate: timeSale[0]['rate'] }
+    // );
+
+    this.seatRepository.update(
       {
         contentId,
         // deletedAt: null,
@@ -373,7 +406,45 @@ export class OrderSeatsService {
     return msg;
   }
 
+  //orderId 받아서 좌석 예매 취소
+  async deleteSeatsByOrderId(
+    userId: number,
+    orderId: number,
+    orderStatusArray: Array<number>
+  ) {
+    const query = `
+      select ol.id from orders o
+      left join orderList ol on o.id = ol.orderId
+      where o.userId = ${userId}
+      and o.id = ${orderId}
+      and o.deletedAt is null
+      and ol.deletedAt is null
+    `;
+
+    const temp = await this.orderRepository.query(query);
+    if (temp.length === 0) {
+      return { errMsg: '주문 정보 만료' };
+    }
+
+    let orderListIds: Array<number> = new Array(temp.length);
+
+    for (let i = 0; i < temp.length; i++) {
+      orderListIds[i] = temp[i].id;
+    }
+
+    this.orderRepository.softDelete(orderId);
+
+    const msg = await this.deleteSeatsByIds(
+      userId,
+      orderListIds,
+      orderStatusArray
+    );
+
+    return msg;
+  }
+
   //contentId 받아서 좌석 예매 취소
+  //해당 회차의 모든 결제건 전부 취소
   async deleteSeatsByContentId(
     userId: number,
     contentId: number,
@@ -463,11 +534,13 @@ export class OrderSeatsService {
   //결제내역, 결제 후 취소 내역 모두 출력
   async getAllOrders(userId: number) {
     const query = `
-      select * from orderList
-      where orderStatus = 3
-      and pricePaid > 0
-      and userId = ${userId}
-      order by id desc
+      select o.id, o.paidTotalPrice, o.createdAt, o.deletedAt, ol.contentId, ol.orderStatus, c.performRound, k.performName, c.performDate from orders o
+      left join orderList ol on o.id = ol.orderId
+      left join contents c on ol.contentId = c.id
+      left join kopisApi k on k.performId = c.performId 
+      where o.userId = ${userId}
+      group by o.id
+      order by o.id desc
     `;
 
     const orders = await this.orderListRepository.query(query);
@@ -476,6 +549,7 @@ export class OrderSeatsService {
   }
 
   //쿼리로 수정 필요
+  //orders 테이블 추가로 그쪽에서 가져오기
   async getAnOrder(userId: number, orderId: number) {
     const order = await this.orderListRepository.findOne({
       where: {
@@ -488,7 +562,7 @@ export class OrderSeatsService {
     return order;
   }
 
-  //진행중 or 예매완료된 예매 모두 출력
+  //진행중 예매 모두 출력
   async getAllProcessingReservations(
     userId: number,
     orderStatusArray: Array<number>
@@ -505,6 +579,27 @@ export class OrderSeatsService {
     `;
 
     const reservations = await this.orderListRepository.query(query);
+
+    return reservations;
+  }
+
+  //예매 완료된 예매 모두 출력 (결제 건 기준)
+  async getAllReservedReservations(
+    userId: number,
+    orderStatusArray: Array<number>
+  ) {
+    const query = `
+      select o.id, ol.contentId, ol.orderStatus, c.performRound, k.performName, c.performDate from orders o
+      left join orderList ol on o.id = ol.orderId
+      left join contents c on ol.contentId = c.id
+      left join kopisApi k on k.performId = c.performId 
+      where o.userId = ${userId}
+      and o.deletedAt is null
+      and ol.deletedAt is null
+      group by o.id
+    `;
+
+    const reservations = await this.orderRepository.query(query);
 
     return reservations;
   }
@@ -599,6 +694,9 @@ export class OrderSeatsService {
         deletedAt: null,
         orderStatus: In(orderStatusArray),
         seat: In(seats),
+      },
+      order: {
+        seat: 'ASC',
       },
     });
 

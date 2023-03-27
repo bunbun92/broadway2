@@ -43,10 +43,10 @@
               let date = rows[i].performDate.split(' ')[0];
               tempHtml += `
                 <div class="processingSeatZone">
-                  <div class="processingSeatLeftZone" onclick="continueReservation(${rows[i].contentId})">${date} ${rows[i].performName} ${rows[i].performRound}회차</div>
+                  <div class="processingSeatLeftZone" >${date} ${rows[i].performName} ${rows[i].performRound}회차</div>
                   <div class="processingSeatRightZone">
                     <button class="continueButton">상세 보기</button>
-                    <button class="deleteButton" onclick="deleteSeatsByContentId(${rows[i].contentId})">예매 취소하기</button>
+                    <button class="deleteButton" onclick="deleteSeatsByOrderId(${rows[i].id})">예매 취소하기</button>
                   </div>
                 </div>
               `;
@@ -63,13 +63,12 @@
         location.href = `/render-order-seats/editSeats?contentId=${contentId}`;
       }
 
-      function deleteSeatsByContentId(contentId) {
-        console.log(contentId);
+      function deleteSeatsByOrderId(orderId) {        
         $.ajax({
           type: 'DELETE',
-          url: '/order-seats/deleteSeatsByContentId',
+          url: '/order-seats/deleteSeatsByOrderId',
           data: {
-            contentId: contentId,
+           orderId: orderId,
           },
           success: function (response) {
             if (response.errMsg) {
@@ -675,7 +674,7 @@
           <div class="borderZone" style="border-top: 4px solid"></div>
           <span class="borderButtonNotChoosed" onclick="location.href='/render-order-seats/processingSeats'">진행중인 예매</span>
           <span class="borderButtonChoosed">예매내역</span>
-          <span class="borderButtonNotChoosed">결제내역</span>
+          <span class="borderButtonNotChoosed" onclick="location.href='/render-order-seats/paidOrders'">결제내역</span>
         </div>
         <div class="borderZone"></div>
         <div class="processingSeatsListZone" id="processingSeatsListZone">
