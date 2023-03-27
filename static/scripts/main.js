@@ -41,7 +41,7 @@ function get_performs() {
         <div class="performTitle">${title}</div>
         <div class="buttons">
           <button class="specBtn" onclick="location.href='/render-content/?id=${performId}'">상세정보</button>
-          <button class="reserveBtn" onclick="location.href='/render-order-seats/performRoundList?performId=${performId}'">예매하기</button>
+          <button class="reserveBtn" ">예매하기</button>
         </div>
       </div>`;
       $('.postsWrap').append(temp_html);
