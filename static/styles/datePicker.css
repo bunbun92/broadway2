@@ -32,13 +32,13 @@ input {
   text-align: right !important;
 }
 
-input:focus {
+/* input:focus {
   -moz-box-shadow: none !important;
   -webkit-box-shadow: none !important;
   box-shadow: none !important;
   border: 1px solid #512da8;
   outline-width: 0;
-}
+} */
 
 ::placeholder {
   color: #bdbdbd;

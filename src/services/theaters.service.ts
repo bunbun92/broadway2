@@ -82,8 +82,8 @@ export class TheatersService {
     }
   }
 
-  deleteTheaterInfo(id: number) {
-    this.theaterRepository.softDelete({ id });
+  deleteTheaterInfo(id: number, userId: number) {
+    this.theaterRepository.delete({ id, userId });
   }
 
   async getSeatsInfoByTheaterId(theaterId: number) {
@@ -138,6 +138,13 @@ export class TheatersService {
     });
   }
 
+  async checkPriceInfoInDB(performId, grade) {
+    return await this.priceInfoRepository.find({
+      where: { performId, grade, deletedAt: null },
+      relations: ['kopisApi'],
+    });
+  }
+
   async createPriceInfo(
     grade: number,
     price: number,
@@ -145,7 +152,7 @@ export class TheatersService {
     theaterId: number,
     userId: number
   ) {
-    const priceInfoInDB = await this.getPriceInfoByPerformId(performId);
+    const priceInfoInDB = await this.checkPriceInfoInDB(performId, grade);
     console.log(performId);
     console.log(priceInfoInDB);
 
