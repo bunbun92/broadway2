@@ -43,6 +43,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
         Order,
       ],
       synchronize: false,
+      logging: true,
     };
   }
 }
