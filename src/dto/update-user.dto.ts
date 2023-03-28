@@ -2,9 +2,6 @@ import { IsNumber, IsString } from 'class-validator';
 
 export class UpdateUserDto {
   @IsString()
-  readonly userId: string;
-
-  @IsString()
   readonly password: string;
 
   @IsString()
@@ -12,7 +9,4 @@ export class UpdateUserDto {
 
   @IsString()
   readonly email: string;
-
-  @IsNumber()
-  readonly userType: number;
 }

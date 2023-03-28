@@ -1,4 +1,5 @@
 import {
+  Res,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -9,6 +10,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { _ } from 'lodash';
 import { Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
+import { Response } from 'express';
 
 @Injectable()
 export class UserService {
@@ -17,10 +19,13 @@ export class UserService {
     private jwtService: JwtService
   ) {}
 
-  async login(userId: string, password: string) {
+  async login(
+    userId: string,
+    password: string
+  ): Promise<{ accessToken: string } | undefined> {
     const user = await this.userRepository.findOne({
       where: { userId, deletedAt: null },
-      select: ['id', 'password'],
+      select: ['id', 'password', 'userId', 'name', 'email', 'userType'],
     });
 
     if (_.isNil(user)) {
@@ -33,9 +38,19 @@ export class UserService {
       );
     }
 
-    const payload = { id: user.id };
-    const accessToken = await this.jwtService.signAsync(payload);
-    return accessToken;
+    const payload = {
+      id: user.id,
+      userId: user.userId,
+      name: user.name,
+      email: user.email,
+      userType: user.userType,
+    };
+    // const accessToken = await this.jwtService.signAsync(payload);
+
+    console.log(payload);
+    return {
+      accessToken: this.jwtService.sign(payload),
+    };
   }
 
   async createUser(
@@ -63,17 +78,20 @@ export class UserService {
     return accessToken;
   }
 
-  async updateUser(
-    userId: string,
-    password: string,
-    name: string,
-    email: string,
-    userType: number
-  ) {
-    await this.userRepository.update(
-      { userId },
-      { name, password, email, userType }
-    );
+  async getInfoById(id: number) {
+    return await this.userRepository.findOne({
+      where: { id, deletedAt: null },
+    });
+  }
+
+  async getMyInfoById(id: number) {
+    return await this.userRepository.findOne({
+      where: { id, deletedAt: null },
+    });
+  }
+
+  async updateUser(id: number, password: string, name: string, email: string) {
+    await this.userRepository.update({ id }, { name, password, email });
   }
 
   async deleteUser(id: number) {

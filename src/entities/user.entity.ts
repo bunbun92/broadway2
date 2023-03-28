@@ -4,9 +4,17 @@ import {
   DeleteDateColumn,
   Entity,
   Index,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Comment } from './comment.entity';
+import { Content } from './content.entity';
+import { Like } from './like.entity';
+import { Theater } from './theater-info.entity';
+import { PriceInfo } from './theater-price.entity';
+import { SeatsInfo } from './theater-seats.entity';
+import { TimeSale } from './time-sale.entity';
 
 @Entity({ schema: 'broadway', name: 'users' })
 export class User {
@@ -37,4 +45,25 @@ export class User {
 
   @DeleteDateColumn()
   deletedAt: Date | null;
+
+  @OneToMany(type => Content, contents => contents.users)
+  contents: Content;
+
+  @OneToMany(type => TimeSale, timeSale => timeSale.users)
+  timeSale: TimeSale;
+
+  @OneToMany(type => Theater, theaterInfo => theaterInfo.users)
+  theaterInfo: Theater;
+
+  @OneToMany(type => PriceInfo, priceInfo => priceInfo.users)
+  priceInfo: PriceInfo;
+
+  @OneToMany(type => SeatsInfo, seatsInfo => seatsInfo.users)
+  seatsInfo: SeatsInfo;
+
+  @OneToMany(() => Comment, comments => comments.user)
+  comments: Comment[];
+
+  @OneToMany(() => Like, like => like.user)
+  likes: Like[];
 }

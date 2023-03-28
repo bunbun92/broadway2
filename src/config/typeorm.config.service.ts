@@ -7,6 +7,13 @@ import { OrderList } from 'src/entities/order-list.entity';
 import { Seat } from 'src/entities/seats.entity';
 import { TimeSale } from 'src/entities/time-sale.entity';
 import { KopisApi } from 'src/entities/kopisApi.entity';
+import { Review } from 'src/entities/review.entity';
+import { Comment } from 'src/entities/comment.entity';
+import { Like } from 'src/entities/like.entity';
+import { PriceInfo } from 'src/entities/theater-price.entity';
+import { SeatsInfo } from 'src/entities/theater-seats.entity';
+import { Theater } from 'src/entities/theater-info.entity';
+import { Order } from 'src/entities/order.entity';
 
 @Injectable()
 export class TypeOrmConfigService implements TypeOrmOptionsFactory {
@@ -20,8 +27,22 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
       username: this.configService.get<string>('DATABASE_USERNAME'),
       password: this.configService.get<string>('DATABASE_PASSWORD'),
       database: this.configService.get<string>('DATABASE_NAME'),
-      entities: [Content, User, Seat, OrderList, TimeSale, KopisApi],
-      synchronize: this.configService.get<boolean>('DATABASE_SYNCHRONIZE'),
+      entities: [
+        Content,
+        User,
+        Seat,
+        OrderList,
+        TimeSale,
+        KopisApi,
+        Review,
+        Comment,
+        Like,
+        Theater,
+        SeatsInfo,
+        PriceInfo,
+        Order,
+      ],
+      synchronize: false,
     };
   }
 }

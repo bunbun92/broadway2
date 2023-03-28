@@ -3,8 +3,12 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
+import { Order } from './order.entity';
 
 @Entity({ schema: 'broadway', name: 'orderList' })
 export class OrderList {
@@ -13,9 +17,6 @@ export class OrderList {
 
   @Column('int')
   userId: number;
-
-  @Column('float')
-  timeSaleRate: number;
 
   @Column('int')
   contentId: number;
@@ -26,8 +27,32 @@ export class OrderList {
   @Column('tinyint')
   orderStatus: number;
 
+  @Column('varchar', { length: 10 })
+  seat: string;
+
+  @Column('float', { default: 0 })
+  timeSaleRate: number | null;
+
+  @Column('int')
+  priceBeforeDiscount: number | null;
+
+  @Column('int')
+  pricePaid: number | null;
+
+  @Column('int')
+  orderId: number | null;
+
+  @ManyToOne(type => Order, orders => orders.orderList, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'orderId' })
+  orders: Order;
+
   @CreateDateColumn()
   createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 
   @DeleteDateColumn()
   deletedAt: Date | null;

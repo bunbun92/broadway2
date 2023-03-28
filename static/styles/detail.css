@@ -1,0 +1,186 @@
+.detailZone1 {
+  width: 100%;
+  height: 100%;
+  background-color: rgb(253, 246, 237);
+
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.detailRight {
+  width: 500px;
+
+  display: flex;
+  justify-content: center;
+}
+
+.detailPoster {
+  margin-top: 80px;
+  margin-bottom: 10px;
+  width: 300px;
+  height: 450px;
+  /* padding: 50px 15px 5px 15px; */
+}
+
+.Detailbuttons {
+  width: 300px;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.starBox {
+  width: 100px;
+  height: 40px;
+
+  color: black;
+  font-weight: bold;
+
+  border-radius: 10px;
+  border-color: gray;
+  border-style: double;
+
+  display: flex;
+  justify-content: left;
+  align-items: center;
+}
+
+.starAvgBox {
+  width: 100px;
+  height: 40px;
+
+  color: black;
+  font-weight: bold;
+
+  border-radius: 10px;
+  border-color: gray;
+  border-style: double;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.detailReserveBtn {
+  width: 150px;
+  height: 40px;
+  background-color: #ffcd4a;
+
+  border-radius: 10px;
+  border-color: gray;
+  border-style: double;
+
+  font-weight: 600;
+}
+
+.InfoBox {
+  margin-top: 10px;
+  padding: 10px;
+  width: 300px;
+
+  border-radius: 10px;
+  border-color: gray;
+  border-style: double;
+
+  color: black;
+  font-weight: bold;
+}
+
+.detailLeft {
+  width: 1000px;
+
+  display: flex;
+  justify-content: left;
+  flex-direction: column;
+}
+
+.reviewWriteBtnBox {
+  margin-top: 30px;
+  margin-bottom: 10px;
+  width: 900px;
+
+  display: flex;
+  justify-content: right;
+}
+
+.manageBtn {
+  margin-right: 10px;
+  background-color: transparent;
+  font-weight: bold;
+  border: 0;
+}
+
+.reviewWriteBtn {
+  width: 150px;
+  padding: 5px;
+  background-color: #ffcd4a;
+
+  border-radius: 10px;
+  border-color: gray;
+  border-style: double;
+
+  font-weight: 600;
+}
+
+.reviewBox {
+  background-color: rgb(243, 243, 243);
+
+  margin-bottom: 30px;
+  padding: 30px;
+  width: 900px;
+
+  border-radius: 10px;
+  border-color: gray;
+  border-style: double;
+
+  color: black;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.starDateBox {
+  margin-bottom: 15px;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.starBox {
+  width: 130px;
+
+  border: 0;
+}
+
+.dateBox {
+  font-weight: lighter;
+}
+
+.reviewContent {
+  font-weight: bold;
+}
+
+.iconBox {
+  margin-top: 15px;
+
+  display: flex;
+  justify-content: right;
+}
+
+.likeBtn {
+  border: 0;
+  background-color: transparent;
+
+  font-weight: bold;
+}
+
+.commentBtn {
+  border: 0;
+  background-color: transparent;
+
+  font-weight: bold;
+}
