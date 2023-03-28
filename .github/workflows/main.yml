@@ -58,10 +58,8 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GHCR_TOKEN }}
       # 3000 -> 80 포트로 수행하도록 지정
-      - name: Docker run and grant sudo permissions to current user
+      - name: Docker run
         run: |
-          sudo usermod -aG docker ${{ github.actor }}
-          newgrp docker
           docker stop redis || true
           docker rm redis || true
           docker stop ${{ env.NAME }} || true
