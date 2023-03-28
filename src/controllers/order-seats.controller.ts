@@ -16,6 +16,7 @@ import { OrderSeatsService } from '../services/order-seats.service';
 import { Response } from 'express';
 import { DeleteOrderSeatsByContentIdDto } from 'src/dto/delete-order-seats-by-content-id.dto';
 import { DeleteOrderSeatsByOrderIdDto } from 'src/dto/delete-order-seats-by-order-id.dto';
+import { CreateSeatDto } from 'src/dto/create-seat.dto';
 
 @Controller('order-seats')
 export class OrderSeatsController {
@@ -217,6 +218,25 @@ export class OrderSeatsController {
       await this.orderSeatsService.getAllReservedReservations(userId, [3]);
 
     return reservations;
+  }
+
+  @Post('/createSeat')
+  createSeat(@Body() data: CreateSeatDto) {
+    const seat = data.seat;
+    const theater = data.theater;
+    const contentId = data.contentId;
+    const performInfo = data.performInfo;
+    const price = data.price;
+    const orderStatus = data.orderStatus;
+
+    this.orderSeatsService.createSeat(
+      seat,
+      theater,
+      contentId,
+      performInfo,
+      price,
+      orderStatus
+    );
   }
 
   //일정 주기로 선점 좌석 해제 평소엔 꺼놔야함
