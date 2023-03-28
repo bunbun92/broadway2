@@ -60,7 +60,7 @@ jobs:
       # 3000 -> 80 포트로 수행하도록 지정
       - name: Docker run and grant sudo permissions to current user
         run: |
-          sudo usermod -aG docker $USER
+          sudo usermod -aG docker ${{ github.actor }}
           docker stop redis || true
           docker rm redis || true
           docker stop ${{ env.NAME }} || true
