@@ -8,7 +8,7 @@ on:
 
 # 환경설정
 env:
-  DOCKER_IMAGE: ghcr.io/${{ github.actor }}/github-auto-deploy
+  DOCKER_IMAGE: ghcr.io/${{ github.actor }}/broadway_9th
   VERSION: ${{ github.sha }}
   NAME: go_cicd
 
