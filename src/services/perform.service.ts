@@ -38,6 +38,21 @@ export class PerformService {
     return performList;
   }
 
+  async getMyTheatersByPerformId(performId: string, userId: number) {
+    const theaterList = await this.performRepository
+      .createQueryBuilder('contents')
+      .select('contents.performId')
+      .addSelect('ka.theater')
+      .leftJoin(KopisApi, 'ka', 'contents.performId = ka.performId')
+      .groupBy('contents.performId, ka.theater')
+      .where('contents.userId = :userId AND contents.performId = :performId', {
+        userId,
+        performId,
+      })
+      .getRawMany();
+    return theaterList;
+  }
+
   createPerform(
     performId: string,
     performRound: number,

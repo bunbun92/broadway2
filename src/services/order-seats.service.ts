@@ -702,4 +702,23 @@ export class OrderSeatsService {
 
     return result;
   }
+
+  // 좌석 정보 생성
+  createSeat(
+    seat: string,
+    theater: string,
+    contentId: number,
+    performInfo: number,
+    price: number,
+    orderStatus: number
+  ) {
+    this.seatRepository.insert({
+      seat,
+      theater,
+      contentId,
+      performInfo,
+      price,
+      orderStatus,
+    });
+  }
 }

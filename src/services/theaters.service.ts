@@ -131,9 +131,9 @@ export class TheatersService {
     this.seatsInfoRepository.softDelete({ theaterId });
   }
 
-  async getPriceInfoByPerformId(performId) {
+  async getPriceInfoByPerformId(performId, userId) {
     return await this.priceInfoRepository.find({
-      where: { performId, deletedAt: null },
+      where: { performId, userId, deletedAt: null },
       relations: ['kopisApi'],
     });
   }
