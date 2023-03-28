@@ -11,7 +11,7 @@ const performId = searchParams.get('id');
 function get_poster(performId) {
   $.ajax({
     type: 'GET',
-    url: '/content/onePerform/',
+    url: `/content/onePerform/${performId}`,
     data: { performId },
     success: function (response) {
       const e = response.data;
