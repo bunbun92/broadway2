@@ -60,13 +60,10 @@ jobs:
       # 3000 -> 80 포트로 수행하도록 지정
       - name: Docker run
         run: |
-          docker stop redis || true
-          docker rm redis || true
           docker stop ${{ env.NAME }} || true
           docker rm ${{ env.NAME }} || true
           docker rmi ${{ env.DOCKER_IMAGE }}:latest || true
-          docker network create app-network || true
-          docker run -d --name redis --network app-network --restart always redis:latest
+          docker network create app-network || true          
           docker run -d -p 80:3000 -p 443:3001 --name go_cicd --network app-network --restart always \
             -e DATABASE_HOST=${{ secrets.DATABASE_HOST }} \
             -e DATABASE_PORT=${{ secrets.DATABASE_PORT }} \
@@ -74,7 +71,5 @@ jobs:
             -e DATABASE_PASSWORD="${{ secrets.DATABASE_PASSWORD }}" \
             -e DATABASE_NAME=${{ secrets.DATABASE_NAME }} \
             -e DATABASE_SYNCHRONIZE=${{ secrets.DATABASE_SYNCHRONIZE }} \            
-            -e JWT_SECRET=${{ secrets.JWT_SECRET }} \            
-            -v /etc/letsencrypt/live/jyh7b.shop/privkey.pem:/app/certs/private.key \
-            -v /etc/letsencrypt/live/jyh7b.shop/fullchain.pem:/app/certs/certificate.pem \
+            -e JWT_SECRET=${{ secrets.JWT_SECRET }} \                        
             ${{ env.DOCKER_IMAGE }}:latest
