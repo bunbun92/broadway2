@@ -1,0 +1,147 @@
+/* zone1 */
+.zone1 {
+  height: 100%;
+  background-image: linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.6),
+      rgba(0, 0, 0, 0.5)
+    ),
+    url('../img/curtain.jpeg');
+  background-position: center;
+  background-size: cover;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.postsWrap {
+  margin-bottom: 30px;
+
+  width: 1300px;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.postboxes {
+  width: 300px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.posts {
+  width: 300px;
+  height: 500px;
+  padding: 100px 15px 0px 15px;
+}
+
+.posts:hover {
+  filter: brightness(50%);
+}
+
+.performTitle {
+  background-color: black;
+
+  margin-bottom: 10px;
+  padding-left: 10px;
+
+  width: 270px;
+  color: white;
+  font-weight: bold;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  display: flex;
+}
+
+.buttons {
+  width: 300px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.specBtn {
+  width: 80px;
+  height: 40px;
+  color: white;
+  background-color: transparent;
+
+  border-radius: 10px;
+  border-color: lightgrey;
+  border-style: double;
+}
+
+.specBtn:hover {
+  background-color: white;
+  color: black;
+  font-weight: bold;
+}
+.reserveBtn {
+  width: 175px;
+  height: 40px;
+  background-color: #ffcd4a;
+
+  border-radius: 10px;
+  border: 0px;
+
+  font-weight: 600;
+}
+
+.searchInputs {
+  margin-top: 30px;
+  margin-bottom: 0px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+}
+
+.inputSearch {
+  width: 700px;
+  height: 50px;
+  padding-left: 10px;
+}
+
+.searchBtn {
+  margin-left: 20px;
+  margin-right: 20px;
+
+  width: 150px;
+  height: 50px;
+  background-color: #ffcd4a;
+
+  border-radius: 10px;
+  border-color: gray;
+  border-style: double;
+
+  font-weight: bold;
+}
+
+.HomeBtn {
+  width: 150px;
+  height: 50px;
+  font-weight: bold;
+  background-color: lightgray;
+  color: black;
+
+  border-radius: 10px;
+}
+
+.height {
+  height: 2000px;
+
+  display: flex;
+  /* justify-content: center; */
+  align-items: center;
+  flex-direction: column;
+}

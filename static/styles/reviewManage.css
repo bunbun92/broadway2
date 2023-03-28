@@ -15,6 +15,17 @@
   justify-content: center;
 }
 
+.toHomeBtn {
+  margin-top: 20px;
+
+  width: 150px;
+  height: 40px;
+  font-weight: 600;
+  background-color: transparent;
+
+  border-radius: 10px;
+}
+
 .detailPoster {
   margin-top: 80px;
   margin-bottom: 10px;

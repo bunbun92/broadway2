@@ -91,7 +91,7 @@ function update_info() {
     },
     success: function (response) {
       alert('회원정보 수정이 완료되었습니다!');
-      window.location.reload();
+      window.location.href = '/render-user/home';
     },
     error: function (response) {
       alert('회원정보 수정에 실패하였습니다!');

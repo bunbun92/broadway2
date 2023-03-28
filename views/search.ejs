@@ -23,31 +23,38 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <link rel="stylesheet" href="styles/header.css" />
-    <link rel="stylesheet" href="styles/reviewManage.css" />
+    <link rel="stylesheet" href="styles/main.css" />
 
     <title>broadway9th</title>
   </head>
   <body>
     <%- include('headerPostLogin.ejs') %>
-    <div class="detailZone1">
-      <span class="detailLeft">
-        <div class="toHomeBtn">
+    <div class="zone1">
+      <div class="height">
+        <div class="searchInputs">
+          <input
+            type="text"
+            class="inputSearch"
+            id="inputSearch"
+            placeholder=" 공연명을 입력해주세요."
+          />
+          <button class="searchBtn" onclick="get_search(1)">검색</button>
           <button
-            class="toHomeBtn"
+            class="HomeBtn"
             type="button"
             onclick="location.href='/render-user/home'"
           >
             홈으로
           </button>
         </div>
-        <div class="reviewWriteBtnBox" id="reviewWriteBtnBox"></div>
-        <div class="reviewsContainer" id="reviewsContainer"></div>
-        <nav aria-label="Page navigation example">
-          <ul id="pagination" class="pagination"></ul>
-        </nav>
-      </span>
-    </div>
+        <div class="postsWrap" id="postsWrap"></div>
 
-    <script src="scripts/reviewManage.js"></script>
+        <!-- Pagination -->
+        <nav aria-label="Page navigation example">
+          <ul id="pageNo" class="pagination"></ul>
+        </nav>
+      </div>
+    </div>
+    <script src="scripts/search.js"></script>
   </body>
 </html>

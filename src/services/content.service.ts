@@ -1,8 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { take } from 'rxjs';
 import { Content } from 'src/entities/content.entity';
 import { KopisApi } from 'src/entities/kopisApi.entity';
 import { Repository } from 'typeorm';
+import { Like } from 'typeorm';
 
 @Injectable()
 export class ContentService {
@@ -11,10 +13,32 @@ export class ContentService {
     @InjectRepository(KopisApi) private performRepository: Repository<KopisApi>
   ) {}
 
-  async getAllperforms() {
-    const performs = await this.performRepository.find({
+  async getPerformsBySearch(limit, offset, search) {
+    const performs = await this.performRepository.findAndCount({
+      order: { updatedAt: 'ASC' },
+      skip: offset,
+      take: limit,
       where: {
         deletedAt: null,
+        performName: Like('%' + search + '%'),
+      },
+    });
+    console.log('서비스', search);
+    console.log('서비스', typeof search);
+    '%' + search + '%';
+    console.log('서비스', '%' + search + '%');
+
+    return { performs };
+  }
+
+  async getAllContentsToHome(limit, offset) {
+    const performs = await this.performRepository.findAndCount({
+      order: { updatedAt: 'ASC' },
+      skip: offset,
+      take: limit,
+      where: {
+        deletedAt: null,
+        performStatus: '공연중',
       },
     });
     return { performs };

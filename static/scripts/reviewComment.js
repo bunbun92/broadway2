@@ -2,7 +2,7 @@ $(document).ready(function () {
   get_backBtnURL();
   get_reviews(reviewId);
   get_comments(reviewId);
-  get_commentBts(reviewId);
+  get_commentBtns(reviewId);
   get_poster(performId);
   get_stars(performId);
   get_performInfo(performId);
@@ -51,7 +51,6 @@ function get_reviews(reviewId) {
       $('.reviewsContainer').append(temp_html);
     },
     error: function (response) {
-      console.log('응, 아니야.', response);
       alert('리뷰 작성 실패!');
     },
   });
@@ -64,7 +63,6 @@ function get_comments(reviewId) {
     url: `/comments/get/${reviewId}`,
     data: { reviewId },
     success: function (response) {
-      console.log('다타?', response);
       for (const e of response.data) {
         let commentId = e.id;
         let userId = e.userId;
@@ -76,8 +74,6 @@ function get_comments(reviewId) {
           url: `/user/get/${userId}`,
           data: { userId },
           success: function (response) {
-            console.log('res', response);
-            console.log('userId', userId);
             let userName = response.name;
 
             let temp_html = `
@@ -106,21 +102,18 @@ function get_comments(reviewId) {
   });
 }
 
-function get_commentBts(reviewId) {
+function get_commentBtns(reviewId) {
   $.ajax({
     type: 'GET',
     url: `/comments/get/${reviewId}`,
     data: { reviewId },
     success: function (response) {
-      console.log(response);
       for (const e of response.data) {
         let commentId = e.id;
         let userId = e.userId;
         let currentUserId = response.currentUserId;
         let comment = e.comment;
         let date = new Date(e.createdAt).toLocaleString().slice(0, -3);
-        console.log('currentUserId', currentUserId);
-        console.log('userId', userId);
 
         if (userId !== currentUserId) continue;
 
@@ -129,7 +122,6 @@ function get_commentBts(reviewId) {
           url: `/user/get/${userId}`,
           data: { userId },
           success: function (response) {
-            console.log('res', response);
             let userName = response.name;
 
             let temp_html = `
@@ -144,7 +136,7 @@ function get_commentBts(reviewId) {
             $(`.iconBox${commentId}`).append(temp_html);
           },
           error: function (response) {
-            console.log('user 실패!');
+            alert('user 실패!');
           },
         });
       }
@@ -212,7 +204,6 @@ function get_stars(performId) {
       $('.starAvgBox').append(temp_html);
     },
     error: function (response) {
-      console.log('응, 아니야.', response);
       alert('리뷰 작성 실패!');
     },
   });
@@ -222,7 +213,7 @@ function get_stars(performId) {
 function get_poster(performId) {
   $.ajax({
     type: 'GET',
-    url: '/content/onePerform/',
+    url: `/content/onePerform/${performId}`,
     data: { performId },
     success: function (response) {
       const e = response.data;
@@ -236,7 +227,6 @@ function get_poster(performId) {
       $('.posterbox').append(temp_html);
     },
     error: function (response) {
-      console.log('응, 아니야.', response);
       alert('info load 실패!');
     },
   });
@@ -246,7 +236,7 @@ function get_poster(performId) {
 function get_performInfo(performId) {
   $.ajax({
     type: 'GET',
-    url: '/content/onePerform/',
+    url: `/content/onePerform/${performId}`,
     data: { performId },
     success: function (response) {
       const e = response.data;
@@ -267,7 +257,6 @@ function get_performInfo(performId) {
       $('.InfoBox').append(temp_html);
     },
     error: function (response) {
-      console.log('응, 아니야.', response);
       alert('info load 실패!');
     },
   });
