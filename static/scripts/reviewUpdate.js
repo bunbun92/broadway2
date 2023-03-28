@@ -83,10 +83,10 @@ function update_review(reviewId) {
     },
     success: function (response) {
       alert('리뷰 수정이 완료되었습니다!');
-      window.location.reload();
+      window.location.href = '/render-review/manage';
     },
     error: function (response) {
-      alert('리뷰 수정에 실패하였습니다!');
+      alert('리뷰 수정에 실패하였습니다. 모든 항목을 입력해주세요!');
     },
   });
 }

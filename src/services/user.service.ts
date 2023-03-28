@@ -11,6 +11,7 @@ import { _ } from 'lodash';
 import { Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
 import { Response } from 'express';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -32,7 +33,9 @@ export class UserService {
       throw new NotFoundException(`User not found. userId: ${userId}`);
     }
 
-    if (user.password !== password) {
+    const passwordTest = bcrypt.compare(password, user.password);
+
+    if (!passwordTest) {
       throw new UnauthorizedException(
         `User password is not correct. userId: ${userId}`
       );
@@ -45,7 +48,6 @@ export class UserService {
       email: user.email,
       userType: user.userType,
     };
-    // const accessToken = await this.jwtService.signAsync(payload);
 
     console.log(payload);
     return {
@@ -55,7 +57,7 @@ export class UserService {
 
   async createUser(
     userId: string,
-    password: string,
+    hashed: string,
     name: string,
     email: string,
     userType: number
@@ -64,6 +66,8 @@ export class UserService {
     if (!_.isNil(existUser)) {
       throw new ConflictException(`User already exists. userId: ${userId}`);
     }
+
+    const password = hashed;
 
     const insertResult = await this.userRepository.insert({
       userId,
@@ -102,6 +106,19 @@ export class UserService {
     return await this.userRepository.findOne({
       where: { userId, deletedAt: null },
       select: ['name'],
+    });
+  }
+
+  async getUserName(name: string) {
+    return await this.userRepository.findOne({
+      where: { name, deletedAt: null },
+      select: ['name'],
+    });
+  }
+
+  async getUserIdById(userId: string) {
+    return await this.userRepository.findOne({
+      where: { userId, deletedAt: null },
     });
   }
 }

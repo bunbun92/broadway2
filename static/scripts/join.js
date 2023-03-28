@@ -10,6 +10,10 @@ function join() {
     return alert('비밀번호와 비밀번호 확인이 일치하지 않습니다.');
   }
 
+  if (!userId || !password || !name || !email || !userType) {
+    return alert('모든 항목을 입력해주세요.');
+  }
+
   $.ajax({
     type: 'POST',
     url: '/user/signup',
@@ -25,9 +29,7 @@ function join() {
       window.location.replace('/render-user/login');
     },
     error: function (response) {
-      console.log('응, 아니야.', response);
-      console.log('응, 아니야.');
-      customAlert(response.responseJSON.errorMessage);
+      alert(response.responseJSON.errorMessage);
     },
   });
 }
