@@ -61,6 +61,7 @@ jobs:
       - name: Docker run and grant sudo permissions to current user
         run: |
           sudo usermod -aG docker ${{ github.actor }}
+          newgrp docker
           docker stop redis || true
           docker rm redis || true
           docker stop ${{ env.NAME }} || true
