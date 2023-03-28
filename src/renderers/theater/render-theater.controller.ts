@@ -1,10 +1,16 @@
 import { Controller, Get, Render } from '@nestjs/common';
 
-@Controller('theater')
+@Controller('Admin')
 export class RenderTheaterController {
-  @Get('/create')
-  @Render('theater.ejs')
-  getTheaterList() {
+  @Get('/editTheater')
+  @Render('adminTheater.ejs')
+  adminEditTheater() {
+    return;
+  }
+
+  @Get('/editContent')
+  @Render('adminContent.ejs')
+  adminEditContent() {
     return;
   }
 }

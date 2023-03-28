@@ -7,7 +7,7 @@ import { RenderTheaterController } from './render-theater.controller';
   imports: [
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', '../../static'),
-      serveRoot: '/theater',
+      serveRoot: '/admin',
     }),
   ],
   controllers: [RenderTheaterController],
