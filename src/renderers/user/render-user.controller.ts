@@ -11,9 +11,18 @@ export class UserController {
       console.log('false', jwt);
       res.render('main.ejs', loginFalse);
     } else {
+      // const userType = res.locals.user.userType;
       const loginTrue = { login: true };
+      console.log('locals', res.locals);
       console.log('true', jwt);
       res.render('main.ejs', loginTrue);
+      // if (userType === 1) {
+      //   res.render('main.ejs', loginTrue);
+      // } else if (userType === 2) {
+      //   res.render('theater.ejs', loginTrue);
+      // } else {
+      //   alert('유효하지 않은 유저 타입입니다.')
+      // }
     }
   }
 

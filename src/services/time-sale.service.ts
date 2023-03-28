@@ -23,14 +23,14 @@ export class TimeSaleService {
     });
   }
 
-  createTimeSale(
+  async createTimeSale(
     contentId: number,
     startTime: string,
     endTime: string,
     rate: number,
     userId: number
   ) {
-    this.timeSaleRepository.insert({
+    return this.timeSaleRepository.insert({
       contentId,
       startTime,
       endTime,
