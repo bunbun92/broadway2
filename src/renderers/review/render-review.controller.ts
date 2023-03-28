@@ -3,7 +3,7 @@ import { Controller, Get, Render } from '@nestjs/common';
 @Controller('render-review')
 export class ReviewController {
   @Get('/create')
-  @Render('detailCreateReview.ejs')
+  @Render('reviewCreate.ejs')
   getDetail() {
     return { message: 'thank you!' };
   }

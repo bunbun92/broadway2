@@ -2,6 +2,7 @@ $(document).ready(function () {
   get_backBtnURL();
   get_reviews(reviewId);
   get_comments(reviewId);
+  get_commentBtns(reviewId);
   get_poster(performId);
   get_stars(performId);
   get_performInfo(performId);
@@ -50,7 +51,6 @@ function get_reviews(reviewId) {
       $('.reviewsContainer').append(temp_html);
     },
     error: function (response) {
-      console.log('응, 아니야.', response);
       alert('리뷰 작성 실패!');
     },
   });
@@ -63,8 +63,7 @@ function get_comments(reviewId) {
     url: `/comments/get/${reviewId}`,
     data: { reviewId },
     success: function (response) {
-      console.log(response);
-      for (const e of response) {
+      for (const e of response.data) {
         let commentId = e.id;
         let userId = e.userId;
         let comment = e.comment;
@@ -75,30 +74,66 @@ function get_comments(reviewId) {
           url: `/user/get/${userId}`,
           data: { userId },
           success: function (response) {
-            console.log('res', response);
             let userName = response.name;
 
             let temp_html = `
               <div class="commentBox">
                 <div class="commentDateBox"> 
-                  <span class="nameBox">${userName}</span>
+                  <span class="nameBox"><img src="img/user.png" style="height: 20px"/>&nbsp;${userName}</span>
                   <span class="dateBox">${date}</span>
                 </div>
                 <div class="reviewContent">
                 ${comment}
                 </div>
-                <div class="iconBox">
-                  <button class="likeBtn" 
-                    onclick="location.href='/reviews/update?id=${performId}&reviewId=${reviewId}&commentId=${commentId}'">
-                    <img src="img/edit.png" style="height: 20px" />&nbsp;수정
-                  </button>&nbsp;
-                  <button class="commentBtn"
-                    onclick="delete_comment(${commentId})">
-                    <img src="img/trash.png" style="height: 20px" />&nbsp;삭제
-                  </button>
+                <div class="iconBox${commentId}" id="iconBox${commentId}">                
                 </div>
               </div>`;
             $('.commentsContainer').append(temp_html);
+          },
+          error: function (response) {
+            alert('user 실패!');
+          },
+        });
+      }
+    },
+    error: function (response) {
+      alert('comment 실패!');
+    },
+  });
+}
+
+function get_commentBtns(reviewId) {
+  $.ajax({
+    type: 'GET',
+    url: `/comments/get/${reviewId}`,
+    data: { reviewId },
+    success: function (response) {
+      for (const e of response.data) {
+        let commentId = e.id;
+        let userId = e.userId;
+        let currentUserId = response.currentUserId;
+        let comment = e.comment;
+        let date = new Date(e.createdAt).toLocaleString().slice(0, -3);
+
+        if (userId !== currentUserId) continue;
+
+        $.ajax({
+          type: 'GET',
+          url: `/user/get/${userId}`,
+          data: { userId },
+          success: function (response) {
+            let userName = response.name;
+
+            let temp_html = `
+            <button class="likeBtn" 
+            onclick="location.href='/reviews/update?id=${performId}&reviewId=${reviewId}&commentId=${commentId}'">
+            <img src="img/edit.png" style="height: 20px" />&nbsp;수정
+          </button>&nbsp;
+          <button class="commentBtn"
+            onclick="delete_comment(${commentId})">
+            <img src="img/trash.png" style="height: 20px" />&nbsp;삭제
+          </button>`;
+            $(`.iconBox${commentId}`).append(temp_html);
           },
           error: function (response) {
             alert('user 실패!');
@@ -169,7 +204,6 @@ function get_stars(performId) {
       $('.starAvgBox').append(temp_html);
     },
     error: function (response) {
-      console.log('응, 아니야.', response);
       alert('리뷰 작성 실패!');
     },
   });
@@ -179,7 +213,7 @@ function get_stars(performId) {
 function get_poster(performId) {
   $.ajax({
     type: 'GET',
-    url: '/content/onePerform/',
+    url: `/content/onePerform/${performId}`,
     data: { performId },
     success: function (response) {
       const e = response.data;
@@ -193,7 +227,6 @@ function get_poster(performId) {
       $('.posterbox').append(temp_html);
     },
     error: function (response) {
-      console.log('응, 아니야.', response);
       alert('info load 실패!');
     },
   });
@@ -203,7 +236,7 @@ function get_poster(performId) {
 function get_performInfo(performId) {
   $.ajax({
     type: 'GET',
-    url: '/content/onePerform/',
+    url: `/content/onePerform/${performId}`,
     data: { performId },
     success: function (response) {
       const e = response.data;
@@ -224,7 +257,6 @@ function get_performInfo(performId) {
       $('.InfoBox').append(temp_html);
     },
     error: function (response) {
-      console.log('응, 아니야.', response);
       alert('info load 실패!');
     },
   });

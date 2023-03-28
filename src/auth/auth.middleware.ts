@@ -15,7 +15,7 @@ export class AuthMiddleware implements NestMiddleware {
     private jwtService: JwtService,
     private readonly userController: UserController
   ) {}
-
+  //
   async use(req: Request, res: Response, next: NextFunction) {
     console.log('미들웨어실행');
     const authHeader = req.headers.authorization;

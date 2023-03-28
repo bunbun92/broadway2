@@ -23,7 +23,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
     return {
       type: 'mysql',
       host: this.configService.get<string>('DATABASE_HOST'),
-      port: this.configService.get<number>('DATABASE_PORT'),
+      port: parseInt(this.configService.get('DATABASE_PORT'), 10),
       username: this.configService.get<string>('DATABASE_USERNAME'),
       password: this.configService.get<string>('DATABASE_PASSWORD'),
       database: this.configService.get<string>('DATABASE_NAME'),
@@ -43,6 +43,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
         Order,
       ],
       synchronize: false,
+      logging: true,
     };
   }
 }

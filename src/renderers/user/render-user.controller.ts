@@ -26,6 +26,12 @@ export class UserController {
     }
   }
 
+  @Get('/search')
+  @Render('search.ejs')
+  getSearch() {
+    return { message: 'thank you!' };
+  }
+
   @Get('/login')
   @Render('login.ejs')
   getLogin() {
