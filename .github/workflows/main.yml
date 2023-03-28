@@ -57,7 +57,7 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GHCR_TOKEN }}
-      # 3000 -> 80 포트로 수행하도록 지정
+      # 3000 -> 80 포트로 수행하도록 지정 ..
       - name: Docker run
         run: |
           docker stop redis || true
