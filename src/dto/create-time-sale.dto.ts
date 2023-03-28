@@ -1,3 +1,4 @@
+import { Type } from 'class-transformer';
 import { IsNumber, IsString } from 'class-validator';
 
 export class CreateTimeSaleDto {
@@ -7,6 +8,7 @@ export class CreateTimeSaleDto {
   @IsString()
   readonly endTime: string;
 
+  @Type(() => Number)
   @IsNumber()
   readonly rate: number;
 }

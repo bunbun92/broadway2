@@ -36,7 +36,7 @@
     <title>broadway9th</title>
   </head>
   <body>
-    <%- include('header.ejs') %>
+    <%- include('headerAdmin.ejs') %>
     <div class="accordion" id="accordionPanelsStayOpenExample">
       <div class="accordion-item">
         <h2 class="accordion-header" id="panelsStayOpen-headingOne">
@@ -57,8 +57,9 @@
           aria-labelledby="panelsStayOpen-headingOne"
         >
           <div class="accordion-body">
-            <table>
-              <tr>
+            <p><h5>내 극장 추가하기</h5></p>
+            <p>
+              <table>
                 <td valgn="top">
                   <input
                     list="theaters-select"
@@ -79,8 +80,33 @@
                     극장 등록
                   </button>
                 </td>
-              </tr>
-            </table>
+              </table>
+            </p>
+            <p><h5>극장 관리</h5></p>
+            <p>
+              <table>
+                <td valgn="top">
+                  <input
+                    list="delete-theaters-select"
+                    id="delete-theater-choice"
+                    name="delete-theater-choice"
+                  />
+                  <datalist
+                    id="delete-theaters-select"
+                    name="delete-theaters-select"
+                  ></datalist>
+                </td>
+                <td>
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    onclick="getMyTheaterIdForDelete()"
+                  >
+                    삭제
+                  </button>
+                </td>
+              </table>
+            </p>
           </div>
         </div>
       </div>
@@ -222,13 +248,13 @@
                 <h5>극장 이름</h5>
                 <td>
                   <input
-                    list="my-theaters-select"
+                    list="my-theaters-select-price"
                     id="my-theater-choice-price"
                     name="my-theater-choice-price"
                   />
                   <datalist
-                    id="my-theaters-select"
-                    name="my-theaters-select"
+                    id="my-theaters-select-price"
+                    name="my-theaters-select-price"
                   ></datalist>
                 </td>
                 <td>
@@ -345,96 +371,7 @@
           </div>
         </div>
       </div>
-      <div class="accordion-item">
-        <h2 class="accordion-header" id="panelsStayOpen-headingFour">
-          <button
-            class="accordion-button collapsed"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#panelsStayOpen-collapseFour"
-            aria-expanded="false"
-            aria-controls="panelsStayOpen-collapseFour"
-          >
-            공연 상세 정보 등록하기
-          </button>
-        </h2>
-        <div
-          id="panelsStayOpen-collapseFour"
-          class="accordion-collapse collapse"
-          aria-labelledby="panelsStayOpen-headingFour"
-        >
-          <div class="accordion-body">
-            <p>
-              <table>
-                <h5>극장 이름</h5>
-                <td>
-                  <input
-                    list="my-theaters-select-content"
-                    id="my-theater-choice-content"
-                    name="my-theater-choice-content"
-                  />
-                  <datalist
-                    id="my-theaters-select-content"
-                    name="my-theaters-select-content"
-                  ></datalist>
-                </td>
-                <td>
-                  <button
-                    type="button"
-                    class="btn btn-secondary"
-                    onclick="getMyPerformsContent()"
-                  >
-                    공연 조회
-                  </button>
-                </td>
-              </table>
-            </p>
-            <p>
-              <h5>공연 제목</h5>
-              <input
-                list="my-performs-select-content"
-                id="my-perform-choice-content"
-                name="my-perform-choice-content"
-              />
-              <datalist
-                id="my-performs-select-content"
-                name="my-performs-select-content"
-              ></datalist>
-            </p>
-            
-            <h5>공연 기간 / 공연 시간</h5>
-            <h6> ( 공연 시작일, 공연 종료일 / 공연 시작시간, 공연 종료시간 )</h6>
-            <p>
-              <table>
-                <td>
-                  <form autocomplete="off">
-                    <div class="flex-row">                  
-                      <div class="input-group input-daterange">
-                        <input type="text" class="form-control input1" id="start-date" placeholder="Start Date" readonly>
-                        <input type="text" class="form-control input2" id="end-date" placeholder="End Date" readonly>
-                      </div>                    
-                    </div>
-                  </form>
-                </td>
-                <td>
-                  <input type="time" id="start-time" value="19:00">
-                </td>
-                <td>
-                  <input type="time" id="end-time" value="21:00">
-                </td>
-              </table>
-            </p>
-            <button
-              type="button"
-              class="btn btn-secondary"
-              onclick="getPerformInfoForContent()"
-            >
-              공연 상세 등록
-            </button>
-          </div>
-        </div>
-      </div>
     </div>
-    <script src="scripts/theater.js"></script>
+    <script src="scripts/adminTheater.js"></script>
   </body>
 </html>

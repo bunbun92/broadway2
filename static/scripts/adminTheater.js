@@ -1,7 +1,21 @@
+function logout() {
+  $.ajax({
+    type: 'POST',
+    url: '/user/logout',
+    success: function (response) {
+      alert('로그아웃에 성공하였습니다.');
+      window.location.href = '/render-user/home';
+    },
+    error: function (response) {
+      alert('로그아웃에 실패하였습니다.');
+    },
+  });
+}
+
 $(document).ready(function () {
   getTheaterList();
   getMyTheaters();
-  getMyTheatersContent();
+  // getMyTheatersContent();
   $('.input-daterange').datepicker({
     format: 'yyyy-mm-dd',
     autoclose: true,
@@ -35,24 +49,60 @@ function getMyTheaters() {
 
       for (let i = 0; i < rows.length; i++) {
         const option = $('<option>' + rows[i]['theater'] + '</option>');
+        $('#delete-theaters-select').append(option);
+      }
+      for (let i = 0; i < rows.length; i++) {
+        const option = $('<option>' + rows[i]['theater'] + '</option>');
+        $('#my-theaters-select-price').append(option);
+      }
+      for (let i = 0; i < rows.length; i++) {
+        const option = $('<option>' + rows[i]['theater'] + '</option>');
         $('#my-theaters-select').append(option);
       }
     },
   });
 }
 
-function getMyTheatersContent() {
+// function getMyTheatersContent() {
+//   $.ajax({
+//     type: 'GET',
+//     url: '/theaters/myList',
+//     data: {},
+//     success: function (response) {
+//       const rows = response;
+
+//       for (let i = 0; i < rows.length; i++) {
+//         const option = $('<option>' + rows[i]['theater'] + '</option>');
+//         $('#my-theaters-select-content').append(option);
+//       }
+//     },
+//   });
+// }
+
+function getMyTheaterIdForDelete() {
+  let theaterName = $('#delete-theater-choice').val();
+
   $.ajax({
     type: 'GET',
-    url: '/theaters/myList',
+    url: `/theaters/getTheaterId/${theaterName}`,
     data: {},
     success: function (response) {
-      const rows = response;
+      // console.log(response['id']);
+      theaterId = response['id'];
+      deleteMyTheaterByTheaterId(theaterId);
+    },
+  });
+}
 
-      for (let i = 0; i < rows.length; i++) {
-        const option = $('<option>' + rows[i]['theater'] + '</option>');
-        $('#my-theaters-select-content').append(option);
-      }
+function deleteMyTheaterByTheaterId(theaterId) {
+  let theaterName = $('#delete-theater-choice').val();
+
+  $.ajax({
+    type: 'DELETE',
+    url: `/theaters/deleteTheater/${theaterId}`,
+    data: {},
+    success: function (response) {
+      alert(theaterName + '을 내 극장 목록에서 삭제하였습니다.');
     },
   });
 }
@@ -60,7 +110,7 @@ function getMyTheatersContent() {
 function getMyTheaterPerforms() {
   let theaterName = $('#my-theater-choice-price').val();
 
-  console.log(theaterName, typeof theaterName);
+  // console.log(theaterName, typeof theaterName);
 
   $.ajax({
     type: 'GET',
@@ -74,28 +124,6 @@ function getMyTheaterPerforms() {
       for (let i = 0; i < rows.length; i++) {
         const option = $('<option>' + rows[i] + '</option>');
         $('#my-performs-select').append(option);
-      }
-    },
-  });
-}
-
-function getMyPerformsContent() {
-  let theaterName = $('#my-theater-choice-content').val();
-
-  console.log(theaterName, typeof theaterName);
-
-  $.ajax({
-    type: 'GET',
-    url: `/theaters/getPerforms/${theaterName}`,
-    data: {},
-    success: function (response) {
-      const rows = response;
-      // console.log(rows);
-      $('#my-performs-select-content').empty();
-
-      for (let i = 0; i < rows.length; i++) {
-        const option = $('<option>' + rows[i] + '</option>');
-        $('#my-performs-select-content').append(option);
       }
     },
   });
@@ -131,6 +159,7 @@ function createTheaterSeats() {
 }
 
 function createTheaterSeatsById(theaterId) {
+  let theaterName = $('#my-theater-choice').val();
   let maxRowIndexText = $('#max-row-index').val();
   let maxColumnIndex = parseInt($('#max-column-index').val());
 
@@ -147,7 +176,7 @@ function createTheaterSeatsById(theaterId) {
       maxColumnIndex,
     },
     success: function (response) {
-      alert(response['message']);
+      alert(theaterName + '의 좌석 배치 정보를 생성하였습니다.');
       printSeatsById(theaterId);
     },
   });
@@ -223,8 +252,7 @@ function createPriceInfo(theaterId, performId) {
           theaterId,
         },
         success: function (response) {
-          alert(response['message']);
-          location.reload();
+          alert('등급 구분이 없는 공연의 가격 정보를 등록하였습니다.');
         },
       });
     }
@@ -243,8 +271,7 @@ function createPriceInfo(theaterId, performId) {
           theaterId,
         },
         success: function (response) {
-          alert(response['message']);
-          location.reload();
+          alert('VIP석 가격 정보를 등록하였습니다.');
         },
       });
     }
@@ -263,8 +290,7 @@ function createPriceInfo(theaterId, performId) {
           theaterId,
         },
         success: function (response) {
-          alert(response['message']);
-          location.reload();
+          alert('R석 가격 정보를 등록하였습니다.');
         },
       });
     }
@@ -283,8 +309,7 @@ function createPriceInfo(theaterId, performId) {
           theaterId,
         },
         success: function (response) {
-          alert(response['message']);
-          location.reload();
+          alert('S석 가격 정보를 등록하였습니다.');
         },
       });
     }
@@ -303,8 +328,7 @@ function createPriceInfo(theaterId, performId) {
           theaterId,
         },
         success: function (response) {
-          alert(response['message']);
-          location.reload();
+          alert('A석 가격 정보를 등록하였습니다.');
         },
       });
     }
@@ -323,135 +347,11 @@ function createPriceInfo(theaterId, performId) {
           theaterId,
         },
         success: function (response) {
-          alert(response['message']);
-          location.reload();
+          alert('B석 가격 정보를 등록하였습니다.');
         },
       });
     }
   }
-}
-
-function getPerformInfoForContent() {
-  let performName = $('#my-perform-choice-content').val();
-  // console.log(performName);
-
-  $.ajax({
-    type: 'GET',
-    url: `/theaters/getPerformId/${performName}`,
-    data: {},
-    success: function (response) {
-      console.log(response);
-
-      performId = response['performId'];
-      performStartDate = response['startDate'];
-      performEndDate = response['endDate'];
-
-      createContent(performId, performStartDate, performEndDate);
-    },
-  });
-}
-
-function createContent(performId, performStartDate, performEndDate) {
-  let startDate = $('#start-date').val();
-  let endDate = $('#end-date').val();
-  let startTime = $('#start-time').val();
-  let endTime = $('#end-time').val();
-
-  let performLength = timeDifference(startTime, endTime);
-
-  const performDatesArray = getAllDates(startDate, endDate);
-
-  // console.log(startDate + ' ' + startTime, endDate + ' ' + startTime);
-  // console.log(startTime, endTime, performLength);
-  // console.log(performDatesArray);
-
-  let validPerformDate = validatePerformDates(performStartDate, performEndDate);
-  console.log(validPerformDate, typeof validPerformDate);
-
-  if (validPerformDate === true) {
-    console.log('승인');
-
-    for (let i = 0; i < performDatesArray.length; i++) {
-      // console.log(performDatesArray[i]);
-
-      let performRound = i + 1;
-      let performDate = performDatesArray[i] + ' ' + startTime;
-      let performTime = performLength;
-
-      console.log('POST', performRound, performDate, performTime);
-      $.ajax({
-        type: 'POST',
-        url: `/perform/myPerformList/${performId}`,
-        data: {
-          performRound,
-          performDate,
-          performTime,
-        },
-        success: function (response) {},
-      });
-    }
-    alert('공연 정보 생성을 완료하였습니다.');
-  } else {
-    alert('유효한 공연 기간이 아닙니다. 공연 일자를 확인해주세요');
-  }
-}
-
-function validatePerformDates(performStartDate, performEndDate) {
-  let startDate = $('#start-date').val();
-  let endDate = $('#end-date').val();
-
-  let inputStartDate = new Date(startDate);
-  let inputEndDate = new Date(endDate);
-  inputStartDate.setHours(inputStartDate.getHours() - 9);
-  inputEndDate.setHours(inputEndDate.getHours() - 9);
-  let startDateInDB = new Date(performStartDate);
-  let endDateInDB = new Date(performEndDate);
-
-  console.log(inputStartDate);
-  console.log(startDateInDB);
-  console.log(inputEndDate);
-  console.log(endDateInDB);
-
-  if (inputStartDate >= startDateInDB && inputEndDate <= endDateInDB) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
-function timeDifference(startTime, endTime) {
-  let startHour = parseInt(startTime.split(':')[0]);
-  let startMinute = parseInt(startTime.split(':')[1]);
-
-  let endHour = parseInt(endTime.split(':')[0]);
-  let endMinute = parseInt(endTime.split(':')[1]);
-
-  let startTimeInMinutes = startHour * 60 + startMinute;
-  let endTimeInMinutes = endHour * 60 + endMinute;
-
-  let diffInMinutes = endTimeInMinutes - startTimeInMinutes;
-
-  return diffInMinutes;
-}
-
-function getAllDates(startDate, endDate) {
-  const dates = [];
-  let currentDate = new Date(startDate);
-  let endDateFormatted = new Date(endDate);
-
-  // console.log('array', currentDate, endDateFormatted);
-
-  while (currentDate <= endDateFormatted) {
-    const year = currentDate.getFullYear();
-    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
-    const day = String(currentDate.getDate()).padStart(2, '0');
-    const formattedDate = `${year}-${month}-${day}`;
-
-    dates.push(formattedDate);
-    currentDate.setDate(currentDate.getDate() + 1);
-  }
-
-  return dates;
 }
 
 function printSeats() {

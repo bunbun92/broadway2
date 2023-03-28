@@ -26,8 +26,21 @@ export class PerformController {
   //   return await this.performService.getPerforms();
   // }
 
-  @Get('/myPerformList/:userId')
-  async getMyPerforms(@Param('userId') userId: number) {
+  @Get('/myContentsList/:performId')
+  async getMyContents(
+    @Req() req: Request,
+    @Param('performId') performId: string
+  ) {
+    const jwt = req.cookies.jwt;
+    const userId = this.jwtService.verify(jwt)['id'];
+    return await this.performService.getMyContents(performId, userId);
+  }
+
+  @Get('/myPerformList')
+  async getMyPerforms(@Req() req: Request) {
+    const jwt = req.cookies.jwt;
+    const userId = this.jwtService.verify(jwt)['id'];
+
     return await this.performService.getMyPerforms(userId);
   }
 

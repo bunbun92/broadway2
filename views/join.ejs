@@ -41,14 +41,14 @@
           type="text"
           class="inputId"
           id="userId"
-          placeholder="아이디는 영어 대소문자와 숫자를 사용한 3글자 이상만 가능합니다."
+          placeholder="영어 대/소문자, 숫자, 3글자 이상"
         />
         <label for="password">비밀번호</label>
         <input
           type="text"
           class="inputId"
           id="password"
-          placeholder="비밀번호는 영어 대소문자와 숫자를 사용한 3글자 이상만 가능합니다."
+          placeholder="영어 대/소문자, 숫자, 3글자 이상"
         />
         <label for="pwCheck">비밀번호 확인</label>
         <input
@@ -62,22 +62,21 @@
           type="text"
           class="inputId"
           id="name"
-          placeholder="닉네임은 한글,영어 대소문자,숫자만 사용가능합니다."
+          placeholder="영어 대/소문자, 한글, 숫자"
         />
         <label for="email">이메일</label>
         <input
           type="text"
           class="inputId"
           id="email"
-          placeholder="aaa@aaa.aaa 이메일 양식을 지켜주세요."
+          placeholder="이메일 양식 - 특수문자 ( @, . ) 포함"
         />
-        <label for="userType">userType</label>
-        <input
-          type="number"
-          class="inputId"
-          id="userType"
-          placeholder="1 or 2"
-        />
+        <label for="userType">사용자 구분</label>
+        <select class="form-select" id="userType">
+                  <option selected>-- 사용자 선택 --</option>
+                  <option value="2">극장담당자</option>
+                  <option value="1">일반회원</option>
+                </select>
       </div>
       <div class="joinBtns">
         <button

@@ -16,7 +16,7 @@
 
 .wrap {
   width: 600px;
-  height: 600px;
+  height: 700px;
   padding: 100px;
 
   display: flex;
@@ -36,7 +36,7 @@
 
 .inputId {
   width: 400px;
-  height: 30px;
+  height: 40px;
   margin-bottom: 15px;
 }
 

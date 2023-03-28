@@ -6,31 +6,39 @@ import {
   Param,
   Post,
   Put,
+  Req,
 } from '@nestjs/common';
 import { CreateTimeSaleDto } from 'src/dto/create-time-sale.dto';
 import { UpdateTimeSaleDto } from 'src/dto/update-time-sale.dto';
 import { TimeSaleService } from 'src/services/time-sale.service';
+import { Request } from 'express';
+import { JwtService } from '@nestjs/jwt';
 
 @Controller('time-sale')
 export class TimeSaleController {
-  constructor(private readonly timeSaleService: TimeSaleService) {}
+  constructor(
+    private readonly timeSaleService: TimeSaleService,
+    private jwtService: JwtService
+  ) {}
 
-  @Get('/timesale')
+  @Get('/getAllTimesale')
   async getTimeSaleInfo() {
     return await this.timeSaleService.getTimeSaleInfo();
   }
 
-  @Get('/timesale/:contentId')
+  @Get('/getTimesale/:contentId')
   async getTimeSaleInfoByContentId(@Param('contentId') contentId: number) {
     return await this.timeSaleService.getTimeSaleInfoByContentId(contentId);
   }
 
-  @Post('/timesale/:contentId/:userId')
+  @Post('/create/:contentId')
   createTimeSale(
+    @Req() req: Request,
     @Param('contentId') contentId: number,
-    @Param('userId') userId: number,
     @Body() data: CreateTimeSaleDto
   ) {
+    const jwt = req.cookies.jwt;
+    const userId = this.jwtService.verify(jwt)['id'];
     return this.timeSaleService.createTimeSale(
       contentId,
       data.startTime,
