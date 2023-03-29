@@ -29,7 +29,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/js/bootstrap.js"></script>
 
-    <link rel="stylesheet" href="styles/header.css" />
+    <link rel="stylesheet" href="styles/headerAdmin.css" />
     <link rel="stylesheet" href="styles/theaterSeats.css" />
     <link rel="stylesheet" href="styles/datePicker.css" />
 
@@ -84,17 +84,32 @@
             </p>
             <p>
               <h5>공연 제목</h5>
-              <input
-                list="my-performs-select-content"
-                id="my-perform-choice-content"
-                name="my-perform-choice-content"
-              />
-              <datalist
-                id="my-performs-select-content"
-                name="my-performs-select-content"
-              ></datalist>
+              <table>
+                <td>
+                  <input
+                    list="my-performs-select-content"
+                    id="my-perform-choice-content"
+                    name="my-perform-choice-content"
+                  />
+                  <datalist
+                    id="my-performs-select-content"
+                    name="my-performs-select-content"
+                  ></datalist>
+                </td>
+                <td>
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    onclick="getPerformInfoForContent()"
+                  >
+                    공연 정보 보기
+                  </button>
+                </td>
+              </table>
             </p>
-            
+            <p>
+              <ul class="list-group" id="perform-info-create-contents"></ul>
+            </p>            
             <h5>공연 기간 / 공연 시간</h5>
             <h6> ( 공연 시작일, 공연 종료일 / 공연 시작시간, 공연 종료시간 )</h6>
             <p>
