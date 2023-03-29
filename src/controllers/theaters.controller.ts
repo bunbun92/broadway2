@@ -101,8 +101,16 @@ export class TheatersController {
   }
 
   @Get('/priceInfo/:performId')
-  async getPriceInfoByPerformId(@Param('performId') performId: string) {
-    return await this.theatersService.getPriceInfoByPerformId(performId);
+  async getPriceInfoByPerformId(
+    @Req() req: Request,
+    @Param('performId') performId: string
+  ) {
+    const jwt = req.cookies.jwt;
+    const userId = this.jwtService.verify(jwt)['id'];
+    return await this.theatersService.getPriceInfoByPerformId(
+      performId,
+      userId
+    );
   }
 
   @Post('/createPriceInfo')

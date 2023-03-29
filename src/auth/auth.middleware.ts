@@ -36,6 +36,7 @@ export class AuthMiddleware implements NestMiddleware {
       }
     }
 
+    console.log('여기 되나?');
     next();
 
     // console.log('req', req);

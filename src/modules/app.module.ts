@@ -29,6 +29,7 @@ import { TheatersModule } from './theaters.module';
 import { UserController } from 'src/renderers/user/render-user.controller';
 import { ReviewController } from 'src/renderers/review/render-review.controller';
 import { RenderOrderSeatsController } from 'src/renderers/orderSeats/render-order-seats.controller';
+import { OrderSeatsController } from 'src/controllers/order-seats.controller';
 
 @Module({
   imports: [
@@ -69,7 +70,11 @@ export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(AuthMiddleware)
-      .forRoutes(RenderOrderSeatsController, '/render-user/membership');
+      .forRoutes(
+        RenderOrderSeatsController,
+        OrderSeatsController,
+        '/render-user/membership/'
+      );
     // .forRoutes('/user/logout');
     // '*'
     // { path: 'user/update', method: RequestMethod.PUT }

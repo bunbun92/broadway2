@@ -69,7 +69,7 @@
               } else {
                 tempHtml += `
                   <span class="seat" id= "${seat}" onclick="chooseSeat(${seat})">${seat}</span>
-                  <span style="display:hidden" id= "${seat}Grade" value="R"></span>
+                  <span style="display:hidden" id= "${seat}Grade" value="일반"></span>
                   <span style="display:hidden" id= "${seat}Price" value="${rows[i].price}"> </span>
               `;
               }
@@ -99,11 +99,12 @@
             let round = response['performRound'];
             let date = response['performDate'].split(' ')[0];
             let time = response['performDate'].split(' ')[1].substr(0, 5);
+            let endTime = calculateEndTime(time, response['performTime']);
 
             tempHtml = `
               ${contentName} ${round}회차 <br />
-              ${date} <br />
-              ${time} ~ 00:00 <br />
+              ${date} 
+              ${time} ~ ${endTime} <br />
             `;
 
             $('#contentInfo').append(tempHtml);
@@ -251,6 +252,38 @@
           console.log('꾸꾸');
           return false;
         }
+      }
+
+      // 00:00 형식의 시간:분 표시에서 종료시간 계산
+      function calculateEndTime(startTime, runningTimeMinutes) {
+        let hours = '';
+        let minutes = '';
+
+        hours = startTime.split(':')[0];
+        minutes = startTime.split(':')[1];
+
+        let plusHours = '';
+        let plusMinutes = '';
+
+        plusHours = parseInt(runningTimeMinutes / 60);
+        plusMinutes = runningTimeMinutes % 60;
+
+        hours = parseInt(hours) + plusHours;
+        minutes = parseInt(minutes) + plusMinutes;
+
+        if (minutes > 60) {
+          hours++;
+          minutes -= 60;
+        }
+
+        hours = hours.toString();
+        minutes = minutes.toString();
+
+        if (minutes === '0') {
+          minutes = '00';
+        }
+
+        return hours + ':' + minutes;
       }
     </script>
     <style>
@@ -694,29 +727,32 @@
     <header class="header">
       <nav class="header_nav">
         <span class="header_nav_home">
-          <a href="/"><img src="img/logo005.png" class="logo" /></a>
+          <a href="/render-user/home"
+            ><img src="img/logo005.png" class="logo"
+          /></a>
         </span>
         <span class="header_nav_content">
           <div class="header_upper">
             <div class="header_nav_columns">
-              <a href="/login">로그인</a>
-              <a href="/join">회원가입</a>
+              <a href="/render-order-seats/processingSeats">예매내역</a>
+              <a href="/render-user/membership">회원정보</a>
+              <a href="" onclick="logout()">로그아웃</a>
             </div>
           </div>
           <div class="header_under">
-            <!-- <button style="background-color: black; border: none">
-              <img
-                src="img/search.png"
-                style="height: 25px"
-                onclick="search()"
-              />
-            </button> -->
-            <form>
-              <p>
-                <input type="text" class="form-text" />
-                <input type="button" class="img-button" />
-              </p>
-            </form>
+            <span class="header_under_zone2">
+              <!-- <form>
+                <p>
+                  <input
+                    type="text"
+                    id="search"
+                    onkeyup="filter()"
+                    class="form-text"
+                    placeholder="공연명 검색"
+                  />
+                </p>
+              </form> -->
+            </span>
           </div>
         </span>
       </nav>

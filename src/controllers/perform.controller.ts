@@ -26,6 +26,19 @@ export class PerformController {
   //   return await this.performService.getPerforms();
   // }
 
+  @Get('/myContentsTheater/:performId')
+  async getMyTheatersByPerformId(
+    @Req() req: Request,
+    @Param('performId') performId: string
+  ) {
+    const jwt = req.cookies.jwt;
+    const userId = this.jwtService.verify(jwt)['id'];
+    return await this.performService.getMyTheatersByPerformId(
+      performId,
+      userId
+    );
+  }
+
   @Get('/myContentsList/:performId')
   async getMyContents(
     @Req() req: Request,
