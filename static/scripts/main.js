@@ -1,26 +1,12 @@
 $(document).ready(function () {
-  get_performs(1);
+  get_contents(1);
 });
 
-// header 검색기능
-function filter() {
-  let search = document.getElementById('search').value.toLowerCase();
-  let perform = document.getElementsByClassName('postboxes');
-  for (let i = 0; i < perform.length; i++) {
-    performTitle = perform[i].getElementsByClassName('performTitle');
-    if (performTitle[0].innerHTML.toLowerCase().includes(search)) {
-      perform[i].style.display = 'flex';
-    } else {
-      perform[i].style.display = 'none';
-    }
-  }
-}
-
-// 모든 공연 불러오기
-function get_performs(page) {
+// content table의 공연을 perform table에서 공연정보 불러오기 - 페이지네이션
+function get_contents(page) {
   $.ajax({
     type: 'GET',
-    url: '/content/getAllContents',
+    url: '/content/getAll',
     data: { page },
     success: function (response) {
       console.log('리스폰스', response);
@@ -47,11 +33,19 @@ function get_performs(page) {
           pageList.innerHTML += `<li class="page-item"><a class="page-link" onclick="get_performs(${i})">${i}</a></li>`;
         }
       }
+      let AvoidDuplication = [];
 
       for (let e of performData) {
         let performId = e.performId;
+        if (!AvoidDuplication.includes(performId)) {
+          AvoidDuplication.push(performId);
+        } else {
+          continue;
+        }
+
         let posterImg = e.poster;
         let title = e.performName;
+
         let temp_html = `
       <div class="postboxes">
         <img
@@ -72,11 +66,11 @@ function get_performs(page) {
   });
 }
 
-// // 모든 공연 불러오기
+// // perform table '공연중'인 공연정보 불러오기 - 페이지네이션
 // function get_performs(page) {
 //   $.ajax({
 //     type: 'GET',
-//     url: '/content/getAll',
+//     url: '/content/getAllContents',
 //     data: { page },
 //     success: function (response) {
 //       console.log('리스폰스', response);
@@ -128,42 +122,6 @@ function get_performs(page) {
 //   });
 // }
 
-// // 모든 공연 불러오기
-// function get_performs() {
-//   $.ajax({
-//     type: 'GET',
-//     url: '/content/getone',
-//     data: {},
-//     success: function (response) {
-//       console.log('리스폰스', response);
-//       console.log('리스폰스.content', response.content);
-//       console.log('리스폰스.content.performId', response.content.performId);
-
-//       // for (let e of response.content) {
-//       let e = response.content;
-//       let performId = e.performId;
-//       let posterImg = e.poster;
-//       let title = e.performName;
-//       let temp_html = `
-//       <div class="postboxes">
-//         <img
-//           class="posts"
-//           src="${posterImg}"
-//         />
-//         <div class="performTitle">${title}</div>
-//         <div class="buttons">
-//           <button class="specBtn"
-//           onclick="location.href='/render-content/?id=${performId}'">상세정보</button>
-//           <button class="reserveBtn"
-//           onclick="location.href='/render-order-seats/performRoundList?performId=${performId}'">예매하기</button>
-//         </div>
-//       </div>`;
-//       $('.postsWrap').append(temp_html);
-//       // }
-//     },
-//   });
-// }
-
 function customAlert(text) {
   $('#alertText').text(text);
   $('#alertModal').modal('show');
@@ -182,3 +140,17 @@ function logout() {
     },
   });
 }
+
+// // header 검색기능
+// function filter() {
+//   let search = document.getElementById('search').value.toLowerCase();
+//   let perform = document.getElementsByClassName('postboxes');
+//   for (let i = 0; i < perform.length; i++) {
+//     performTitle = perform[i].getElementsByClassName('performTitle');
+//     if (performTitle[0].innerHTML.toLowerCase().includes(search)) {
+//       perform[i].style.display = 'flex';
+//     } else {
+//       perform[i].style.display = 'none';
+//     }
+//   }
+// }
