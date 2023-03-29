@@ -216,6 +216,25 @@ function getMyContentsPerformId() {
     success: function (response) {
       performId = response['performId'];
       getMyContensList(performId);
+      getMyTheaterListForSeat(performId);
+    },
+  });
+}
+
+function getMyTheaterListForSeat(performId) {
+  $.ajax({
+    type: 'GET',
+    url: `/perform/myContentsTheater/${performId}`,
+    data: {},
+    success: function (response) {
+      const rows = response;
+
+      $('#my-theaters-select').empty();
+
+      for (let i = 0; i < rows.length; i++) {
+        const option = $('<option>' + rows[i]['ka_theater'] + '</option>');
+        $('#my-theaters-select').append(option);
+      }
     },
   });
 }
@@ -237,24 +256,179 @@ function getMyContensList(performId) {
 function appendContentsList(res) {
   let performName = $('#my-contents-choice-for-seats').val();
   $('#contents-list').empty();
-
+  let temp_html = `<input id="number-of-contents" value="${res.length}" hidden="true">`;
+  $('#contents-list').append(temp_html);
   for (let i = 0; i < res.length; i++) {
     let performId = res[i]['performId'];
     let performRound = res[i]['performRound'];
     let performDate = res[i]['performDate'];
     let performTime = res[i]['performTime'];
+    let contentId = res[i]['id'];
 
     let temp_html = `<li class="list-group-item">
     <input class="form-check-input me-1" id="seats-${performId}-${performRound}" type="checkbox" value="" aria-label="..." />
       <table>
-        <td id="">&nbsp;${performId}&nbsp;</td>
-        <td id="">&nbsp;${performRound}회차&nbsp;</td>
-        <td id="">&nbsp;${performName}&nbsp;</td>
-        <td id="">&nbsp;${performDate}&nbsp;</td>
-        <td id="">&nbsp;${performTime}분&nbsp;</td>
-      </table>               
+        <td id="seats-performId-${performRound}">&nbsp;${performId}&nbsp;</td>
+        <td id="seats-performRound-${performRound}">&nbsp;${performRound}회차&nbsp;</td>
+        <td id="seats-performName-${performRound}">&nbsp;${performName}&nbsp;</td>
+        <td id="seats-performDate-${performRound}">&nbsp;${performDate}&nbsp;</td>
+        <td id="seats-performTime-${performRound}">&nbsp;${performTime}분&nbsp;</td>
+      </table>
+      <input id="seats-contentId-${performRound}" value="${contentId}" hidden="true">            
     </li>`;
     $('#contents-list').append(temp_html);
+  }
+}
+
+function printSeats() {
+  let theaterName = $('#my-theater-choice').val();
+
+  console.log(theaterName);
+
+  $.ajax({
+    type: 'GET',
+    url: `/theaters/getTheaterId/${theaterName}`,
+    data: {},
+    success: function (response) {
+      console.log(response);
+      printSeatsById(response['id']);
+    },
+  });
+}
+
+function printSeatsById(theaterId) {
+  $.ajax({
+    type: 'GET',
+    url: `/theaters/printSeats/${theaterId}`,
+    success: function (response) {
+      //좌석 전체 출력
+      let rows = response;
+      console.log(rows);
+
+      let tempHtml = `<div class="seatsHorizontalLine">`;
+      let currentSeatAlphabet = 'A';
+
+      document.getElementById('seats').innerHTML = '';
+
+      for (let i = 0; i < rows.length; i++) {
+        let seatAlphabet = rows[i].seat[0];
+        let seat = rows[i].seat;
+        if (seatAlphabet !== currentSeatAlphabet) {
+          currentSeatAlphabet = seatAlphabet;
+
+          tempHtml += `</div><div class="seatsHorizontalLine">`;
+        }
+        tempHtml += `<span class="seat" id= "${seat}">${seat}</span>`;
+      }
+
+      tempHtml += `</div>`;
+
+      $('#seats').append(tempHtml);
+    },
+  });
+  return;
+}
+
+function getContentsPerformId() {
+  let performName = $('#my-contents-choice-for-seats').val();
+  console.log(performName);
+
+  $.ajax({
+    type: 'GET',
+    url: `/theaters/getPerformId/${performName}`,
+    data: {},
+    success: function (response) {
+      performId = response['performId'];
+      getPriceInfo(performId);
+    },
+  });
+}
+
+function getPriceInfo(PerformId) {
+  $.ajax({
+    type: 'GET',
+    url: `/theaters/priceInfo/${performId}`,
+    data: {},
+    success: function (response) {
+      let noGrade = checkPriceInfoNoGrade(response);
+      if (noGrade === true) {
+        getTheaterIdNoGrade(response);
+      }
+    },
+  });
+}
+
+function getTheaterIdNoGrade(res) {
+  let price = res[0]['price'];
+  let theaterName = $('#my-theater-choice').val();
+
+  $.ajax({
+    type: 'GET',
+    url: `/theaters/getTheaterId/${theaterName}`,
+    data: {},
+    success: function (response) {
+      let theaterId = response['id'];
+      getSeatsNoGrade(theaterId, price);
+    },
+  });
+}
+
+function getSeatsNoGrade(theaterId, price) {
+  $.ajax({
+    type: 'GET',
+    url: `/theaters/printSeats/${theaterId}`,
+    success: function (response) {
+      createSeatsNoGrade(price, response);
+    },
+  });
+}
+
+function createSeatsNoGrade(price, res) {
+  let seats = res;
+  let countContents = $('#number-of-contents').val();
+  let theater = $('#my-theater-choice').val().substring(0, 5);
+  let orderStatus = 0;
+
+  for (let i = 0; i < countContents; i++) {
+    let checkboxSeat = $(`#seats-${performId}-${i + 1}`).prop('checked');
+    let contentId = parseInt($(`#seats-contentId-${i + 1}`).val());
+    let performInfo = i + 1;
+
+    if (checkboxSeat === true) {
+      for (let j = 0; j < seats.length; j++) {
+        let seat = seats[j]['seat'];
+
+        $.ajax({
+          type: 'POST',
+          url: '/order-seats/createSeat',
+          data: {
+            seat,
+            theater,
+            contentId,
+            performInfo,
+            price,
+            orderStatus,
+          },
+          success: function (response) {
+            console.log('POST', seat, theater, contentId, performInfo, price);
+          },
+        });
+      }
+    }
+  }
+}
+
+function checkPriceInfoNoGrade(res) {
+  let rowsLength = res.length;
+  if (rowsLength > 1) {
+    return false;
+  } else if (rowsLength === 1) {
+    let grade = res[0]['grade'];
+    if (grade === -1) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }
 

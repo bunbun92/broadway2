@@ -748,29 +748,32 @@
     <header class="header">
       <nav class="header_nav">
         <span class="header_nav_home">
-          <a href="/"><img src="img/logo005.png" class="logo" /></a>
+          <a href="/render-user/home"
+            ><img src="img/logo005.png" class="logo"
+          /></a>
         </span>
         <span class="header_nav_content">
           <div class="header_upper">
             <div class="header_nav_columns">
-              <a href="/login">로그인</a>
-              <a href="/join">회원가입</a>
+              <a href="/render-order-seats/processingSeats">예매내역</a>
+              <a href="/render-user/membership">회원정보</a>
+              <a href="" onclick="logout()">로그아웃</a>
             </div>
           </div>
           <div class="header_under">
-            <!-- <button style="background-color: black; border: none">
-              <img
-                src="img/search.png"
-                style="height: 25px"
-                onclick="search()"
-              />
-            </button> -->
-            <form>
-              <p>
-                <input type="text" class="form-text" />
-                <input type="button" class="img-button" />
-              </p>
-            </form>
+            <span class="header_under_zone2">
+              <!-- <form>
+                <p>
+                  <input
+                    type="text"
+                    id="search"
+                    onkeyup="filter()"
+                    class="form-text"
+                    placeholder="공연명 검색"
+                  />
+                </p>
+              </form> -->
+            </span>
           </div>
         </span>
       </nav>

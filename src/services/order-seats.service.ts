@@ -604,6 +604,18 @@ export class OrderSeatsService {
     return reservations;
   }
 
+  // async getReservedSeatsByOrderId(userId: number, orderId: number) {
+  //   const seats = await this.orderListRepository.find({
+  //     where: {
+  //       userId,
+  //       orderId,
+  //     },
+  //     select: {
+  //       seat,
+  //     },
+  //   });
+  // }
+
   // 여기서부터 API 미연결 함수들
   //타임세일 정보 출력 (모든 회차)
   async getCurrentAllTimeSaleByPerformId(performId: string) {
@@ -701,5 +713,24 @@ export class OrderSeatsService {
     });
 
     return result;
+  }
+
+  // 좌석 정보 생성
+  createSeat(
+    seat: string,
+    theater: string,
+    contentId: number,
+    performInfo: number,
+    price: number,
+    orderStatus: number
+  ) {
+    this.seatRepository.insert({
+      seat,
+      theater,
+      contentId,
+      performInfo,
+      price,
+      orderStatus,
+    });
   }
 }
