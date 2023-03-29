@@ -60,7 +60,7 @@ function getMyPerformsContent() {
   });
 }
 
-function getPerformInfoForContent() {
+function getPerformInfoContent() {
   let performName = $('#my-perform-choice-content').val();
   console.log(performName);
 
@@ -82,6 +82,25 @@ function getPerformInfoForContent() {
         performStartDate,
         performEndDate
       );
+    },
+  });
+}
+
+function getPerformInfoForContent() {
+  let performName = $('#my-perform-choice-content').val();
+  // console.log(performName);
+
+  $.ajax({
+    type: 'GET',
+    url: `/theaters/getPerformId/${performName}`,
+    data: {},
+    success: function (response) {
+      console.log(response);
+      performId = response['performId'];
+      performStartDate = response['startDate'];
+      performEndDate = response['endDate'];
+
+      createContent(performId, performStartDate, performEndDate);
     },
   });
 }
