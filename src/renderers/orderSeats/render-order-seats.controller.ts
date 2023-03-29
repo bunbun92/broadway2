@@ -30,7 +30,7 @@ export class RenderOrderSeatsController {
   @Get('/processingSeats')
   @Render('orderSeatsProcessingSeats.ejs')
   getOrderSeatsProcessingSeats(@Res() res: Response) {
-    console.log('fff' + res.locals.user.id);
+    console.log('유저아이디 ' + res.locals.user.id);
     return;
   }
 

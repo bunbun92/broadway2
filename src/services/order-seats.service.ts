@@ -604,6 +604,18 @@ export class OrderSeatsService {
     return reservations;
   }
 
+  // async getReservedSeatsByOrderId(userId: number, orderId: number) {
+  //   const seats = await this.orderListRepository.find({
+  //     where: {
+  //       userId,
+  //       orderId,
+  //     },
+  //     select: {
+  //       seat,
+  //     },
+  //   });
+  // }
+
   // 여기서부터 API 미연결 함수들
   //타임세일 정보 출력 (모든 회차)
   async getCurrentAllTimeSaleByPerformId(performId: string) {
