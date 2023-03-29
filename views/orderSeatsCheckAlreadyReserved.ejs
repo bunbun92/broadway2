@@ -30,14 +30,17 @@
       );
 
       $(document).ready(function () {
+        console.log('1');
         navigateToChooseOrEditSeats(contentId);
+        console.log('3');
       });
 
-      function navigateToChooseOrEditSeats(contentId) {
+      async function navigateToChooseOrEditSeats(contentId) {
         $.ajax({
           type: 'GET',
           url: `/order-seats/${contentId}/reservedSeats`,
           success: function (response) {
+            console.log('2');
             console.log(response);
             if (response.length > 0) {
               location.href = `/render-order-seats/editSeats?contentId=${contentId}`;

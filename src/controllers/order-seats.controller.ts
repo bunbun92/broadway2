@@ -52,8 +52,11 @@ export class OrderSeatsController {
   }
 
   @Get('/:contentId/seatsWithMine')
-  async getAllSeatsAndMySeatsOfAContent(@Param('contentId') contentId: number) {
-    const userId = 1;
+  async getAllSeatsAndMySeatsOfAContent(
+    @Param('contentId') contentId: number,
+    @Res() res: Response
+  ) {
+    const userId = res.locals.user.id;
 
     const seats = await this.orderSeatsService.getAllSeatsOfAContent(contentId);
     const mySeats = await this.orderSeatsService.getReservedSeats(
@@ -61,15 +64,16 @@ export class OrderSeatsController {
       contentId
     );
 
-    return { seats, mySeats };
+    return res.status(200).send({ seats, mySeats });
   }
 
   @Post('/:contentId/seatsRTWP')
   async seatsReservationTemporarilyWhilePay(
     @Param('contentId') contentId: number,
-    @Body() data: CreateOrderSeatsDto
+    @Body() data: CreateOrderSeatsDto,
+    @Res() res: Response
   ) {
-    const userId = 1;
+    const userId = res.locals.user.id;
     const msg =
       await this.orderSeatsService.seatsReservationTemporarilyWhilePay(
         userId,
@@ -77,41 +81,49 @@ export class OrderSeatsController {
         data.seats
       );
 
-    return msg;
+    return res.status(200).send(msg);
   }
 
   @Get('/:contentId/reservedSeats')
-  async getReservedSeats(@Param('contentId') contentId: number) {
-    const userId = 1;
+  async getReservedSeats(
+    @Param('contentId') contentId: number,
+    @Res() res: Response
+  ) {
+    const userId = res.locals.user.id;
+    console.log(userId);
     const seats = await this.orderSeatsService.getReservedSeats(
       userId,
       contentId
     );
 
-    return seats;
+    console.log(seats);
+
+    return res.status(200).send(seats);
   }
 
   @Post('/:contentId/payReservedSeats')
   async payReservedSeats(
     @Param('contentId') contentId: number,
-    @Body() data: CreateOrderSeatsDto
+    @Body() data: CreateOrderSeatsDto,
+    @Res() res: Response
   ) {
-    const userId = 1;
+    const userId = res.locals.user.id;
     const msg = await this.orderSeatsService.payReservedSeats(
       userId,
       contentId,
       data.seats
     );
 
-    return msg;
+    return res.status(200).send(msg);
   }
 
   @Patch('/:contentId/editReservedSeats')
   async editReservedSeats(
     @Param('contentId') contentId: number,
-    @Body() data: UpdateOrderSeatsDto
+    @Body() data: UpdateOrderSeatsDto,
+    @Res() res: Response
   ) {
-    const userId = 1;
+    const userId = res.locals.user.id;
     const msg = await this.orderSeatsService.editReservedSeats(
       userId,
       contentId,
@@ -119,24 +131,30 @@ export class OrderSeatsController {
       data.seatsAfter
     );
 
-    return msg;
+    return res.status(200).send(msg);
   }
 
   @Delete('/deletePaidSeats')
-  async deletePaidSeatsByIds(@Body() data: DeleteOrderSeatsDto) {
-    const userId = 1;
+  async deletePaidSeatsByIds(
+    @Body() data: DeleteOrderSeatsDto,
+    @Res() res: Response
+  ) {
+    const userId = res.locals.user.id;
     const msg = await this.orderSeatsService.deleteSeatsByIds(
       userId,
       data.orderListIds,
       [3]
     );
 
-    return msg;
+    return res.status(200).send(msg);
   }
 
   @Delete('/releaseSeats')
-  async releaseSeatsByIds(@Body() data: DeleteOrderSeatsDto) {
-    const userId = 1;
+  async releaseSeatsByIds(
+    @Body() data: DeleteOrderSeatsDto,
+    @Res() res: Response
+  ) {
+    const userId = res.locals.user.id;
 
     const msg = await this.orderSeatsService.releaseSeatsByIds(
       userId,
@@ -144,12 +162,15 @@ export class OrderSeatsController {
       [1, 2]
     );
 
-    return msg;
+    return res.status(200).send(msg);
   }
 
   @Delete('/releaseSeatsByContentId')
-  async releaseSeatsByContentId(@Body() data: DeleteOrderSeatsByContentIdDto) {
-    const userId = 1;
+  async releaseSeatsByContentId(
+    @Body() data: DeleteOrderSeatsByContentIdDto,
+    @Res() res: Response
+  ) {
+    const userId = res.locals.user.id;
 
     const msg = await this.orderSeatsService.deleteSeatsByContentId(
       userId,
@@ -157,12 +178,15 @@ export class OrderSeatsController {
       [1, 2]
     );
 
-    return msg;
+    return res.status(200).send(msg);
   }
 
   @Delete('/deleteSeatsByOrderId')
-  async deleteSeatsByOrderId(@Body() data: DeleteOrderSeatsByOrderIdDto) {
-    const userId = 1;
+  async deleteSeatsByOrderId(
+    @Body() data: DeleteOrderSeatsByOrderIdDto,
+    @Res() res: Response
+  ) {
+    const userId = res.locals.user.id;
 
     const msg = await this.orderSeatsService.deleteSeatsByOrderId(
       userId,
@@ -170,12 +194,15 @@ export class OrderSeatsController {
       [3]
     );
 
-    return msg;
+    return res.status(200).send(msg);
   }
 
   @Delete('/deleteSeatsByContentId')
-  async deleteSeatsByContentId(@Body() data: DeleteOrderSeatsByContentIdDto) {
-    const userId = 1;
+  async deleteSeatsByContentId(
+    @Body() data: DeleteOrderSeatsByContentIdDto,
+    @Res() res: Response
+  ) {
+    const userId = res.locals.user.id;
 
     const msg = await this.orderSeatsService.deleteSeatsByContentId(
       userId,
@@ -183,41 +210,41 @@ export class OrderSeatsController {
       [3]
     );
 
-    return msg;
+    return res.status(200).send(msg);
   }
 
   @Get('/orders')
-  async getAllOrders() {
-    const userId = 1;
+  async getAllOrders(@Res() res: Response) {
+    const userId = res.locals.user.id;
     const orders = await this.orderSeatsService.getAllOrders(userId);
 
-    return orders;
+    return res.status(200).send(orders);
   }
 
   @Get('/order/:orderId')
-  async getAnOrder(@Param('orderId') orderId: number) {
-    const userId = 1;
+  async getAnOrder(@Param('orderId') orderId: number, @Res() res: Response) {
+    const userId = res.locals.user.id;
     const order = await this.orderSeatsService.getAnOrder(userId, orderId);
 
-    return order;
+    return res.status(200).send(order);
   }
 
   @Get('/processingReservations')
-  async getAllProcessingReservations() {
-    const userId = 1;
+  async getAllProcessingReservations(@Res() res: Response) {
+    const userId = res.locals.user.id;
     const reservations =
       await this.orderSeatsService.getAllProcessingReservations(userId, [1, 2]);
 
-    return reservations;
+    return res.status(200).send(reservations);
   }
 
   @Get('/reservedReservations')
-  async getAllReservedReservations() {
-    const userId = 1;
+  async getAllReservedReservations(@Res() res: Response) {
+    const userId = res.locals.user.id;
     const reservations =
       await this.orderSeatsService.getAllReservedReservations(userId, [3]);
 
-    return reservations;
+    return res.status(200).send(reservations);
   }
 
   @Post('/createSeat')
@@ -239,13 +266,13 @@ export class OrderSeatsController {
     );
   }
 
-  //일정 주기로 선점 좌석 해제 평소엔 꺼놔야함
-  // @Cron('*/10 * * * * *')
-  // async releaseSeatsInterval() {
-  //   const msg = await this.orderSeatsService.releaseSeatsInterval(900, [1]);
-  //   console.log(msg);
-  //   return;
-  // }
+  // 일정 주기로 선점 좌석 해제 평소엔 꺼놔야함
+  @Cron('*/10 * * * * *')
+  async releaseSeatsInterval() {
+    const msg = await this.orderSeatsService.releaseSeatsInterval(900, [1]);
+    console.log(msg);
+    return;
+  }
 
   //현재 미사용 URI
   // @Get('/:contentId/timeSale')
