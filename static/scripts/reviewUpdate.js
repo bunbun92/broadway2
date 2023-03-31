@@ -69,9 +69,10 @@ function get_reviews(reviewId) {
 function update_review(reviewId) {
   let rating = Number($('#starIndex').val());
   let review = $('#reviewContent').val();
-  console.log(typeof rating);
-  console.log(typeof review);
-  console.log(typeof reviewId);
+
+  if (!rating || !review) {
+    return alert('모든 항목을 입력해주세요.');
+  }
 
   $.ajax({
     type: 'PUT',
@@ -86,7 +87,7 @@ function update_review(reviewId) {
       window.location.href = '/render-review/manage';
     },
     error: function (response) {
-      alert('리뷰 수정에 실패하였습니다. 모든 항목을 입력해주세요!');
+      alert('리뷰 수정에 실패하였습니다.');
     },
   });
 }

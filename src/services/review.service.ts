@@ -33,6 +33,7 @@ export class ReviewService {
   // 내가 쓴 모든 리뷰 조회
   async getReviewsByUserId(userId: number) {
     const myReviews = await this.reviewRepository.find({
+      order: { updatedAt: 'ASC' },
       where: {
         deletedAt: null,
         userId,
@@ -44,6 +45,7 @@ export class ReviewService {
   // 특정 공연 리뷰 조회
   async getReviewsByPerformId(performId: string) {
     const reviews = await this.reviewRepository.find({
+      order: { updatedAt: 'ASC' },
       where: {
         deletedAt: null,
         performId,

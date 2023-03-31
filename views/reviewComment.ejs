@@ -28,7 +28,8 @@
     <title>broadway9th</title>
   </head>
   <body>
-    <%- include('headerPostLogin.ejs') %>
+    <% if(login) { %> <%- include('headerPostLogin.ejs') %> <% }else{ %> <%-
+    include('header.ejs') %> <% } %>
     <div class="detailZone1">
       <span class="detailRight">
         <div>
@@ -43,12 +44,11 @@
         <div class="BtnsBox" id="BtnsBox"></div>
         <div class="reviewsContainer" id="reviewsContainer"></div>
         <div class="commentInputs">
-          <input
-            type="text"
+          <textarea
             class="inputId"
             id="commentContent"
             placeholder=" 댓글을 입력해주세요."
-          />
+          ></textarea>
           <button class="commentWriteBtn" onclick="create_review(reviewId)">
             작성
           </button>
@@ -58,5 +58,6 @@
     </div>
 
     <script src="scripts/reviewComment.js"></script>
+    <script src="scripts/header.js"></script>
   </body>
 </html>

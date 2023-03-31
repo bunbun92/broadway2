@@ -81,7 +81,7 @@
 
   display: flex;
   align-items: center;
-  justify-content: right;
+  justify-content: space-evenly;
 }
 .header_under_zone2 {
   width: 400px;

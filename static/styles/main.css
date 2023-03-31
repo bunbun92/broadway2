@@ -145,3 +145,24 @@
   align-items: center;
   flex-direction: column;
 }
+
+.reviewBox {
+  background-color: transparent;
+
+  margin-top: 30px;
+  padding: 30px;
+  width: 900px;
+
+  border-radius: 10px;
+  border-color: gray;
+  border-style: double;
+
+  color: white;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.reviewContent {
+  font-weight: bold;
+}
