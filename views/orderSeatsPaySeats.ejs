@@ -54,8 +54,8 @@
             let endTime = calculateEndTime(time, response['performTime']);
 
             tempHtml = `
-              ${contentName} ${round}회차 <br />
-              ${date} ${time} ~ ${endTime} <br />              
+              <span style="font-size:80%"> ${contentName} ${round}회차 </span> <br />
+              <span style="font-size:80%"> ${date} ${time} ~ ${endTime} </span>              
             `;
 
             tempHtmlForPoster = `
@@ -94,12 +94,13 @@
 
             //타임세일 여부 if문 필요
             //1차 발표 끝나고 깔끔하게 중복코드 없애고 다시 정리하기..
+
             if (rows[0].timeSaleRate) {
               $('#contentInfo').append(`
-                <span style="font-size: 65%; color: orange;">
+                <div style="font-size: 65%; color: orange;">
                   ${rows[0].timeSaleEndTime} 이전 결제 완료시 ${
                 rows[0].timeSaleRate * 100
-              }% 할인</span>
+              }% 할인</div>
               `);
 
               for (let i = 0; i < rows.length; i++) {
@@ -258,7 +259,14 @@
           minutes -= 60;
         }
 
-        return hours.toString() + ':' + minutes.toString();
+        hours = hours.toString();
+        minutes = minutes.toString();
+
+        if (minutes === '0') {
+          minutes = '00';
+        }
+
+        return hours + ':' + minutes;
       }
     </script>
     <style>

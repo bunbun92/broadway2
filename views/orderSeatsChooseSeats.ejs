@@ -103,7 +103,7 @@
 
             tempHtml = `
               ${contentName} ${round}회차 <br />
-              ${date} <br />
+              ${date} 
               ${time} ~ ${endTime} <br />
             `;
 
@@ -276,7 +276,14 @@
           minutes -= 60;
         }
 
-        return hours.toString() + ':' + minutes.toString();
+        hours = hours.toString();
+        minutes = minutes.toString();
+
+        if (minutes === '0') {
+          minutes = '00';
+        }
+
+        return hours + ':' + minutes;
       }
     </script>
     <style>

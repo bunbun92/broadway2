@@ -60,9 +60,9 @@ function getMyPerformsContent() {
   });
 }
 
-function getPerformInfoForContent() {
+function getPerformInfoContent() {
   let performName = $('#my-perform-choice-content').val();
-  // console.log(performName);
+  console.log(performName);
 
   $.ajax({
     type: 'GET',
@@ -75,9 +75,52 @@ function getPerformInfoForContent() {
       performStartDate = response['startDate'];
       performEndDate = response['endDate'];
 
+      // console.log(performId, performName, performStartDate, performEndDate);
+      appendPerformInfoForContent(
+        performId,
+        performName,
+        performStartDate,
+        performEndDate
+      );
+    },
+  });
+}
+
+function getPerformInfoForContent() {
+  let performName = $('#my-perform-choice-content').val();
+  // console.log(performName);
+
+  $.ajax({
+    type: 'GET',
+    url: `/theaters/getPerformId/${performName}`,
+    data: {},
+    success: function (response) {
+      console.log(response);
+      performId = response['performId'];
+      performStartDate = response['startDate'];
+      performEndDate = response['endDate'];
+
       createContent(performId, performStartDate, performEndDate);
     },
   });
+}
+
+function appendPerformInfoForContent(
+  performId,
+  performName,
+  performStartDate,
+  performEndDate
+) {
+  console.log(performId, performName, performStartDate, performEndDate);
+  let temp_html = `<li class="list-group-item">
+      <table>
+        <td id="performInfo-performId">&nbsp;${performId}&nbsp;</td>
+        <td id="performInfo-performName">&nbsp;${performName}&nbsp;</td>
+        <td id="performInfo-startDate">&nbsp;공연 시작일 :&nbsp;&nbsp;${performStartDate}&nbsp;</td>
+        <td id="performInfo-endDate">&nbsp;공연 종료일 :&nbsp;&nbsp;${performEndDate}&nbsp;</td>
+      </table>           
+    </li>`;
+  $('#perform-info-create-contents').append(temp_html);
 }
 
 function createContent(performId, performStartDate, performEndDate) {

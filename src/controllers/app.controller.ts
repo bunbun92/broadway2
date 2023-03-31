@@ -9,6 +9,12 @@ export class AppController {
     private readonly appService: AppService,
     private jwtService: JwtService
   ) {}
+
+  @Get('/')
+  @Render('toHome.ejs')
+  getMainToRenderUser() {
+    return;
+  }
   @Get('/auth')
   async getAuth(@Req() req: Request) {
     const jwt = req.cookies.jwt;
