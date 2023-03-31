@@ -1,5 +1,5 @@
 $(document).ready(function () {
-  get_reviewCreateBtnURL();
+  get_backBtnURL();
   get_poster(performId);
   get_stars(performId);
 });
@@ -57,8 +57,8 @@ function get_stars(performId) {
   });
 }
 
-// '리뷰 작성하기'버튼의 이동경로에 performId 삽입
-function get_reviewCreateBtnURL() {
+// '뒤로가기'버튼의 이동경로에 performId 삽입
+function get_backBtnURL() {
   let temp_html = `<button
   class="BackBtn"
   onclick="location.href='/render-content/?id=${performId}'"
@@ -71,6 +71,10 @@ function get_reviewCreateBtnURL() {
 function create_review(performId) {
   let rating = Number($('#starIndex').val());
   let review = $('#reviewContent').val();
+
+  if (!rating || !review) {
+    return alert('모든 항목을 입력해주세요.');
+  }
 
   $.ajax({
     type: 'POST',

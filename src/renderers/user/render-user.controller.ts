@@ -27,15 +27,31 @@ export class UserController {
   }
 
   @Get('/search')
-  @Render('search.ejs')
-  getSearch() {
-    return { message: 'thank you!' };
+  async getSearch(@Res() res: Response, @Req() req: Request): Promise<any> {
+    const jwt = req.cookies.jwt;
+    if (!jwt) {
+      const loginFalse = { login: false };
+      console.log('false', jwt);
+      res.render('search.ejs', loginFalse);
+    } else {
+      const loginTrue = { login: true };
+      console.log('true', jwt);
+      res.render('search.ejs', loginTrue);
+    }
   }
 
   @Get('/login')
-  @Render('login.ejs')
-  getLogin() {
-    return { message: 'thank you!' };
+  async getLogin(@Res() res: Response, @Req() req: Request): Promise<any> {
+    const jwt = req.cookies.jwt;
+    if (!jwt) {
+      const loginFalse = { login: false };
+      console.log('false', jwt);
+      res.render('login.ejs', loginFalse);
+    } else {
+      const loginTrue = { login: true };
+      console.log('true', jwt);
+      res.render('login.ejs', loginTrue);
+    }
   }
 
   @Get('/join')

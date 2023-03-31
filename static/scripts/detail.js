@@ -12,13 +12,16 @@ const performId = searchParams.get('id');
 // '리뷰 작성하기'버튼의 이동경로에 performId 삽입
 function get_buttonURL() {
   let temp_html = `
-  <button class="manageBtn"onclick="location.href='/render-review/manage'">내 게시물 관리</button>
+  <button 
+    class="manageBtn"
+    onclick="location.href='/render-review/manage'">내 게시물 관리
+  </button>
   <button
-      class="reviewWriteBtn"
-      onclick="location.href='/render-review/create?id=${performId}'"
-    >
-      리뷰 작성하기
-    </button>
+          class="reviewWriteBtn"
+          onclick="location.href='/render-review/create?id=${performId}'"
+        >
+          리뷰 작성하기
+        </button>
   `;
   $('.reviewWriteBtnBox').append(temp_html);
 }
@@ -73,31 +76,28 @@ function get_reviews(performId) {
                   let userName = response.name;
 
                   let temp_html = `
-        <div class="reviewBox">
-        <span class="nameBox"><img src="img/user.png" style="height: 20px"/>&nbsp;${userName}</span>
-
-          <div class="starDateBox">
-            <span class="starBox"
-              >${stars}</span>
-            <span class="dateBox">${date}</span>
-          </div>
-          <div class="reviewContent">
-          ${content}
-          </div>
-          <div class="iconBox">
-            <button 
-              class="commentBtn"
-              onclick="location.href='/render-review/comment?id=${performId}&reviewId=${reviewId}'"
-              >
-              <img src="img/comment.png" style="height: 20px" />&nbsp;${commentCount}
-              Comments
-            </button>
-          </div>
-        </div>`;
+  <div class="reviewBox">
+    <span class="nameBox">
+      <img src="img/user.png" style="height: 20px"/>&nbsp;${userName}
+    </span>
+    <div class="starDateBox">
+      <span class="starBox"
+        >${stars}</span>
+      <span class="dateBox">${date}</span>
+    </div>
+    <div class="reviewContent">
+      ${content}
+    </div>
+    <div class="iconBox">
+      <button 
+        class="commentBtn"
+        onclick="location.href='/render-review/comment?id=${performId}&reviewId=${reviewId}'">
+        <img src="img/comment.png" style="height: 20px" />&nbsp;${commentCount}
+        Comments
+      </button>
+    </div>
+  </div>`;
                   $('.reviewsContainer').append(temp_html);
-                },
-                error: function (response) {
-                  alert('user 실패!');
                 },
               });
             },
@@ -106,7 +106,7 @@ function get_reviews(performId) {
       }
     },
     error: function (response) {
-      alert('리뷰 작성 실패!');
+      alert('리뷰 조회 실패!');
     },
   });
 }
@@ -136,10 +136,6 @@ function get_stars(performId) {
         $('.starAvgBox').append(temp_html);
       }
     },
-    error: function (response) {
-      console.log('응, 아니야.', response);
-      alert('리뷰 작성 실패!');
-    },
   });
 }
 
@@ -161,7 +157,6 @@ function get_poster(performId) {
       $('.posterbox').append(temp_html);
     },
     error: function (response) {
-      console.log('응, 아니야.', response);
       alert('info load 실패!');
     },
   });
@@ -192,7 +187,6 @@ function get_performInfo(performId) {
       $('.InfoBox').append(temp_html);
     },
     error: function (response) {
-      console.log('응, 아니야.', response);
       alert('info load 실패!');
     },
   });

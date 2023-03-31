@@ -16,7 +16,6 @@ import { UpdateCommentDto } from '../dto/update-comment.dto';
 import { JwtService } from '@nestjs/jwt';
 import { Response, Request } from 'express';
 
-// review/:id/comments/
 @Controller('comments')
 export class CommentController {
   constructor(
@@ -24,22 +23,42 @@ export class CommentController {
     private jwtService: JwtService
   ) {}
 
-  // localhost:3000/comment
-
-  // check Api
+  // 조건에 따라 댓글 불러오기
   @Get('/get/:reviewId')
   async getAllComments(@Query('reviewId') reviewId, @Req() req: Request) {
     const jwt = req.cookies.jwt;
-    const currentUserId = this.jwtService.verify(jwt)['id'];
 
-    if (reviewId) {
-      return await this.CommentService.getCommentByReviewId(
-        reviewId,
-        currentUserId
-      );
+    // 비로그인 시, 댓글 수정/삭제 버튼 보이지 않음
+    if (!jwt) {
+      const currentUserId = null;
+
+      // 현재 로그인된 userId와 해당 댓글을 작성한 userId를 비교하기 위해 currentUserId 할당
+      if (reviewId) {
+        return await this.CommentService.getCommentByReviewId(
+          reviewId,
+          currentUserId
+        );
+      } else {
+        return await this.CommentService.getAllComments();
+      }
     } else {
-      return await this.CommentService.getAllComments();
+      const currentUserId = this.jwtService.verify(jwt)['id'];
+
+      if (reviewId) {
+        return await this.CommentService.getCommentByReviewId(
+          reviewId,
+          currentUserId
+        );
+      } else {
+        return await this.CommentService.getAllComments();
+      }
     }
+  }
+
+  // 해당 댓글 불러오기
+  @Get('/:id')
+  async getComments(@Param('id') id: number) {
+    return this.CommentService.getComments(id);
   }
 
   @Post('/create/:reviewId')
@@ -54,19 +73,6 @@ export class CommentController {
     );
   }
 
-  // 특정공연 리뷰에 대한 댓글
-
-  // /contents/1/rewiews/1/comments
-  // /comments/2
-
-  // comments/:reviewId
-  @Get('/:id')
-  async getComments(@Param('id') id: number) {
-    return this.CommentService.getComments(id);
-  }
-
-  // /comments/9
-
   @Put('/update/:id')
   async updateComment(@Param('id') id: number, @Body() data: UpdateCommentDto) {
     return await this.CommentService.updateComment(id, data.comment);
@@ -77,8 +83,3 @@ export class CommentController {
     return this.CommentService.deleteComment(commentId);
   }
 }
-
-// @Post('/comment')
-// async getAllContents() {
-//   return await this.CommentService.getAllContents();
-// }

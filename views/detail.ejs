@@ -28,7 +28,8 @@
     <title>broadway9th</title>
   </head>
   <body>
-    <%- include('headerPostLoginNotHome.ejs') %>
+    <% if(login) { %> <%- include('headerPostLogin.ejs') %> <% }else{ %> <%-
+    include('header.ejs') %> <% } %>
     <div class="detailZone1">
       <span class="detailRight">
         <div>
@@ -48,5 +49,6 @@
       </span>
     </div>
     <script src="scripts/detail.js"></script>
+    <script src="scripts/header.js"></script>
   </body>
 </html>

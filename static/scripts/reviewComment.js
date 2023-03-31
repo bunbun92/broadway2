@@ -149,21 +149,39 @@ function get_commentBtns(reviewId) {
 
 // 해당 리뷰 댓글 작성하기
 function create_review(reviewId) {
-  let comment = $('#commentContent').val();
-
+  // 접속자 로그인 상태 확인
   $.ajax({
-    type: 'POST',
-    url: `/comments/create/${reviewId}`,
-    data: {
-      reviewId,
-      comment,
-    },
+    type: 'GET',
+    // app.controller.ts, @Get('/auth')
+    url: '/auth',
     success: function (response) {
-      alert('댓글 작성이 완료되었습니다!');
-      window.location.reload();
-    },
-    error: function (response) {
-      alert('댓글 작성 실패!');
+      // 비로그인 상태일 때, 로그인 유도
+      if (response === '0') {
+        alert('댓글 작성을 위해 로그인이 필요합니다.');
+        window.location.replace('/render-user/login');
+      } else {
+        let comment = $('#commentContent').val();
+
+        if (!comment) {
+          return alert('댓글 내용을 입력해주세요.');
+        }
+
+        $.ajax({
+          type: 'POST',
+          url: `/comments/create/${reviewId}`,
+          data: {
+            reviewId,
+            comment,
+          },
+          success: function (response) {
+            alert('댓글 작성이 완료되었습니다!');
+            window.location.reload();
+          },
+          error: function (response) {
+            alert('댓글 작성 실패!');
+          },
+        });
+      }
     },
   });
 }

@@ -13,6 +13,7 @@ export class ContentService {
     @InjectRepository(KopisApi) private performRepository: Repository<KopisApi>
   ) {}
 
+  // 검색페이지 검색 결과 불러오기 - 페이지네이션
   async getPerformsBySearch(limit, offset, search) {
     const performs = await this.performRepository.findAndCount({
       order: { updatedAt: 'ASC' },
@@ -31,7 +32,8 @@ export class ContentService {
     return { performs };
   }
 
-  async getAllContentsToHome(limit, offset) {
+  // perform table '공연중'인 공연정보 불러오기 - 페이지네이션
+  async getAllPerformsToHome(limit, offset) {
     const performs = await this.performRepository.findAndCount({
       order: { updatedAt: 'ASC' },
       skip: offset,
@@ -42,6 +44,30 @@ export class ContentService {
       },
     });
     return { performs };
+  }
+
+  // content table의 모든 공연정보 불러오기 - 페이지네이션
+  async getContentsToHome(limit, offset) {
+    const performs = await this.contentRepository.findAndCount({
+      order: { updatedAt: 'ASC' },
+      skip: offset,
+      take: limit,
+      where: {
+        deletedAt: null,
+      },
+    });
+    return { performs };
+  }
+
+  // 퍼폼아이디로 공연정보 한개만 불러오기
+  async getPerformById(performId) {
+    const data = await this.performRepository.findOne({
+      where: {
+        deletedAt: null,
+        performId,
+      },
+    });
+    return { data };
   }
 
   async getAllContents() {
@@ -56,15 +82,5 @@ export class ContentService {
       },
     });
     return { content };
-  }
-
-  async getPerformById(performId) {
-    const data = await this.performRepository.findOne({
-      where: {
-        deletedAt: null,
-        performId,
-      },
-    });
-    return { data };
   }
 }

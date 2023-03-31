@@ -8,6 +8,7 @@ const performId = searchParams.get('id');
 const reviewId = Number(searchParams.get('reviewId'));
 const commentId = Number(searchParams.get('commentId'));
 
+// 해당 댓글 불러오기
 function get_comment(commentId) {
   $.ajax({
     type: 'GET',
@@ -41,8 +42,10 @@ function get_comment(commentId) {
 // 해당 댓글 수정
 function update_comment(commentId) {
   let comment = $('#commentContent').val();
-  console.log(comment);
-  console.log(typeof comment);
+
+  if (!comment) {
+    return alert('댓글 내용을 입력해주세요.');
+  }
 
   $.ajax({
     type: 'PUT',
@@ -53,7 +56,7 @@ function update_comment(commentId) {
     },
     success: function (response) {
       alert('댓글 수정이 완료되었습니다!');
-      window.location.reload();
+      window.location.href = `/render-review/comment?id=${performId}&reviewId=${reviewId}`;
     },
     error: function (response) {
       alert('댓글 수정에 실패하였습니다!');
@@ -70,3 +73,5 @@ function get_backBtnURL(performId, reviewId) {
 
   $('.reviewCreateBtnBox').append(temp_html);
 }
+
+// /render-review/comment?id=PF214506&reviewId=29
