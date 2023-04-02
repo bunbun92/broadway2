@@ -27,6 +27,9 @@ export class OrderSeatsService {
         performId,
       },
       relations: ['kopisApi'],
+      order: {
+        performRound: 'ASC',
+      },
     });
 
     //타임세일이 진행중일 때만 timeSale.length > 0
@@ -226,22 +229,43 @@ export class OrderSeatsService {
     const result = await this.orderRepository.query(query);
 
     //좌석마다 가격이 다를 경우 (등급별 가격) 고려해서 부득이하게 반복문으로 처리
-    for (let i = 0; i < seats.length; i++) {
-      this.orderListRepository.update(
-        {
-          userId,
-          contentId,
-          orderStatus: In([1, 2]),
-          seat: seats[i],
-        },
-        {
-          orderStatus: 3,
-          pricePaid: price[i],
-          timeSaleRate: timeSale[0]['rate'],
-          orderId: result.insertId,
-        }
-      );
+    //타임세일 적용 여부에 따라 조건문 추가
+    if (timeSale.length > 0) {
+      for (let i = 0; i < seats.length; i++) {
+        this.orderListRepository.update(
+          {
+            userId,
+            contentId,
+            orderStatus: In([1, 2]),
+            seat: seats[i],
+          },
+          {
+            orderStatus: 3,
+            pricePaid: price[i],
+            timeSaleRate: timeSale[0]['rate'],
+            orderId: result.insertId,
+          }
+        );
+      }
+    } else {
+      for (let i = 0; i < seats.length; i++) {
+        this.orderListRepository.update(
+          {
+            userId,
+            contentId,
+            orderStatus: In([1, 2]),
+            seat: seats[i],
+          },
+          {
+            orderStatus: 3,
+            pricePaid: price[i],
+            timeSaleRate: 0,
+            orderId: result.insertId,
+          }
+        );
+      }
     }
+
     // await this.orderListRepository.update(
     //   {
     //     userId,
@@ -534,7 +558,7 @@ export class OrderSeatsService {
   //결제내역, 결제 후 취소 내역 모두 출력
   async getAllOrders(userId: number) {
     const query = `
-      select o.id, o.paidTotalPrice, o.createdAt, o.deletedAt, ol.contentId, ol.orderStatus, c.performRound, k.performName, c.performDate from orders o
+      select o.id, o.paidTotalPrice, DATE_ADD(o.createdAt, INTERVAL 9 HOUR) as createdAt, DATE_ADD(o.deletedAt, INTERVAL 9 HOUR) as deletedAt, ol.contentId, ol.orderStatus, c.performRound, k.performName, c.performDate from orders o
       left join orderList ol on o.id = ol.orderId
       left join contents c on ol.contentId = c.id
       left join kopisApi k on k.performId = c.performId 
@@ -597,11 +621,28 @@ export class OrderSeatsService {
       and o.deletedAt is null
       and ol.deletedAt is null
       group by o.id
+      order by o.id desc
     `;
 
     const reservations = await this.orderRepository.query(query);
 
     return reservations;
+  }
+
+  async getAReservedReservationByOrderId(userId: number, orderId: number) {
+    const query = `
+      select k.performName, k.theater, c.performDate, c.performTime, ol.seat, ol.pricePaid from orderList ol
+      left join contents c on ol.contentId = c.id
+      left join kopisApi k on k.performId = c.performId
+      where ol.userId = ${userId}
+      and ol.orderId = ${orderId}
+      and ol.deletedAt is null
+      order by seat
+    `;
+
+    const reservation = await this.orderListRepository.query(query);
+
+    return reservation;
   }
 
   // async getReservedSeatsByOrderId(userId: number, orderId: number) {
