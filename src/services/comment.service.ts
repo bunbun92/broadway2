@@ -11,11 +11,13 @@ export class CommentService {
     @InjectRepository(Comment) private commentRepository: Repository<Comment>
   ) {}
 
+  // 모든 댓글 불러오기
   async getAllComments() {
     return this.commentRepository.find();
   }
 
-  async getCommentByReviewId(reviewId, currentUserId) {
+  // 해당 리뷰에 작성된 댓글 불러오기 + currentUserId 함께 보내주기
+  async getCommentByReviewId(reviewId: number, currentUserId: number) {
     const data = await this.commentRepository.find({
       where: { deletedAt: null, reviewId },
       relations: ['user'],
@@ -23,6 +25,7 @@ export class CommentService {
     return { data, currentUserId };
   }
 
+  // 해당 댓글 불러오기
   async getComments(id: number) {
     return await this.commentRepository.findOne({
       where: { id, deletedAt: null },

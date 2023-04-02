@@ -30,6 +30,7 @@ import { UserController } from 'src/renderers/user/render-user.controller';
 import { ReviewController } from 'src/renderers/review/render-review.controller';
 import { RenderOrderSeatsController } from 'src/renderers/orderSeats/render-order-seats.controller';
 import { OrderSeatsController } from 'src/controllers/order-seats.controller';
+import { CommentController } from 'src/controllers/comment.controller';
 
 @Module({
   imports: [
@@ -73,7 +74,10 @@ export class AppModule implements NestModule {
       .forRoutes(
         RenderOrderSeatsController,
         OrderSeatsController,
-        '/render-user/membership/'
+        '/render-user/membership/',
+        '/render-review/create',
+        '/render-review/manage',
+        { path: '/render-review/comment', method: RequestMethod.POST }
       );
     // .forRoutes('/user/logout');
     // '*'

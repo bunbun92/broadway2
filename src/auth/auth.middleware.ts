@@ -1,6 +1,8 @@
 import {
+  Get,
   Injectable,
   NestMiddleware,
+  Req,
   Res,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -17,7 +19,6 @@ export class AuthMiddleware implements NestMiddleware {
   ) {}
   //
   async use(req: Request, res: Response, next: NextFunction) {
-    console.log('미들웨어실행');
     const authHeader = req.headers.authorization;
 
     const jwt = req.cookies.jwt;
@@ -29,14 +30,12 @@ export class AuthMiddleware implements NestMiddleware {
 
     try {
       res.locals.user = await this.jwtService.verify(jwt);
-      console.log(res.locals.user);
     } catch (err) {
       if (err instanceof TokenExpiredError) {
         return res.render('toMain.ejs');
       }
     }
 
-    console.log('여기 되나?');
     next();
 
     // console.log('req', req);

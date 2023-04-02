@@ -150,8 +150,7 @@
                     </span>
                     <span class="showGradeAndPrice">
                       ${grade}석 <br />
-                      <span style ="text-decoration: line-through;">₩${rows[i].priceBeforeDiscount}</span>
-                      <span style ="color: orange;">₩${rows[i].priceAfterDiscount}</span>
+                      <span>₩${rows[i].priceBeforeDiscount}</span>                      
                     </span>
                   </span>
                   <span class="choosedSeatListRightZone"
@@ -162,6 +161,7 @@
 
                 totalPriceBeforeDiscount += rows[i].priceBeforeDiscount;
                 totalPriceAfterDiscount += rows[i].priceAfterDiscount;
+                seatsArrayGlobal.push(rows[i].seat);
               }
 
               document.getElementById('choosedSeatsListZone').innerHTML = '';
@@ -170,8 +170,8 @@
               $('#showPriceZone').append(
                 `
                 <span class="price"> 예상 금액:
-                  <span style="text-decoration: line-through;">₩${totalPriceBeforeDiscount}</span>
-                  <span style=" color: orange;"> ₩${totalPriceAfterDiscount}</span>
+                  <span>₩${totalPriceBeforeDiscount}</span>
+                  
                 </span>
                 `
               );
