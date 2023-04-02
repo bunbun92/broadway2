@@ -247,6 +247,22 @@ export class OrderSeatsController {
     return res.status(200).send(reservations);
   }
 
+  @Get('/reservedReservation/:orderId')
+  async getAReservedReservationByOrderId(
+    @Res() res: Response,
+    @Param('orderId') orderId: number
+  ) {
+    const userId = res.locals.user.id;
+
+    const reservation =
+      await this.orderSeatsService.getAReservedReservationByOrderId(
+        userId,
+        orderId
+      );
+
+    return res.status(200).json(reservation);
+  }
+
   @Post('/createSeat')
   createSeat(@Body() data: CreateSeatDto) {
     const seat = data.seat;

@@ -41,6 +41,17 @@
           success: function (response) {
             console.log(response);
             let rows = response["contents"];
+
+            if(rows.length === 0) {
+              $('#processingSeatsListZone').append(`
+                <div style ='color: lightgrey; text-align: center;''> 현재 예매 가능한 공연 회차가 없습니다 </div> <br>
+                <div style="text-align: center;">
+                  <button class="continueButton" onclick="location.href='/'">돌아가기</button>
+                </div> 
+                `);
+              return;
+            }
+
             const performName = rows[0].kopisApi.performName;
             const genreName = rows[0].kopisApi.genreName;
             // const posterSrc = rows[0].kopisApi.poster;
@@ -49,7 +60,13 @@
 
             document.getElementById('processingSeatsListZone').innerHTML = '';
 
+            
+
             for (let i = 0; i < rows.length; i++) {
+              //임시로 페이지네이션 대신 숨기기
+              if(i > 14) {
+                break;
+              }
               let date = rows[i].performDate;
               tempHtml += `
                 <div class="processingSeatZone">
