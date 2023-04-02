@@ -54,7 +54,7 @@
                     
                   </div>
                   <div class="processingSeatRightZone">
-                    <button class="continueButton" >상세 보기</button>
+                    <button class="continueButton" onclick="showDetailsByOrderId(${rows[i].id})">상세 보기</button>
                     
                     <button class="deleteButton" onclick="deleteSeatsByOrderId(${rows[i].id})">예매 취소하기</button>
                   </div>
@@ -74,8 +74,35 @@
         });
       }
 
-      function continueReservation(contentId) {
-        location.href = `/render-order-seats/editSeats?contentId=${contentId}`;
+      function showDetailsByOrderId(orderId) {
+        $.ajax({
+          type: "GET",
+          url: `/order-seats/reservedReservation/${orderId}`,
+          success: function (response){
+            console.log(response);
+            let rows = response;
+            let performName = rows[0].performName;
+            let performDate = rows[0].performDate;
+            let performTime = rows[0].performTime;
+            let theater = rows[0].theater;            
+            let seats = "";
+            let totalPrice = 0;
+
+            for(let i =0; i < rows.length; i++){
+              seats += rows[i].seat + " ";
+              totalPrice += rows[i].pricePaid;
+            }
+
+            alert(`
+              공연: ${performName}
+              극장: ${theater}              
+              시작시간: ${performDate}
+              러닝타임: ${performTime}              
+              좌석: ${seats}
+              총 결제금액: ${totalPrice}
+            `);
+          }
+        })
       }
 
       function deleteSeatsByOrderId(orderId) {        
